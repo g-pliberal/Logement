@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- La couleur du fond de l'affiche : sur un téléphone, la barre du navigateur
+     la reprend, et la page commence où elle commence. -->
+<meta name="theme-color" content="#0b3d3a">
+<title>Logement — le programme du Parti libéral français</title>
+<meta name="description" content="Le programme du Parti libéral français pour le logement : libérer le droit de construire, rendre au bail sa liberté, remplacer douze aides par un chèque logement, et cesser de taxer le déménagement.">
+<link rel="icon" href="moteur/icone.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="moteur/icone.svg">
+
+<link rel="stylesheet" href="moteur/style.css">
+<link rel="preload" href="moteur/donnees.json" as="fetch" crossorigin>
+
+<!-- Les modules sont un graphe peu profond, mais les annoncer ici les fait
+     partir ensemble plutôt qu'en cascade. Un test verrouille cette liste sur
+     le contenu de moteur/js/. -->
+<link rel="modulepreload" href="moteur/js/pages.js">
+<link rel="modulepreload" href="moteur/js/gabarit.js">
+<link rel="modulepreload" href="moteur/js/chiffres.js">
+<link rel="modulepreload" href="moteur/js/calculs.js">
+<link rel="modulepreload" href="moteur/js/format.js">
+
+<style>
+  /* Écran d'attente. Il ne s'affiche qu'au-delà d'un tiers de seconde : sur une
+     connexion rapide la page est prête avant, et un écran qui n'aurait clignoté
+     que le temps d'être aperçu vaut moins que rien. Le retard est en CSS et non
+     en JavaScript, parce que l'attente qu'il couvre se produit justement avant
+     que le moindre script ne soit chargé. */
+  #amorce { max-width: 34rem; margin: 0 auto; padding: 5rem 1.5rem; text-align: center;
+            animation: paraitre 0.25s ease-out 0.35s both; }
+  #amorce h1 { font-size: 1.4rem; font-weight: 600; margin: 0 0 0.75rem; }
+  #amorce p { color: var(--texte-doux); font-size: 0.98rem; }
+  #amorce .jauge { height: 6px; width: min(24rem, 80%); margin: 2rem auto 0;
+                   background: var(--fond-appui); border-radius: 3px; overflow: hidden; }
+  #amorce .jauge > span { display: block; height: 100%; width: 30%;
+                          background: var(--accent);
+                          animation: glisse 1.4s ease-in-out infinite; }
+  @keyframes paraitre { from { opacity: 0; } to { opacity: 1; } }
+  /* Lue par les synthèses vocales, jamais affichée : le contenu de <main> est
+     remplacé en bloc à chaque navigation, ce qu'un lecteur d'écran ne signale
+     pas de lui-même. */
+  .hors-ecran { position: absolute; width: 1px; height: 1px; overflow: hidden;
+                clip-path: inset(50%); white-space: nowrap; }
+  .replique { text-align: left; border-left: 3px solid var(--accent);
+              background: var(--fond-appui); padding: 0.9rem 1.1rem; margin-top: 1.5rem;
+              font-size: 0.92rem; }
+  @media (prefers-reduced-motion: reduce) {
+    #amorce .jauge > span { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<p id="annonce" class="hors-ecran" role="status" aria-live="polite"></p>
+
+<div id="amorce">
+  <h1>Logement</h1>
+  <p>La page se prépare. Les chiffres et les calculs s'exécutent dans votre
+  navigateur : rien n'est envoyé à un serveur.</p>
+  <div class="jauge"><span></span></div>
+  <noscript>
+    <div class="replique">Ce site a besoin de JavaScript : les pages et leurs
+    calculs sont composés dans votre navigateur, il n'y a pas de serveur pour
+    le faire à sa place. Le programme et ses sources restent lisibles dans
+    <a href="https://github.com/g-pliberal/logement">le dépôt</a>.</div>
+  </noscript>
+</div>
+
+<script type="module">
+import { DESCRIPTIONS, Donnees, TITRES, rendre } from "./moteur/js/pages.js";
+import * as gabarit from "./moteur/js/gabarit.js";
+
+const amorce = document.getElementById("amorce");
+let donnees = null;
+
+// Ce qu'un message d'erreur peut porter de texte arbitraire — le nom d'un
+// fichier, une chaîne renvoyée par le navigateur — ne doit jamais être lu comme
+// du balisage.
+function neutraliser(texte) {
+  return String(texte).replace(/[&<>"']/g, (caractere) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#x27;",
+  }[caractere]));
+}
+
+function echec(titre, detail) {
+  amorce.innerHTML = `<h1>${titre}</h1><div class="replique">${detail}</div>`;
+}
+
+// -- démarrage ---------------------------------------------------------------
+
+async function preparer() {
+  // Requête volontairement nue : c'est celle que décrit le <link rel="preload">
+  // de l'en-tête, `crossorigin` compris. Toute option qui s'en écarterait ferait
+  // manquer le préchargement, et le paquet serait téléchargé deux fois.
+  const reponse = await fetch("moteur/donnees.json", { cache: "force-cache" });
+  if (!reponse.ok) {
+    throw new Error(`moteur/donnees.json introuvable (${reponse.status})`);
+  }
+  donnees = new Donnees(await reponse.json());
+}
+
+function coquille() {
+  amorce.remove();
+  // Le pied est posé une fois, à côté de <main> et non dedans : un <footer>
+  // imbriqué dans <main> n'est pas un repère « contentinfo » et disparaît de la
+  // navigation par repères.
+  document.body.insertAdjacentHTML("beforeend",
+    '<div id="entete"></div><main id="contenu" tabindex="-1"></main>'
+    + gabarit.pied());
+}
+
+function annoncer(texte) {
+  const region = document.getElementById("annonce");
+  // Vider d'abord : deux rendus qui donnent le même texte doivent s'entendre
+  // deux fois, et une région dont le contenu ne change pas reste muette.
+  region.textContent = "";
+  setTimeout(() => { region.textContent = texte; }, 50);
+}
+
+function adresse() {
+  const brut = location.hash.replace(/^#/, "") || "/";
+  const separation = brut.indexOf("?");
+  const chemin = separation === -1 ? brut : brut.slice(0, separation);
+  const requete = separation === -1 ? "" : brut.slice(separation + 1);
+  const parametres = {};
+  new URLSearchParams(requete).forEach((valeur, cle) => { parametres[cle] = valeur; });
+  return { chemin: chemin || "/", parametres };
+}
+
+let premierRendu = true;
+
+function afficher() {
+  const cible = adresse();
+  const contenu = document.getElementById("contenu");
+  const route = cible.chemin in TITRES ? cible.chemin : "/";
+
+  let titre;
+  let corps;
+  try {
+    [titre, corps] = rendre(donnees, route, cible.parametres);
+  } catch (erreur) {
+    contenu.innerHTML = '<div class="erreur"><strong>La page n\'a pas pu être '
+      + "composée.</strong> " + neutraliser(erreur) + "</div>";
+    annoncer(`La page n'a pas pu être composée. ${String(erreur)}`);
+    return;
+  }
+
+  document.getElementById("entete").innerHTML = gabarit.entete(route);
+  contenu.innerHTML = corps;
+  document.title = `${titre} — Logement`;
+  const description = document.querySelector('meta[name="description"]');
+  if (description && DESCRIPTIONS[route]) {
+    description.content = DESCRIPTIONS[route];
+  }
+  annoncer(resume(titre, contenu));
+  reprendre(contenu);
+}
+
+// Résumé parlé d'une page rendue : son titre, et le résultat s'il y en a un.
+function resume(titre, contenu) {
+  const resultat = contenu.querySelector(".carte h3, .cle .reponse");
+  return resultat ? `${titre}. ${resultat.textContent.trim()}` : `${titre}.`;
+}
+
+/**
+ * Où va le focus après un rendu.
+ *
+ * Au premier affichage, nulle part : déplacer le focus sur le contenu ferait
+ * sauter la page avant même que le lecteur ait lu le titre. Ensuite, sur le
+ * résultat s'il y en a un — c'est ce que le lecteur vient de demander —, sinon
+ * en tête du contenu, pour que la navigation au clavier reparte de la page
+ * nouvelle et non de la précédente.
+ */
+function reprendre(contenu) {
+  if (premierRendu) { premierRendu = false; return; }
+  const resultat = contenu.querySelector("[id^='resultat-']");
+  const cible = resultat || contenu;
+  cible.focus({ preventScroll: true });
+  cible.scrollIntoView({ block: "start", behavior: "auto" });
+}
+
+// -- les formulaires : la saisie EST l'adresse -------------------------------
+
+document.addEventListener("submit", (evenement) => {
+  const formulaire = evenement.target.closest("form");
+  if (!formulaire) { return; }
+  evenement.preventDefault();
+
+  const parametres = new URLSearchParams();
+  new FormData(formulaire).forEach((valeur, cle) => {
+    if (String(valeur).trim() !== "") { parametres.set(cle, valeur); }
+  });
+  const route = (formulaire.getAttribute("action") || "#/").replace(/^#/, "");
+  const cible = `#${route}?${parametres.toString()}`;
+  if (location.hash === cible) { afficher(); } else { location.hash = cible; }
+});
+
+// -- les mots du glossaire ---------------------------------------------------
+//
+// En écoute DÉLÉGUÉE, sur le document, et non sur chaque bouton : le contenu de
+// <main> est remplacé en bloc à chaque rendu, et des écouteurs posés un par un
+// disparaîtraient avec les boutons qui les portaient.
+
+function fermerLesMots(sauf) {
+  for (const bouton of document.querySelectorAll('.mot > .terme[aria-expanded="true"]')) {
+    if (bouton === sauf) { continue; }
+    bouton.setAttribute("aria-expanded", "false");
+    bouton.nextElementSibling.hidden = true;
+  }
+}
+
+document.addEventListener("click", (evenement) => {
+  const terme = evenement.target.closest(".mot > .terme");
+  fermerLesMots(terme);
+  if (!terme) { return; }
+  // Un appel de bulle posé dans un <label> ferait, sans cela, DEUX choses d'un
+  // seul clic : ouvrir la bulle, et donner le focus au champ que le libellé
+  // désigne.
+  evenement.preventDefault();
+  const ouvrir = terme.getAttribute("aria-expanded") !== "true";
+  terme.setAttribute("aria-expanded", String(ouvrir));
+  terme.nextElementSibling.hidden = !ouvrir;
+});
+
+document.addEventListener("keydown", (evenement) => {
+  // Le mot du glossaire est un `<span role="button">` — un vrai bouton ne coule
+  // pas dans une phrase sous Chromium — et doit donc répondre à Entrée et à
+  // Espace comme un bouton le ferait de lui-même.
+  if ((evenement.key === "Enter" || evenement.key === " ")
+      && evenement.target.matches?.('.mot > .terme[role="button"]')) {
+    evenement.preventDefault();
+    evenement.target.click();
+    return;
+  }
+  if (evenement.key !== "Escape") { return; }
+  const ouvert = document.querySelector('.mot > .terme[aria-expanded="true"]');
+  if (!ouvert) { return; }
+  fermerLesMots(null);
+  ouvert.focus();
+});
+
+// -- le plan de la page ------------------------------------------------------
+//
+// Les liens du plan ne touchent pas à l'adresse : ici l'adresse EST la route.
+// `data-vers` désigne la section, qu'on ouvre, sur laquelle on pose le focus,
+// et vers laquelle on fait défiler.
+
+document.addEventListener("click", (evenement) => {
+  const lien = evenement.target.closest(".plan a[data-vers]");
+  if (!lien) { return; }
+  evenement.preventDefault();
+  const section = document.getElementById(lien.dataset.vers);
+  if (!section) { return; }
+  if (section.tagName === "DETAILS") { section.open = true; }
+  section.scrollIntoView({ block: "start", behavior: "smooth" });
+  section.focus({ preventScroll: true });
+});
+
+// -- le tri des tableaux -----------------------------------------------------
+//
+// Les nombres se comparent en nombres — « 1 245 » avant « 987 » serait un tri
+// de dictionnaire —, le reste en français.
+
+function nombreEnTete(texte) {
+  const trouve = /^[+-−]?\d[\d \s ]*(?:[.,]\d+)?/.exec(texte);
+  return trouve
+    ? Number(trouve[0].replace(/[ \s −]/g, "").replace(",", "."))
+    : null;
+}
+
+document.addEventListener("click", (evenement) => {
+  const bouton = evenement.target.closest("th > button.tri");
+  if (!bouton) { return; }
+  const entete = bouton.parentElement;
+  const table = entete.closest("table");
+  if (!table || !table.tBodies.length) { return; }
+  const colonne = Number(bouton.dataset.colonne);
+  const sens = entete.getAttribute("aria-sort") === "ascending" ? "descending" : "ascending";
+  for (const autre of table.tHead.querySelectorAll("th[aria-sort]")) {
+    autre.removeAttribute("aria-sort");
+  }
+  entete.setAttribute("aria-sort", sens);
+  const corps = table.tBodies[0];
+  const texte = (ligne) => ligne.cells[colonne]?.textContent.trim() ?? "";
+  const lignes = [...corps.rows].sort((a, b) => {
+    const [ta, tb] = [texte(a), texte(b)];
+    const [na, nb] = [nombreEnTete(ta), nombreEnTete(tb)];
+    const ordre = na !== null && nb !== null && na !== nb
+      ? na - nb
+      : ta.localeCompare(tb, "fr", { numeric: true, sensitivity: "base" });
+    return sens === "ascending" ? ordre : -ordre;
+  });
+  corps.append(...lignes);
+});
+
+// -- le partage d'une carte --------------------------------------------------
+//
+// Une carte chiffrée est faite pour sortir du site : la question, la réponse,
+// l'adresse. Pas d'image composée ici — le site n'en fabrique aucune —, mais le
+// texte exact, que la feuille de partage du système ou le presse-papiers
+// emporte. Le repli, quand ni l'un ni l'autre n'existent, est un champ où le
+// texte est déjà sélectionnable.
+
+function messageDeLaCarte(carte) {
+  const question = carte.querySelector("h3")?.textContent.trim() ?? "";
+  const reponse = carte.querySelector(".reponse, h3 + p")?.textContent.trim() ?? "";
+  return [question, reponse].filter(Boolean).join(" ");
+}
+
+function etat(carte, texte) {
+  const region = carte.querySelector(".partage .etat");
+  if (region) { region.textContent = texte; }
+}
+
+document.addEventListener("click", async (evenement) => {
+  const bouton = evenement.target.closest(".partage .partager");
+  if (!bouton) { return; }
+  const carte = bouton.closest("section, figure, .carte");
+  const texte = messageDeLaCarte(carte);
+  const adresseCourante = location.href;
+  try {
+    if (navigator.share) {
+      await navigator.share({ title: document.title, text: texte, url: adresseCourante });
+      return;
+    }
+    await navigator.clipboard.writeText(`${texte}\n${adresseCourante}`);
+    etat(carte, "Copié.");
+  } catch (erreur) {
+    // Refus de la feuille de partage, presse-papiers interdit, page non
+    // sécurisée : dans les trois cas, le texte doit rester atteignable.
+    const repli = carte.querySelector(".partage .repli");
+    if (repli) {
+      repli.value = `${texte}\n${adresseCourante}`;
+      repli.hidden = false;
+      repli.select();
+      etat(carte, "À copier à la main :");
+    }
+  }
+});
+
+document.addEventListener("click", (evenement) => {
+  const bouton = evenement.target.closest(".partage .partager-x");
+  if (!bouton) { return; }
+  const carte = bouton.closest("section, figure, .carte");
+  const message = `${messageDeLaCarte(carte)}\n${location.href}`;
+  window.open(
+    `https://x.com/intent/tweet?text=${encodeURIComponent(message)}`,
+    "_blank", "noopener",
+  );
+});
+
+window.addEventListener("hashchange", afficher);
+
+preparer().then(() => {
+  coquille();
+  afficher();
+}).catch((erreur) => {
+  echec(
+    "La page n'a pas pu se charger",
+    `<p>${neutraliser(erreur)}</p>`
+    + "<p>Les chiffres et le code sont servis depuis ce dépôt : un réseau "
+    + "coupé pendant le chargement, ou un navigateur qui bloque les modules "
+    + "JavaScript, peuvent l'empêcher d'aboutir. Recharger la page suffit "
+    + "souvent ; sinon, un navigateur à jour (Firefox, Chrome, Safari, Edge) "
+    + "règle le problème.</p>"
+    + '<p><a href="https://github.com/g-pliberal/logement">Le dépôt du '
+    + "projet</a></p>",
+  );
+});
+</script>
+</body>
+</html>

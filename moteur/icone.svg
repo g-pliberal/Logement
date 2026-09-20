@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Logement">
+  <!-- L'icône du site : le carré de la charte, et le tracé « house » de Lucide
+       1.46.0 (ISC, voir icones/LICENSE), posé sur la même grille de 24 et au
+       même trait de 2 que les pictogrammes de la page. -->
+  <rect width="32" height="32" rx="7" fill="#0b3d3a"/>
+  <g transform="translate(4 4)" fill="none" stroke="#e9c53d" stroke-width="2"
+     stroke-linecap="round" stroke-linejoin="round">
+    <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
+    <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+  </g>
+</svg>
