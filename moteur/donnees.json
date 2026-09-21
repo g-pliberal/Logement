@@ -993,5 +993,59 @@
         170.6
       ]
     }
+  },
+  "echeances": {
+    "encadrement_extinction": {
+      "libelle": "L'expérimentation de l'encadrement des loyers s'éteint faute de loi nouvelle",
+      "echeance": "2026-11-25",
+      "ecrit": "25 novembre 2026",
+      "ou": "/louer, section « encadrement » ; note de encadrement_villes",
+      "verifier": "S'est-elle éteinte, ou la proposition de loi de pérennisation a-t-elle abouti ? Dans les deux cas la page Louer change de temps : elle parle d'un dispositif en vigueur. Reprendre aussi encadrement_villes, dont la liste des dix collectivités n'aura plus le même sens.",
+      "url": "https://www.anil.org/aj-experimentation-encadrement-niveau-loyers-zones-tendues/"
+    },
+    "encadrement_perennisation": {
+      "libelle": "La proposition de loi qui pérennise l'encadrement est au Sénat, adoptée par l'Assemblée le 11 décembre 2025",
+      "echeance": "2026-11-25",
+      "ou": "/louer, section « encadrement »",
+      "verifier": "Où en est le texte ? Adopté, rejeté, ou toujours en commission ? La page affirme qu'il est « au Sénat » : c'est un état, et un état se périme.",
+      "url": "https://www.assemblee-nationale.fr/dyn/17/dossiers/retrouver_confiance_equilibre_rapports_locatifs_17e"
+    },
+    "evaluation_encadrement": {
+      "libelle": "Le rapport d'évaluation de l'encadrement confié à G. Fack et G. Chapelle est dû au Parlement",
+      "echeance": "2026-12-31",
+      "ou": "/louer ; note de encadrement_effet",
+      "verifier": "Le rapport est-il publié ? S'il l'est, il devient la source primaire de encadrement_effet, qui passe par un rapport parlementaire en attendant. C'est la reprise la plus utile à faire.",
+      "url": "https://www.ecologie.gouv.fr/politiques-publiques/encadrement-loyers"
+    },
+    "trace_zan": {
+      "libelle": "La loi TRACE est adoptée en première lecture par le Sénat, et attend l'Assemblée nationale",
+      "echeance": "2027-03-18",
+      "ecrit": "18 mars 2025",
+      "ou": "/construire, section « zan »",
+      "verifier": "Le texte a-t-il été inscrit à l'Assemblée, adopté, abandonné ? La page décrit un texte en cours depuis le 18 mars 2025 ; deux ans sans mouvement méritent une phrase différente.",
+      "url": "https://www.vie-publique.fr/loi/297753-assouplissement-zan-artificialisation-sols-proposition-de-loi-trace"
+    },
+    "dmto_majoration": {
+      "libelle": "La majoration départementale des droits de mutation prend fin",
+      "echeance": "2028-03-31",
+      "ecrit": "31 mars 2028",
+      "ou": "/fiscalite, section « mutation » ; note de dmto_taux",
+      "verifier": "La majoration a-t-elle été prorogée ou est-elle tombée ? Si elle tombe, le taux de dmto_taux redescend à 5,81 % et la calculette change de barème par défaut.",
+      "url": "https://www.impots.gouv.fr/sites/default/files/media/1_metier/3_partenaire/notaires/dmto/dmto_2026-02.pdf"
+    },
+    "dpe_interdiction_f": {
+      "libelle": "L'interdiction de louer atteint les logements classés F",
+      "echeance": "2028-01-01",
+      "ou": "/louer, section « dpe »",
+      "verifier": "L'échéance a-t-elle été tenue, repoussée, supprimée ? La page écrit « les classes F suivront en 2028 » : au futur.",
+      "url": "https://www.ecologie.gouv.fr/politiques-publiques/diagnostic-performance-energetique-dpe"
+    },
+    "dpe_interdiction_e": {
+      "libelle": "L'interdiction de louer atteint les logements classés E",
+      "echeance": "2034-01-01",
+      "ou": "/louer, section « dpe »",
+      "verifier": "Même question que pour les classes F, dont la réponse commandera probablement celle-ci.",
+      "url": "https://www.ecologie.gouv.fr/politiques-publiques/diagnostic-performance-energetique-dpe"
+    }
   }
 }

@@ -1773,6 +1773,47 @@ ${corps}
 const ORDRE_FIABILITE = ["officielle", "academique", "calcul",
   "partie_prenante", "presse"];
 
+/** Les mois, pour qu'une échéance se lise comme une date et non comme une clé. */
+const MOIS = Object.freeze([
+  "janvier", "février", "mars", "avril", "mai", "juin",
+  "juillet", "août", "septembre", "octobre", "novembre", "décembre",
+]);
+
+/** « 2026-11-25 » se lit « 25 novembre 2026 ». */
+function dateEnFrancais(iso) {
+  const [annee, mois, jour] = iso.split("-");
+  const quantieme = Number(jour) === 1 ? "1er" : String(Number(jour));
+  return `${quantieme} ${MOIS[Number(mois) - 1]} ${annee}`;
+}
+
+/**
+ * Les faits datés que le site surveille, dans l'ordre où ils tomberont.
+ *
+ * C'est la contrepartie visible du test de péremption : le lecteur voit ce
+ * que nous nous sommes engagés à revérifier, et quand. Une veille qu'on ne
+ * montre pas est une veille qu'on peut abandonner sans que personne ne le
+ * sache.
+ */
+function tableauEcheances(d) {
+  const echeances = d.echeances();
+  const cles = Object.keys(echeances)
+    .sort((a, b) => echeances[a].echeance.localeCompare(echeances[b].echeance));
+  const lignes = cles.map((cle) => {
+    const e = echeances[cle];
+    return [
+      `${echapper(e.libelle)}<br>`
+      + `<span class="precision">${echapper(e.ou)}</span>`,
+      `<a href="${echapper(e.url)}">${echapper(dateEnFrancais(e.echeance))}</a>`,
+      `<span class="precision">${echapper(e.verifier)}</span>`,
+    ];
+  });
+  return g.tableau(
+    ["Ce que le site affirme", "À revérifier après le", "Quoi vérifier"],
+    lignes, ["", "nombre", ""],
+    "Les faits datés, et leur date de péremption", true,
+  );
+}
+
 function tableauDonnees(d) {
   const cles = d.toutesLesCles().sort((a, b) => {
     const ea = d.chiffre(a);
@@ -1846,6 +1887,23 @@ ${g.depliant("La règle", `
   figure pas sur le site — et c'est le but. Les deux calculs du site, le coût
   fiscal d'un achat et le chiffrage de la réforme, n'utilisent eux aussi que
   ces valeurs-là.</p>`, "regle")}
+
+${g.depliant("Ce qui se périmera, et quand nous le revérifierons",
+    `<p>Un chiffre vieillit visiblement : son année est écrite à côté de lui.
+  Une phrase, non. « L'expérimentation s'éteint le 25 novembre 2026 », « le
+  texte est au Sénat », « les classes F suivront en 2028 » sont vraies le jour
+  où on les écrit et fausses un jour, sans que rien ne prévienne — au milieu
+  de chiffres qui, eux, sont tenus à jour. C'est la façon la plus sûre de
+  perdre une confiance qu'on met des années à gagner.</p>
+  <p>Chacune de ces phrases porte donc une échéance, et un test refuse de
+  laisser publier le site lorsqu'une échéance est passée. Il ne se contente
+  pas de le signaler : il dit où la phrase est écrite et quoi aller vérifier.
+  Les voici, telles que le test les lit.</p>
+  ${tableauEcheances(d)}
+  <p>Deux réponses sont acceptables quand une échéance sonne : corriger le
+  site, ou reporter l'échéance parce qu'on a vérifié qu'elle tient encore. Une
+  seule ne l'est pas, et c'est la plus tentante : supprimer la ligne.</p>`,
+    "peremption")}
 
 ${g.depliant("Ce que ce site ne sait pas", `
   ${g.points([

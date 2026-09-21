@@ -18,6 +18,7 @@ Ils tiennent quatre promesses du dépôt :
 import json
 import re
 import unittest
+from datetime import date
 from pathlib import Path
 
 RACINE = Path(__file__).resolve().parent.parent
@@ -203,6 +204,132 @@ class NombresEnDur(unittest.TestCase):
         self.assertEqual(fautes, [],
                          "pages.js : grandeur écrite à la main, "
                          "elle doit venir de donnees.json — " + " ; ".join(fautes))
+
+
+class Peremption(unittest.TestCase):
+    """Un fait daté se périme, et personne ne le voit.
+
+    Le site dit qu'une expérimentation s'éteint à telle date, qu'un texte est
+    au Sénat, qu'une interdiction suivra en 2028. Ces phrases sont vraies le
+    jour où on les écrit et fausses un jour sans que rien ne prévienne : elles
+    ne lèvent pas, elles ne cassent aucun test, elles vieillissent en silence
+    au milieu de chiffres, eux, tenus à jour. C'est la façon la plus sûre de
+    perdre la confiance qu'on met des années à gagner.
+
+    `donnees.json` porte donc, à côté des chiffres, une liste d'échéances :
+    chacune dit ce que le site affirme, jusqu'à quand cette affirmation tient,
+    où elle est écrite, et quoi aller vérifier. Ces tests sont le réveil.
+    Quand l'un d'eux sonne, il y a deux réponses acceptables — corriger le
+    site, ou reporter l'échéance parce qu'on a vérifié qu'elle tient encore —
+    et une seule inacceptable : supprimer l'échéance.
+    """
+
+    MOIS = ("janvier|février|mars|avril|mai|juin|juillet|août|septembre"
+            "|octobre|novembre|décembre")
+    #: « 25 novembre 2026 », « 1er avril 2025 » : une date écrite en toutes
+    #: lettres dans une phrase du site.
+    DATE = re.compile(r"\b((?:1er|\d{1,2}) (?:" + MOIS + r") (20\d\d))\b")
+    #: Une année seule, qui peut annoncer un fait à venir.
+    ANNEE = re.compile(r"(?<![\d/-])(20[2-9]\d)(?![\d/-])")
+
+    #: Les années à venir qu'une page peut citer sans qu'une veille s'impose.
+    #: Y ajouter une ligne demande de dire pourquoi la date ne se périme pas.
+    ANNEES_SANS_ECHEANCE = {
+        "2031": "l'ancienne échéance du ZAN, citée seulement pour dire "
+                "qu'elle a été repoussée : c'est un fait passé",
+        "2050": "l'horizon du ZAN. Une veille à vingt-cinq ans ne réveille "
+                "personne ; la loi qui le porte est suivie par trace_zan",
+    }
+
+    #: Tout ce que le site écrit, pages et notes des données réunies : une
+    #: date se périme aussi bien dans une note que dans un paragraphe.
+    TEXTE = PAGES + "\n" + "\n".join(
+        entree.get("note", "") for entree in DONNEES["chiffres"].values())
+
+    @staticmethod
+    def echeances():
+        return DONNEES.get("echeances", {})
+
+    def test_chaque_echeance_est_complete(self):
+        """Une échéance sans mode d'emploi ne sert qu'à être supprimée le jour
+        où elle sonne."""
+        self.assertTrue(self.echeances(), "aucune échéance déclarée")
+        for cle, entree in self.echeances().items():
+            with self.subTest(echeance=cle):
+                for champ in ("libelle", "echeance", "ou", "verifier", "url"):
+                    self.assertIn(champ, entree, f"{cle} : « {champ} » manquant")
+                self.assertRegex(entree["echeance"], DATE)
+                self.assertTrue(entree["url"].startswith("https://"))
+                self.assertGreater(len(entree["verifier"]), 60,
+                                   f"{cle} : dire quoi vérifier, pas seulement "
+                                   "qu'il faut vérifier")
+
+    def test_aucune_echeance_n_est_passee(self):
+        """Le réveil. Il sonne le lendemain du jour où une phrase du site a pu
+        cesser d'être vraie."""
+        aujourd_hui = date.today().isoformat()
+        sonnees = [(cle, e) for cle, e in self.echeances().items()
+                   if e["echeance"] < aujourd_hui]
+        if sonnees:
+            details = "\n".join(
+                f"\n  ── {cle} (échéance du {e['echeance']})\n"
+                f"     {e['libelle']}.\n"
+                f"     Où : {e['ou']}\n"
+                f"     Vérifier : {e['verifier']}\n"
+                f"     Source : {e['url']}"
+                for cle, e in sonnees)
+            self.fail(
+                f"{len(sonnees)} fait(s) daté(s) ont passé leur échéance au "
+                f"{aujourd_hui}. Corriger le site, ou reporter l'échéance "
+                f"après avoir vérifié qu'elle tient encore — jamais la "
+                f"supprimer.{details}\n")
+
+    def test_une_echeance_declaree_est_encore_ecrite(self):
+        """Une échéance qui surveille une phrase disparue surveille le vide, et
+        laisse croire que la veille est faite."""
+        for cle, entree in self.echeances().items():
+            if "ecrit" in entree:
+                with self.subTest(echeance=cle):
+                    # `assertIn` recopierait tout le site dans le message ;
+                    # ce qu'il faut lire tient en une ligne.
+                    self.assertTrue(
+                        entree["ecrit"] in self.TEXTE,
+                        f"{cle} : « {entree['ecrit']} » n'est plus écrit nulle "
+                        "part. Soit la phrase a changé et l'échéance doit "
+                        "suivre, soit elle a disparu et l'échéance n'a plus "
+                        "d'objet — mais une échéance orpheline fait croire "
+                        "qu'une veille est tenue.")
+
+    def test_aucune_date_future_n_est_ecrite_sans_echeance(self):
+        """L'autre sens : une date à venir posée dans une phrase sans que
+        personne ne se soit engagé à la surveiller."""
+        aujourd_hui = date.today().isoformat()
+        MOIS_NUM = {nom: i + 1 for i, nom in enumerate(self.MOIS.split("|"))}
+        declarees = {e["ecrit"] for e in self.echeances().values() if "ecrit" in e}
+        orphelines = []
+        for texte, annee in self.DATE.findall(self.TEXTE):
+            jour, mois = texte.split(" ")[0], texte.split(" ")[1]
+            iso = "%s-%02d-%02d" % (annee, MOIS_NUM[mois],
+                                    1 if jour == "1er" else int(jour))
+            if iso >= aujourd_hui and texte not in declarees:
+                orphelines.append(texte)
+        self.assertEqual(sorted(set(orphelines)), [],
+                         "date à venir écrite sans échéance déclarée dans "
+                         "donnees.json : " + ", ".join(sorted(set(orphelines))))
+
+    def test_aucune_annee_future_n_est_citee_sans_veille(self):
+        """Les faits à venir ne se datent pas toujours au jour près : « les
+        classes F suivront en 2028 » est une promesse comme une autre."""
+        annees_veillees = {e["echeance"][:4] for e in self.echeances().values()}
+        cette_annee = str(date.today().year)
+        orphelines = sorted({
+            annee for annee in self.ANNEE.findall(self.TEXTE)
+            if annee > cette_annee
+            and annee not in annees_veillees
+            and annee not in self.ANNEES_SANS_ECHEANCE})
+        self.assertEqual(orphelines, [],
+                         "année à venir citée sans échéance qui tombe cette "
+                         "année-là, ni exemption motivée : " + ", ".join(orphelines))
 
 
 class Autonomie(unittest.TestCase):

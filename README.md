@@ -100,6 +100,35 @@ Un test refuse une entrée incomplète, un chiffre cité mais absent, et un chif
 présent mais jamais affiché — ce dernier étant celui qui vieillit sans qu'on le
 voie.
 
+## Les faits datés se périment, et le dépôt le sait
+
+Un chiffre vieillit visiblement : son année est à côté de lui. Une phrase, non.
+« L'expérimentation s'éteint le 25 novembre 2026 », « le texte est au Sénat »,
+« les classes F suivront en 2028 » sont vraies le jour où on les écrit et
+fausses un jour, sans que rien ne prévienne.
+
+`moteur/donnees.json` porte donc, à côté des chiffres, un bloc `echeances`.
+Chaque entrée dit ce que le site affirme, jusqu'à quand l'affirmation tient
+(`echeance`), où elle est écrite (`ou`), quoi aller vérifier (`verifier`), et
+la date telle qu'elle est écrite sur le site (`ecrit`, facultatif). La liste est
+[affichée sur la page Données](https://g-pliberal.github.io/logement/#/donnees) :
+une veille qu'on ne montre pas est une veille qu'on peut abandonner sans que
+personne ne le sache.
+
+Cinq tests la tiennent :
+
+| Le test refuse | Pourquoi |
+|---|---|
+| une échéance passée | c'est le réveil : `verifier.sh` échoue, et le message dit où la phrase est écrite et quoi vérifier |
+| une échéance sans mode d'emploi | une échéance qu'on ne sait pas instruire est une échéance qu'on supprimera |
+| une échéance dont la phrase a disparu | elle ferait croire qu'une veille est tenue |
+| une date à venir écrite sans échéance | c'est ainsi qu'on repose une bombe à retardement |
+| une année à venir citée sans veille ni exemption motivée | idem, pour « en 2028 » et « en 2034 » |
+
+Quand le réveil sonne, deux réponses sont acceptables — corriger le site, ou
+reporter l'échéance parce qu'on a vérifié qu'elle tient encore. Une seule ne
+l'est pas, et c'est la plus tentante : supprimer la ligne.
+
 ## Vérifier, servir, publier
 
 ```bash

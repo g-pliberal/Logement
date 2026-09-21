@@ -65,6 +65,16 @@ export class Donnees {
     return this.chiffre(cle).valeur;
   }
 
+  /**
+   * Les faits datés que le site surveille, et la date à laquelle il faudra
+   * les revérifier. Une phrase comme « l'expérimentation s'éteint le
+   * 25 novembre 2026 » est vraie le jour où on l'écrit et fausse un jour
+   * sans que rien ne prévienne : c'est ce que cette liste répare.
+   */
+  echeances() {
+    return this.paquet.echeances ?? {};
+  }
+
   serie(cle) {
     const entree = this.series[cle];
     if (!entree) {
