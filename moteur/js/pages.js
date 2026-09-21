@@ -512,12 +512,13 @@ ${g.cle("La file d'attente s'allonge pendant qu'on distribue.",
   six, et il grandit : ${nombre(n(d, "parc_social_entrees"), 0)} logements y sont
   entrés en ${an(d, "parc_social_entrees")}. La demande, elle, grandit plus vite.
   Le délai moyen d'obtention atteint
-  ${vc(d, "delai_hlm", 0)} pour les demandes satisfaites en
-  ${an(d, "delai_hlm")}, et ${vc(d, "delai_hlm_idf")} en Île-de-France.</p>
+  ${vc(d, "delai_hlm_idf", 0)} en Île-de-France pour les demandes satisfaites
+  en ${an(d, "delai_hlm_idf")} — la moitié des ménages servis avaient attendu
+  davantage. Il s'y compte ${vc(d, "tension_idf", 0)} pour une attribution.</p>
   <p>Un parc qui ne se libère pas ne peut pas absorber une file qui s'allonge :
   le ${g.terme("droit au maintien dans les lieux")} garantit à l'occupant d'y rester quel que soit son revenu ultérieur, quand
   celui qui attend, lui, n'a droit à rien.</p>`,
-    sources(d, "demandes_hlm", "parc_social", "delai_hlm", "delai_hlm_idf",
+    sources(d, "demandes_hlm", "parc_social", "delai_hlm_idf", "tension_idf",
       "demandes_hlm_mutation"), "attente")}
 
 ${g.cle("Le logement rapporte aux administrations plus du double de ce qu'il leur coûte.",
@@ -596,13 +597,25 @@ ${g.depliant("Le droit de construire est devenu un droit d'interdire",
   couleur des volets. Ce document n'est pas un arbitrage entre des usages :
   c'est un plafond. Là où la demande est forte, le plafond crée une rente, et
   la rente se voit dans le prix du terrain — la
-  ${g.terme("charge foncière")} atteint ${vc(d, "part_foncier_paris", 0)} du
-  prix d'une opération à Paris, contre environ un quart en province, et
-  ${vc(d, "part_foncier", 0)} du coût hors taxes des opérations de logement
-  social en ${an(d, "part_foncier")}, en hausse de dix points depuis 2020.</p>
-  <p>On achète donc de moins en moins un sol, et de plus en plus une
-  autorisation.</p>
-  <p class="source">${sources(d, "part_foncier", "part_foncier_paris")}</p>`,
+  ${g.terme("charge foncière")} en porte la trace.</p>
+  <p>Sur ce point, il faut corriger une idée reçue que nous avons nous-mêmes
+  portée. Le foncier ne dévore pas le coût d'un logement social : il en
+  représente ${vc(d, "part_foncier")} en ${an(d, "part_foncier")}, et il
+  n'explique qu'une faible part de la hausse des prix de revient depuis 2019 —
+  les coûts de construction en expliquent l'essentiel. « Contre toute
+  attente, le foncier contribue nettement moins », écrit la Banque des
+  Territoires, qui tient la base.</p>
+  <p>La rareté du droit de bâtir se lit ailleurs, et plus nettement : dans
+  l'écart entre les territoires. Un logement social coûte
+  ${vc(d, "surcout_zone_tres_tendue", 0)} de plus à produire en zone très
+  tendue — Paris et sa proche couronne — qu'en zone simplement tendue, et son
+  prix de revient y a crû de 24&nbsp;% en cinq ans quand il montait de 10 à
+  15&nbsp;% partout ailleurs. Entre les zones détendues, en revanche, l'écart
+  se compte en quelques pour cent. <strong class="cle-texte">Le coût s'envole
+  là où, et seulement là où, la demande se heurte à un plafond.</strong></p>
+  <p>On achète donc, à mesure qu'on s'approche des villes où le logement
+  manque, de moins en moins un sol et de plus en plus une autorisation.</p>
+  <p class="source">${sources(d, "part_foncier", "surcout_zone_tres_tendue")}</p>`,
     "plu")}
 
 ${g.depliant("Un maire qui construit paie, et ne touche rien",
@@ -748,9 +761,12 @@ ${g.depliant("L'objection : « il y a plus de permis que de chantiers »",
   refusés ; il se lit dans les projets rabotés d'avance, et dans ceux qu'on ne
   dépose pas.</p>
   <p>Où se lit-il, alors ? Dans le prix du sol, qui est le prix de
-  l'autorisation : ${v(d, "part_foncier", 0)} du coût d'une opération de
-  logement social, ${v(d, "part_foncier_paris", 0)} d'une opération
-  parisienne. Un terrain ne vaut cher que parce que le droit d'y bâtir est
+  l'autorisation. Non dans la part du foncier, qui est plus modeste qu'on ne
+  le dit — ${v(d, "part_foncier")} du prix de revient d'un logement social —,
+  mais dans l'écart entre les territoires : produire le même logement coûte
+  ${v(d, "surcout_zone_tres_tendue", 0)} de plus en zone très tendue qu'en
+  zone tendue, quand les zones détendues se tiennent à quelques pour cent les
+  unes des autres. Un terrain ne vaut cher que là où le droit d'y bâtir est
   rare.</p>
   <p>Cette objection établit malgré tout quelque chose, et nous le concédons :
   ouvrir le droit de construire ne suffit pas à lui seul. Le coût du crédit et
@@ -759,7 +775,7 @@ ${g.depliant("L'objection : « il y a plus de permis que de chantiers »",
   un nombre de logements : nous promettons la levée d'un plafond, sans laquelle
   rien d'autre ne peut jouer.</p>
   <p class="source">${sources(d, "logements_autorises", "logements_commences",
-    "part_foncier")}</p>`, "permis-chantiers")}
+    "part_foncier", "surcout_zone_tres_tendue")}</p>`, "permis-chantiers")}
 
 ${g.depliant("L'objection : « une commune ne peut pas être forcée »",
     `<p>Le droit de l'urbanisme est une compétence que la loi délègue, non un
@@ -814,18 +830,30 @@ ${g.depliant("L'encadrement des loyers : un transfert, pas une construction",
   le dispositif et l'ouvre à toute commune volontaire en zone tendue. Le texte
   est au Sénat. Notre proposition n'enregistre donc pas une échéance : elle
   s'oppose à un texte en cours, et elle doit se défendre comme telle.</p>
-  <p>Le bilan est celui qu'on attendait. Les loyers des logements concernés
-  reculent d'environ ${vc(d, "encadrement_effet", 0)} hors Paris —
-  ${vc(d, "encadrement_transfert", 0)} transférés chaque année aux locataires
-  en place. Plus d'un nouveau bail sur trois
-  dépasse pourtant le plafond, et plus de 40&nbsp;% dans certaines zones : un
-  plafond qu'on ne peut pas faire respecter n'est pas une politique, c'est une
-  loterie entre les locataires qui savent le faire valoir et les autres.</p>
-  <p>Surtout, aucun de ces euros n'est un logement de plus. Le transfert va aux
-  locataires <em>en place</em> ; celui qui cherche affronte la même rareté, avec
-  moins d'offre à visiter.</p>
-  <p class="source">${sources(d, "encadrement_villes", "encadrement_effet",
-    "encadrement_transfert")}</p>`,
+  <p>Le bilan, et il n'est pas celui que nous aurions écrit. Le dispositif
+  <em>marche</em>, au sens où il fait ce qu'il dit : l'évaluation
+  parlementaire chiffre à
+  <strong class="cle-texte">${nombre(Math.abs(n(d, "encadrement_effet")), 1)}&nbsp;%</strong>
+  la modération de la hausse des loyers parisiens entre 2019 et 2024, soit
+  environ 80 € par mois pour un locataire concerné. Le rapport note qu'une part importante des
+  loyers dépasse encore les plafonds autorisés — un plafond mal respecté
+  répartit mal —, mais l'effet est réel et il est mesuré.</p>
+  <p>Nous devons même concéder davantage, parce que c'est dans le même
+  rapport. L'Apur, qui suit le dispositif depuis six ans et l'a étendu à sept
+  villes encadrées, conclut à <strong>l'absence de dégradation durable de
+  l'offre locative</strong> à Paris. C'est l'objection directe à ce que nous
+  écrivons plus bas sur San Francisco, et nous ne la cacherons pas : le retrait
+  d'offre que le contrôle des loyers produit ailleurs n'a pas été constaté
+  ici.</p>
+  <p>Que reste-t-il alors de notre position ? L'essentiel, et il ne dépend pas
+  du point contesté. <strong class="cle-texte">Aucun de ces euros n'est un
+  logement de plus.</strong> L'encadrement transfère du bailleur au locataire
+  <em>en place</em> ; celui qui cherche affronte exactement la même rareté, et
+  il n'entre pas dans les statistiques de loyer parce qu'il ne signe rien. Un
+  dispositif peut être efficace sur ce qu'il mesure et inutile sur ce qui
+  manque. C'est le cas ici, et c'est pour cela, et non pour ses effets sur
+  l'offre, que nous ne le reconduisons pas.</p>
+  <p class="source">${sources(d, "encadrement_villes", "encadrement_effet")}</p>`,
     "encadrement")}
 
 ${g.cle("Que fait un contrôle des loyers à l'offre ?",
@@ -840,8 +868,20 @@ ${g.cle("Que fait un contrôle des loyers à l'offre ?",
   l'échelle de la ville, le gain des protégés.</p>
   <p>C'est le mécanisme, pas l'anecdote : un prix plafonné sous le prix
   d'équilibre rend la location moins attrayante que les usages concurrents —
-  vendre, habiter, louer meublé, ne pas louer du tout. La France n'y échappe
-  pas plus que la Californie.</p>`,
+  vendre, habiter, louer meublé, ne pas louer du tout.</p>
+  <p><strong>Ce mécanisme n'a pourtant pas été constaté à Paris</strong>, et
+  il faut le dire ici plutôt que de compter sur l'inattention du lecteur.
+  L'Apur, qui suit l'encadrement français depuis six ans, conclut à l'absence
+  de dégradation durable de l'offre locative. Trois raisons peuvent
+  l'expliquer, et nous ne savons pas départager : l'encadrement français est
+  bien plus lâche que le contrôle californien, puisqu'il autorise un
+  dépassement de 20&nbsp;% et se réinitialise à chaque relocation ; il est
+  récent, quand l'étude américaine mesure sur vingt ans ; et il est mal
+  respecté, ce qui atténue mécaniquement ses effets, bons comme mauvais.</p>
+  <p>Nous retenons donc de San Francisco ce qu'un plafond <em>strict et
+  durable</em> produit, non ce que l'encadrement français aurait déjà produit.
+  Et nous fondons notre proposition sur l'argument qui ne dépend pas de ce
+  point : un plafond ne construit rien.</p>`,
     sources(d, "san_francisco_offre"), "controle")}
 
 ${g.depliant("Les interdictions au diagnostic énergétique",
@@ -1043,14 +1083,17 @@ ${g.depliant("Le logement social : un parc qui ne circule pas",
   ${nombre(n(d, "attributions_hlm"), 0)} en ${an(d, "attributions_hlm")}, pour
   ${v(d, "demandes_hlm")} de ménages en attente — dont
   ${v(d, "demandes_hlm_mutation", 0)} déjà logés dans le parc et qui demandent
-  à en changer — et un délai moyen de ${v(d, "delai_hlm", 0)}. Le ${g.terme("droit au maintien dans les lieux")}
+  à en changer. En Île-de-France, une attribution pour
+  ${v(d, "tension_idf", 0)} demandes, et un délai médian de
+  ${v(d, "delai_hlm_idf", 0)}. Le ${g.terme("droit au maintien dans les lieux")}
   garantit à l'occupant d'y rester quel que soit son revenu ultérieur : le
   surloyer existe, mais il est plafonné, contourné et, dans les quartiers
   prioritaires, inapplicable.</p>
   <p>Le résultat est un tirage au sort décalé dans le temps : ce qui compte
   n'est pas le besoin d'aujourd'hui, mais la date à laquelle on est entré.</p>
   <p class="source">${sources(d, "parc_social", "parc_social_entrees",
-    "demandes_hlm", "demandes_hlm_mutation", "delai_hlm")}</p>`,
+    "demandes_hlm", "demandes_hlm_mutation", "delai_hlm_idf",
+    "tension_idf")}</p>`,
     "social")}
 
 ${proposition("Aider le ménage, jamais le logement", [
@@ -1382,8 +1425,11 @@ ${g.depliant("L'objection : « qui perd ? »",
       + `<a href="${g.lien("/chiffrage")}">chiffrage</a>, qui y suffit. `
       + "C'est un arbitrage, pas un impensé."],
     ["Les locataires protégés par l'encadrement des loyers",
-      `${v(d, "encadrement_transfert")} par an cessent de leur être `
-      + "transférés. Ils sont les perdants les plus immédiats et les plus "
+      "Environ 80 € par mois à Paris — "
+      + `${nombre(Math.abs(n(d, "encadrement_effet")), 1)} % de modération `
+      + "de la hausse — cessent "
+      + "de leur être transférés. Ils sont les perdants les plus immédiats "
+      + "et les plus "
       + "visibles de la réforme. Leur bail en cours n'est pas touché ; le "
       + "chèque logement prend le relais pour ceux dont le revenu est "
       + "modeste ; et l'offre supplémentaire est ce qui doit faire le "
@@ -1405,7 +1451,7 @@ ${g.depliant("L'objection : « qui perd ? »",
       + "transfert de charge de plus."],
   ])}
   <p class="source">${sources(d, "niches_investissement_locatif",
-    "tva_travaux_taux_reduit", "encadrement_transfert", "bonifications")}</p>`,
+    "tva_travaux_taux_reduit", "encadrement_effet", "bonifications")}</p>`,
     "qui-perd")}
 `;
 

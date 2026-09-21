@@ -86,7 +86,9 @@ Cinq niveaux de fiabilité sont distingués, et affichés sur la page
   ne publie mieux qu'eux, et ils ont un intérêt dans la réponse — *les deux se
   disent* ;
 - **presse** — la reprise d'une publication que nous n'avons pas pu ouvrir
-  directement, *à reprendre à la source primaire* ;
+  directement, *à reprendre à la source primaire*. **Il n'en reste aucune :
+  les six dernières ont été remboursées, et trois d'entre elles étaient
+  fausses** ;
 - **calcul** — obtenu ici à partir d'autres entrées, la formule est dans la
   note.
 
@@ -144,6 +146,7 @@ objections sont donc portées par le site, chacune là où elle se pose :
 | « Vous oubliez les loyers imputés » — 11 Md€, le solde refait | [Fiscalité](https://g-pliberal.github.io/logement/#/fiscalite) |
 | « Qui perd ? » — les cinq perdants, nommés | [Fiscalité](https://g-pliberal.github.io/logement/#/fiscalite) |
 | « Sans impôt nouveau » : ce que la suppression d'une niche fait vraiment | [Chiffrage](https://g-pliberal.github.io/logement/#/chiffrage) |
+| « L'encadrement n'a pas réduit l'offre à Paris » — l'Apur le mesure, on le concède | [Louer](https://g-pliberal.github.io/logement/#/louer) |
 
 | « Une ville en Nouvelle-Zélande ne prouve rien » — Minneapolis et la Californie ont échoué, et on dit pourquoi | [Construire](https://g-pliberal.github.io/logement/#/construire) |
 | « Un rapport officiel recommande l'inverse » — l'IGF sur le Pinel | [Fiscalité](https://g-pliberal.github.io/logement/#/fiscalite) |

@@ -324,17 +324,6 @@
       "lu_le": "2026-09-21",
       "note": "En hausse de 3 % sur un an, après plusieurs années de baisse, et à un niveau qui reste faible. Mobilité interne au parc comprise. Publié par l'Union sociale pour l'habitat, fédération des bailleurs sociaux : c'est la source primaire, et elle a intérêt à ce que la demande paraisse forte."
     },
-    "delai_hlm": {
-      "libelle": "Délai moyen d'obtention d'un logement social",
-      "valeur": 19,
-      "unite": "mois",
-      "annee": 2024,
-      "fiabilite": "presse",
-      "source": "Cour des comptes, rapport public annuel 2026, « Faciliter le parcours d'accès au logement social dans les territoires »",
-      "url": "https://www.ccomptes.fr/sites/default/files/2026-03/20260325-RPA-2026-I-4-Faciliter-le-parcours-d-acces-au-logement-social.pdf",
-      "lu_le": "2026-09-21",
-      "note": "Demandes satisfaites en 2024 ; 39,5 mois en Île-de-France. Chiffre relevé dans la reprise du rapport ; à reprendre au rapport lui-même."
-    },
     "friggit_ecart": {
       "libelle": "Prix des logements rapporté au revenu par ménage",
       "valeur": 55,
@@ -402,15 +391,15 @@
       "note": "Paris, Lille, Lyon, Villeurbanne, Bordeaux, Montpellier, les établissements publics territoriaux Plaine Commune et Est Ensemble, le Pays basque et Grenoble-Alpes Métropole — soit plusieurs dizaines de communes. L'expérimentation ouverte par la loi ELAN, prolongée par la loi 3DS, s'éteint le 25 novembre 2026 faute de loi nouvelle."
     },
     "encadrement_effet": {
-      "libelle": "Effet mesuré de l'encadrement sur les loyers, hors Paris",
-      "valeur": -3.0,
+      "libelle": "Effet mesuré de l'encadrement sur les loyers parisiens",
+      "valeur": -5.2,
       "unite": "%",
-      "annee": 2026,
-      "fiabilite": "presse",
-      "source": "Rapport d'évaluation de l'expérimentation, repris par MoneyVox",
-      "url": "https://www.moneyvox.fr/immobilier/actualites/108939/encadrement-des-loyers-un-rapport-pose-la-question-de-la-poursuite-du-dispositif",
-      "lu_le": "2026-09-20",
-      "note": "Fourchette de 2 à 4 % ; plus d'un tiers des nouveaux baux dépassent le plafond, jusqu'à plus de 40 % dans certaines zones ; environ 700 M€ transférés chaque année aux locataires en place. L'évaluation officielle a été confiée en avril 2025 à G. Fack et G. Chapelle (IGF-IGEDD) ; le rapport est dû au Parlement avant le 25 juin 2026. Nous n'avons pas pu ouvrir le document d'évaluation lui-même : à reprendre dès sa publication."
+      "annee": 2024,
+      "fiabilite": "officielle",
+      "source": "Assemblée nationale, rapport n° 2197 de la mission d'évaluation de l'encadrement des loyers (I. Echaniz), 3 décembre 2025, d'après l'Apur",
+      "url": "https://www.assemblee-nationale.fr/dyn/opendata/RAPPANR5L17B2197.html",
+      "lu_le": "2026-09-21",
+      "note": "« L'effet de modération de la hausse des loyers imputable au dispositif d'encadrement à Paris est de −5,2 % » entre juillet 2019 et juin 2024, soit environ 80 € par mois. L'Apur, dans son troisième bilan annuel d'avril 2026, confirme l'ordre de grandeur sur six ans et étend l'analyse à sept villes encadrées ; elle conclut aussi à l'absence de dégradation durable de l'offre locative, ce qui contredit une partie de notre argument et figure sur la page Louer."
     },
     "dmto_taux": {
       "libelle": "Taux des droits de mutation, achat dans l'ancien",
@@ -424,15 +413,15 @@
       "note": "Taux global d'un achat dans l'ancien : part départementale portée à 5,00 % par la loi de finances pour 2025 (du 1er avril 2025 au 31 mars 2028) et adoptée par la grande majorité des départements, plus 1,20 % de taxe communale et les frais d'assiette. Là où la part départementale est restée à 4,50 %, le taux global est de 5,81 %. Les primo-accédants sont exonérés de la majoration sur la fraction du prix inférieure à 250 000 €."
     },
     "part_foncier": {
-      "libelle": "Part du terrain dans le coût d'une opération",
-      "valeur": 41,
+      "libelle": "Part du foncier dans le prix de revient d'un logement social",
+      "valeur": 19.8,
       "unite": "%",
       "annee": 2023,
-      "fiabilite": "presse",
-      "source": "Sénat, exposé des motifs de la proposition de loi n° 548 (2024-2025) sur le prix du foncier",
-      "url": "https://www.senat.fr/leg/exposes-des-motifs/ppl24-548-expose.html",
-      "lu_le": "2026-09-20",
-      "note": "Part du foncier dans le coût moyen hors taxes des opérations de logement social en 2023, en hausse de 10 points depuis 2020. Sur le marché libre, la fourchette va de 25 % en province à 50 % à Paris."
+      "fiabilite": "officielle",
+      "source": "Banque des Territoires, « Le prix de revient des logements sociaux face aux tensions inflationnistes », Éclairages n° 33, décembre 2024",
+      "url": "https://www.banquedesterritoires.fr/sites/default/files/2025-01/Exe%20brochure%20Eclairages%2033%20A4%202024%20vdef.pdf",
+      "lu_le": "2026-09-21",
+      "note": "520 € de foncier par m² de surface utile, sur 2 620 € de prix de revient, en maîtrise d'ouvrage directe. Le foncier n'explique que 0,3 point des 4,3 % de croissance annuelle moyenne du prix de revient entre 2019 et 2023 ; les coûts de construction en expliquent 3,4. « Contre toute attente, le foncier contribue nettement moins », écrit l'étude, et il a même reculé en 2021."
     },
     "recours_duree": {
       "libelle": "Durée d'un recours contre un permis de construire",
@@ -554,15 +543,15 @@
       "note": "Un mal-logement qui n'apparaît dans aucune statistique de loyer. Publié par la Fondation pour le logement des défavorisés, qui milite pour l'hébergement et le logement social : c'est la source primaire, et elle est partie au débat."
     },
     "delai_hlm_idf": {
-      "libelle": "Délai moyen d'obtention d'un logement social, Île-de-France",
-      "valeur": 39.5,
+      "libelle": "Délai médian d'obtention d'un logement social, Île-de-France",
+      "valeur": 28,
       "unite": "mois",
       "annee": 2024,
-      "fiabilite": "presse",
-      "source": "Cour des comptes, rapport public annuel 2026, « Faciliter le parcours d'accès au logement social dans les territoires »",
-      "url": "https://www.ccomptes.fr/sites/default/files/2026-03/20260325-RPA-2026-I-4-Faciliter-le-parcours-d-acces-au-logement-social.pdf",
+      "fiabilite": "officielle",
+      "source": "Drihl, « Les attributions de logement social en 2024 en Île-de-France », ministère chargé du logement",
+      "url": "https://www.ecologie.gouv.fr/sites/default/files/documents/Les%20attributions%20de%20logement%20social%20en%202024%20en%20%C3%8Ele-de-France.pdf",
       "lu_le": "2026-09-21",
-      "note": "Demandes satisfaites en 2024, contre 19 mois pour la France entière. Chiffre relevé dans la reprise du rapport ; à reprendre au rapport lui-même."
+      "note": "Deux ans et quatre mois : la moitié des ménages qui ont obtenu un logement social en 2024 avaient déposé leur demande depuis moins longtemps, l'autre moitié depuis plus. Le site portait auparavant 39,5 mois, repris d'une publication que nous n'avons pas pu ouvrir ; la mesure officielle est plus basse, et c'est elle qui figure ici."
     },
     "demandes_hlm_mutation": {
       "libelle": "Demandes de logement social émanant de locataires du parc social",
@@ -615,28 +604,6 @@
       "url": "https://motu-www.motu.org.nz/wpapers/24_07.pdf",
       "lu_le": "2026-09-21",
       "note": "Estimation de Greenaway-McGrevy et Phillips (2023), qui compare les quartiers d'Auckland entre eux plutôt qu'Auckland à d'autres villes : 21 808 logements autorisés en plus cinq ans après la réforme, soit environ 4 % du parc. C'est la méthode la plus prudente des trois, et la revue qui la rapporte juge qu'elle sous-estime plutôt qu'elle n'exagère."
-    },
-    "encadrement_transfert": {
-      "libelle": "Loyers transférés chaque année aux locataires en place par l'encadrement",
-      "valeur": 700,
-      "unite": "M€",
-      "annee": 2026,
-      "fiabilite": "presse",
-      "source": "Rapport d'évaluation de l'expérimentation, repris par MoneyVox",
-      "url": "https://www.moneyvox.fr/immobilier/actualites/108939/encadrement-des-loyers-un-rapport-pose-la-question-de-la-poursuite-du-dispositif",
-      "lu_le": "2026-09-21",
-      "note": "Ordre de grandeur annuel du transfert, pour zéro logement construit. L'évaluation officielle a été confiée en avril 2025 à G. Fack et G. Chapelle (IGF-IGEDD) ; le rapport est dû au Parlement avant le 25 juin 2026. Nous n'avons pas pu ouvrir le document d'évaluation lui-même : à reprendre dès sa publication."
-    },
-    "part_foncier_paris": {
-      "libelle": "Part du terrain dans le coût d'une opération, à Paris",
-      "valeur": 50,
-      "unite": "%",
-      "annee": 2023,
-      "fiabilite": "presse",
-      "source": "Sénat, exposé des motifs de la proposition de loi n° 548 (2024-2025) sur le prix du foncier",
-      "url": "https://www.senat.fr/leg/exposes-des-motifs/ppl24-548-expose.html",
-      "lu_le": "2026-09-21",
-      "note": "Contre environ 25 % en province, sur le marché libre."
     },
     "dpe_reclasses": {
       "libelle": "Logements sortis du statut de passoire par le seul changement de méthode",
@@ -791,6 +758,28 @@
       "url": "https://www.vie-publique.fr/files/rapport/pdf/271773.pdf",
       "lu_le": "2026-09-21",
       "note": "À comparer aux 107 M€ d'économies de loyer : le rapport des deux est la part de 9,3 % qui parvient au locataire."
+    },
+    "surcout_zone_tres_tendue": {
+      "libelle": "Surcoût d'un logement social en zone très tendue par rapport à la zone tendue",
+      "valeur": 50,
+      "unite": "%",
+      "annee": 2023,
+      "fiabilite": "officielle",
+      "source": "Banque des Territoires, « Le prix de revient des logements sociaux face aux tensions inflationnistes », Éclairages n° 33, décembre 2024",
+      "url": "https://www.banquedesterritoires.fr/sites/default/files/2025-01/Exe%20brochure%20Eclairages%2033%20A4%202024%20vdef.pdf",
+      "lu_le": "2026-09-21",
+      "note": "Un logement social coûte environ 50 % de plus en zone A bis — Paris et sa proche couronne — qu'en zone A. Le prix de revient y a crû de 24 % en cinq ans, contre 10 à 15 % partout ailleurs. Entre les zones B1, B2 et C, l'écart n'est que de quelques pour cent : le coût s'envole là où, et seulement là où, la demande est contrainte."
+    },
+    "tension_idf": {
+      "libelle": "Demandes de logement social par attribution, Île-de-France",
+      "valeur": 14,
+      "unite": "demandes",
+      "annee": 2024,
+      "fiabilite": "officielle",
+      "source": "Drihl, « Les attributions de logement social en 2024 en Île-de-France », ministère chargé du logement",
+      "url": "https://www.ecologie.gouv.fr/sites/default/files/documents/Les%20attributions%20de%20logement%20social%20en%202024%20en%20%C3%8Ele-de-France.pdf",
+      "lu_le": "2026-09-21",
+      "note": "Une attribution pour quatorze demandes en 2024 : 65 094 attributions dans 613 communes franciliennes."
     }
   },
   "series": {
