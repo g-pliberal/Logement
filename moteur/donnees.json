@@ -1,5 +1,5 @@
 {
-  "_lisez_moi": "Toutes les valeurs du site sont ici, et nulle part ailleurs. Chaque entrée porte sa source, son adresse, l'année qu'elle mesure et la date à laquelle elle a été lue. tests/test_donnees.py refuse une entrée incomplete, et refuse qu'une page cite une clé qui n'existe pas. Fiabilite : 'officielle' = service statistique public ou juridiction financiere ; 'academique' = article a comite de lecture ; 'presse' = source secondaire, a reprendre a la source primaire des qu'elle est accessible ; 'calcul' = obtenu ici a partir d'autres entrees, la formule est dans 'note'.",
+  "_lisez_moi": "Toutes les valeurs du site sont ici, et nulle part ailleurs. Chaque entrée porte sa source, son adresse, l'année qu'elle mesure et la date à laquelle elle a été lue. tests/test_site.py refuse une entrée incomplete, refuse qu'une page cite une cle qui n'existe pas, refuse une adresse qui ne designe aucun document, et refuse qu'une page ecrive un nombre a la main. Fiabilite : 'officielle' = service statistique public, juridiction financiere ou texte officiel ; 'academique' = article a comite de lecture ; 'partie_prenante' = source primaire, publiee par un acteur qui est partie au debat (federation professionnelle, association) — le chiffre est le sien, et son interet aussi ; 'presse' = source secondaire, a reprendre a la source primaire des qu'elle est accessible ; 'calcul' = obtenu ici a partir d'autres entrees, la formule est dans 'note'.",
   "lu_le": "2026-09-21",
   "chiffres": {
     "depense_nationale": {
@@ -307,22 +307,22 @@
       "valeur": 2.885,
       "unite": "millions",
       "annee": 2025,
-      "fiabilite": "presse",
+      "fiabilite": "partie_prenante",
       "source": "Union sociale pour l'habitat, USH Statistiques n° 4, « La demande et les attributions de logement social à fin 2025 »",
       "url": "https://www.union-habitat.org/centre-de-ressources/economie-financement/la-demande-et-les-attributions-de-logement-social-fin-0",
       "lu_le": "2026-09-21",
-      "note": "Au 31 décembre 2025, en hausse de 4 % sur un an. Ce total comprend les demandes de mutation, déposées par des ménages déjà logés dans le parc social. Chiffre relevé dans la reprise de cette publication ; à reprendre à la source dès qu'elle est accessible."
+      "note": "Au 31 décembre 2025, en hausse de 4 % sur un an. Ce total comprend les demandes de mutation, déposées par des ménages déjà logés dans le parc social. Publié par l'Union sociale pour l'habitat, fédération des bailleurs sociaux : c'est la source primaire, et elle a intérêt à ce que la demande paraisse forte."
     },
     "attributions_hlm": {
       "libelle": "Attributions de logements sociaux dans l'année",
       "valeur": 394000,
       "unite": "attributions",
       "annee": 2025,
-      "fiabilite": "presse",
+      "fiabilite": "partie_prenante",
       "source": "Union sociale pour l'habitat, USH Statistiques n° 4, « La demande et les attributions de logement social à fin 2025 »",
       "url": "https://www.union-habitat.org/centre-de-ressources/economie-financement/la-demande-et-les-attributions-de-logement-social-fin-0",
       "lu_le": "2026-09-21",
-      "note": "En hausse de 3 % sur un an, après plusieurs années de baisse, et à un niveau qui reste faible. Mobilité interne au parc comprise."
+      "note": "En hausse de 3 % sur un an, après plusieurs années de baisse, et à un niveau qui reste faible. Mobilité interne au parc comprise. Publié par l'Union sociale pour l'habitat, fédération des bailleurs sociaux : c'est la source primaire, et elle a intérêt à ce que la demande paraisse forte."
     },
     "delai_hlm": {
       "libelle": "Délai moyen d'obtention d'un logement social",
@@ -373,33 +373,33 @@
       "valeur": 4.0,
       "unite": "millions",
       "annee": 2026,
-      "fiabilite": "presse",
+      "fiabilite": "partie_prenante",
       "source": "Fondation pour le logement des défavorisés, 31e rapport sur l'état du mal-logement",
       "url": "https://www.fondationpourlelogement.fr/31e-rapport-sur-letat-du-mal-logement-en-france-en-2026/",
       "lu_le": "2026-09-20",
-      "note": "Rapport publié le 3 février 2026. Environ 6 % de la population."
+      "note": "Rapport publié le 3 février 2026. Environ 6 % de la population. Publié par la Fondation pour le logement des défavorisés, qui milite pour l'hébergement et le logement social : c'est la source primaire, et elle est partie au débat."
     },
     "sans_domicile": {
       "libelle": "Personnes sans domicile",
       "valeur": 350000,
       "unite": "personnes",
       "annee": 2025,
-      "fiabilite": "presse",
+      "fiabilite": "partie_prenante",
       "source": "Fondation pour le logement des défavorisés, 31e rapport",
       "url": "https://www.fondationpourlelogement.fr/31e-rapport-sur-letat-du-mal-logement-en-france-en-2026/",
       "lu_le": "2026-09-20",
-      "note": "Contre 300 000 en 2020. Près de 600 000 personnes sont par ailleurs hébergées chez un tiers faute de logement autonome."
+      "note": "Contre 300 000 en 2020. Près de 600 000 personnes sont par ailleurs hébergées chez un tiers faute de logement autonome. Publié par la Fondation pour le logement des défavorisés, qui milite pour l'hébergement et le logement social : c'est la source primaire, et elle est partie au débat."
     },
     "encadrement_villes": {
-      "libelle": "Communes appliquant l'encadrement des loyers",
-      "valeur": 69,
-      "unite": "communes",
+      "libelle": "Collectivités appliquant l'encadrement des loyers",
+      "valeur": 10,
+      "unite": "collectivités",
       "annee": 2026,
-      "fiabilite": "presse",
-      "source": "Foncia, liste des villes soumises à l'encadrement des loyers",
-      "url": "https://actus.foncia.com/gestion-locative/loyers/liste-des-villes-francaises-soumises-a-lencadrement-des-loyers",
-      "lu_le": "2026-09-20",
-      "note": "L'expérimentation ouverte par la loi ELAN de 2018 s'éteint le 23 novembre 2026 sans loi nouvelle."
+      "fiabilite": "officielle",
+      "source": "ANIL, analyse juridique de l'expérimentation de l'encadrement du niveau des loyers en zones tendues",
+      "url": "https://www.anil.org/aj-experimentation-encadrement-niveau-loyers-zones-tendues/",
+      "lu_le": "2026-09-21",
+      "note": "Paris, Lille, Lyon, Villeurbanne, Bordeaux, Montpellier, les établissements publics territoriaux Plaine Commune et Est Ensemble, le Pays basque et Grenoble-Alpes Métropole — soit plusieurs dizaines de communes. L'expérimentation ouverte par la loi ELAN, prolongée par la loi 3DS, s'éteint le 25 novembre 2026 faute de loi nouvelle."
     },
     "encadrement_effet": {
       "libelle": "Effet mesuré de l'encadrement sur les loyers, hors Paris",
@@ -410,18 +410,18 @@
       "source": "Rapport d'évaluation de l'expérimentation, repris par MoneyVox",
       "url": "https://www.moneyvox.fr/immobilier/actualites/108939/encadrement-des-loyers-un-rapport-pose-la-question-de-la-poursuite-du-dispositif",
       "lu_le": "2026-09-20",
-      "note": "Fourchette de 2 à 4 % ; plus d'un tiers des nouveaux baux dépassent le plafond, jusqu'à plus de 40 % dans certaines zones ; environ 700 M€ transférés chaque année aux locataires en place."
+      "note": "Fourchette de 2 à 4 % ; plus d'un tiers des nouveaux baux dépassent le plafond, jusqu'à plus de 40 % dans certaines zones ; environ 700 M€ transférés chaque année aux locataires en place. L'évaluation officielle a été confiée en avril 2025 à G. Fack et G. Chapelle (IGF-IGEDD) ; le rapport est dû au Parlement avant le 25 juin 2026. Nous n'avons pas pu ouvrir le document d'évaluation lui-même : à reprendre dès sa publication."
     },
     "dmto_taux": {
       "libelle": "Taux des droits de mutation, achat dans l'ancien",
       "valeur": 6.32,
       "unite": "%",
       "annee": 2026,
-      "fiabilite": "presse",
-      "source": "Barèmes DMTO 2026 par département",
-      "url": "https://www.mesfraisnotaire.fr/taux-dmto-departement",
-      "lu_le": "2026-09-20",
-      "note": "Taux appliqué dans 89 départements après la hausse de 0,5 point ouverte par la loi de finances pour 2025 (du 1er avril 2025 au 30 avril 2028) ; 5,81 % dans 11 départements. Les primo-accédants en sont exonérés sur la fraction du prix inférieure à 250 000 €."
+      "fiabilite": "officielle",
+      "source": "DGFiP, tableau des droits d'enregistrement et de la taxe de publicité foncière par département",
+      "url": "https://www.impots.gouv.fr/sites/default/files/media/1_metier/3_partenaire/notaires/dmto/dmto_2026-02.pdf",
+      "lu_le": "2026-09-21",
+      "note": "Taux global d'un achat dans l'ancien : part départementale portée à 5,00 % par la loi de finances pour 2025 (du 1er avril 2025 au 31 mars 2028) et adoptée par la grande majorité des départements, plus 1,20 % de taxe communale et les frais d'assiette. Là où la part départementale est restée à 4,50 %, le taux global est de 5,81 %. Les primo-accédants sont exonérés de la majoration sur la fraction du prix inférieure à 250 000 €."
     },
     "part_foncier": {
       "libelle": "Part du terrain dans le coût d'une opération",
@@ -436,14 +436,14 @@
     },
     "recours_duree": {
       "libelle": "Durée d'un recours contre un permis de construire",
-      "valeur": 15,
+      "valeur": 23,
       "unite": "mois",
-      "annee": 2026,
-      "fiabilite": "presse",
-      "source": "Cabinets spécialisés en droit de l'urbanisme, ordre de grandeur",
-      "url": "https://www.bras-avocats.fr/loi-2025-recours-urbanisme-delais-reforme",
-      "lu_le": "2026-09-20",
-      "note": "Fourchette de 12 à 18 mois en première instance. La loi n° 2025-1129 du 26 novembre 2025 a resserré les délais de recours : le recours gracieux ne proroge plus le délai contentieux, et un jugement est attendu sous dix mois pour les permis de plus de deux logements."
+      "annee": 2016,
+      "fiabilite": "officielle",
+      "source": "Sénat, rapport d'information « Droit de l'urbanisme et de la construction : l'urgence de simplifier » (n° 720, 2015-2016)",
+      "url": "https://www.senat.fr/rap/r15-720-1/r15-720-127.html",
+      "lu_le": "2026-09-21",
+      "note": "Un an et onze mois : délai moyen de jugement des tribunaux administratifs en matière d'urbanisme. S'y ajoutent un an et six mois en appel et dix mois au Conseil d'État, soit plus de quatre ans quand la procédure va à son terme. C'est la mesure officielle la plus récente que nous ayons pu sourcer ; la loi du 26 novembre 2025 vise désormais dix mois en première instance pour les permis de plus de deux logements."
     },
     "auckland_permis": {
       "libelle": "Logements autorisés en plus après l'ouverture des droits à bâtir à Auckland",
@@ -536,22 +536,22 @@
       "valeur": 300000,
       "unite": "personnes",
       "annee": 2020,
-      "fiabilite": "presse",
+      "fiabilite": "partie_prenante",
       "source": "Fondation pour le logement des défavorisés, 31e rapport",
       "url": "https://www.fondationpourlelogement.fr/31e-rapport-sur-letat-du-mal-logement-en-france-en-2026/",
       "lu_le": "2026-09-21",
-      "note": "Point de comparaison du chiffre de 2026 : le nombre de personnes sans domicile a crû d'un sixième en cinq ans. Chiffre relevé dans la reprise du rapport ; à reprendre à la source dès qu'elle est accessible."
+      "note": "Point de comparaison du chiffre de 2026 : le nombre de personnes sans domicile a crû d'un sixième en cinq ans. Publié par la Fondation pour le logement des défavorisés, qui milite pour l'hébergement et le logement social : c'est la source primaire, et elle est partie au débat."
     },
     "heberges_tiers": {
       "libelle": "Personnes hébergées chez un tiers faute de logement autonome",
       "valeur": 600000,
       "unite": "personnes",
       "annee": 2026,
-      "fiabilite": "presse",
+      "fiabilite": "partie_prenante",
       "source": "Fondation pour le logement des défavorisés, 31e rapport",
       "url": "https://www.fondationpourlelogement.fr/31e-rapport-sur-letat-du-mal-logement-en-france-en-2026/",
       "lu_le": "2026-09-21",
-      "note": "Un mal-logement qui n'apparaît dans aucune statistique de loyer."
+      "note": "Un mal-logement qui n'apparaît dans aucune statistique de loyer. Publié par la Fondation pour le logement des défavorisés, qui milite pour l'hébergement et le logement social : c'est la source primaire, et elle est partie au débat."
     },
     "delai_hlm_idf": {
       "libelle": "Délai moyen d'obtention d'un logement social, Île-de-France",
@@ -569,11 +569,11 @@
       "valeur": 890000,
       "unite": "ménages",
       "annee": 2024,
-      "fiabilite": "presse",
+      "fiabilite": "partie_prenante",
       "source": "Union sociale pour l'habitat, USH Statistiques n° 1, « La demande et les attributions de logement social à fin 2024 »",
       "url": "https://www.union-habitat.org/sites/default/files/articles/pdf/2025-09/ush_stats_1_demandevdef.pdf",
       "lu_le": "2026-09-21",
-      "note": "Soit 32 % des demandeurs à fin 2024 : des ménages déjà logés dans le parc social qui souhaitent en changer. Les deux tiers restants sont des ménages qui attendent d'y entrer."
+      "note": "Soit 32 % des demandeurs à fin 2024 : des ménages déjà logés dans le parc social qui souhaitent en changer. Les deux tiers restants sont des ménages qui attendent d'y entrer. Publié par l'Union sociale pour l'habitat, fédération des bailleurs sociaux : c'est la source primaire, et elle a intérêt à ce que la demande paraisse forte."
     },
     "logements_autorises_ecart": {
       "libelle": "Écart des autorisations à la moyenne des cinq années précédentes",
@@ -625,7 +625,7 @@
       "source": "Rapport d'évaluation de l'expérimentation, repris par MoneyVox",
       "url": "https://www.moneyvox.fr/immobilier/actualites/108939/encadrement-des-loyers-un-rapport-pose-la-question-de-la-poursuite-du-dispositif",
       "lu_le": "2026-09-21",
-      "note": "Ordre de grandeur annuel du transfert, pour zéro logement construit."
+      "note": "Ordre de grandeur annuel du transfert, pour zéro logement construit. L'évaluation officielle a été confiée en avril 2025 à G. Fack et G. Chapelle (IGF-IGEDD) ; le rapport est dû au Parlement avant le 25 juin 2026. Nous n'avons pas pu ouvrir le document d'évaluation lui-même : à reprendre dès sa publication."
     },
     "part_foncier_paris": {
       "libelle": "Part du terrain dans le coût d'une opération, à Paris",
@@ -681,6 +681,50 @@
       "url": "https://www.fipeco.fr/fiche/La-politique-du-logement",
       "lu_le": "2026-09-21",
       "note": "Réductions d'impôt accordées en contrepartie d'un engagement de location. Leur bénéfice est concentré sur les ménages les plus imposés."
+    },
+    "loyers_imputes_cout": {
+      "libelle": "Coût de la non-imposition des loyers imputés des propriétaires",
+      "valeur": 11.0,
+      "unite": "Md€",
+      "annee": 2024,
+      "fiabilite": "academique",
+      "source": "M. Botey et G. Chapelle, « La non-imposition des loyers imputés : un cadeau pour Harpagon ? », Économie et Statistique n° 541, Insee",
+      "url": "https://www.insee.fr/fr/statistiques/7738724",
+      "lu_le": "2026-09-21",
+      "note": "Les loyers imputés — ce qu'un propriétaire occupant se verse à lui-même en n'ayant pas de loyer à payer — représentent 7 % du revenu national net. Ne pas les imposer est la première aide publique aux propriétaires occupants, et elle ne figure dans aucun compte des aides au logement. Elle bénéficie surtout aux ménages âgés et aisés."
+    },
+    "taux_credit_bas": {
+      "libelle": "Taux des crédits immobiliers nouveaux, au plus bas",
+      "valeur": 1.1,
+      "unite": "%",
+      "annee": 2021,
+      "fiabilite": "officielle",
+      "source": "Banque de France, Panorama des prêts à l'habitat des ménages",
+      "url": "https://www.banque-france.fr/fr/publications-et-statistiques/statistiques/panorama-des-prets-lhabitat-des-menages",
+      "lu_le": "2026-09-21",
+      "note": "Décembre 2021, crédits nouveaux à l'habitat."
+    },
+    "taux_credit_haut": {
+      "libelle": "Taux des crédits immobiliers nouveaux, deux ans plus tard",
+      "valeur": 3.45,
+      "unite": "%",
+      "annee": 2023,
+      "fiabilite": "officielle",
+      "source": "Banque de France, Panorama des prêts à l'habitat des ménages",
+      "url": "https://www.banque-france.fr/fr/publications-et-statistiques/statistiques/panorama-des-prets-lhabitat-des-menages",
+      "lu_le": "2026-09-21",
+      "note": "Octobre 2023, renégociations comprises ; 3,87 % hors renégociations. Le coût du crédit a plus que triplé en vingt-deux mois."
+    },
+    "solde_public_loyers_imputes": {
+      "libelle": "Le même solde, la non-imposition des loyers imputés déduite",
+      "valeur": 45.1,
+      "unite": "Md€",
+      "annee": 2024,
+      "fiabilite": "calcul",
+      "source": "Calcul du site : prélèvements − aides − loyers imputés non imposés",
+      "url": "https://www.insee.fr/fr/statistiques/7738724",
+      "lu_le": "2026-09-21",
+      "note": "99,2 − 43,1 − 11,0 = 45,1 Md€. C'est le solde tel que le calcule l'objection la plus sérieuse qu'on nous fasse : compter parmi les aides l'avantage que les propriétaires occupants tirent de ne pas être imposés sur le loyer qu'ils ne se paient pas. Le rapport des prélèvements aux aides tombe alors de 2,3 à 1,8 — il ne s'inverse pas."
     }
   },
   "series": {

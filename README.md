@@ -74,12 +74,17 @@ lui-même les trois hypothèses qui pèsent.
 `moteur/donnees.json`, où chaque entrée porte sa source et sa date. Une page qui
 demanderait une clé absente lève, et ne s'affiche pas.
 
-Quatre niveaux de fiabilité sont distingués, et affichés sur la page
+Cinq niveaux de fiabilité sont distingués, et affichés sur la page
 [Données](https://g-pliberal.github.io/logement/#/donnees) :
 
 - **officielle** — service statistique public, juridiction financière, texte
   officiel ;
 - **académique** — article à comité de lecture ;
+- **partie prenante** — source primaire, publiée par un acteur qui est partie
+  au débat : l'Union sociale pour l'habitat pour la demande de logement social,
+  la Fondation pour le logement des défavorisés pour le mal-logement. Personne
+  ne publie mieux qu'eux, et ils ont un intérêt dans la réponse — *les deux se
+  disent* ;
 - **presse** — la reprise d'une publication que nous n'avons pas pu ouvrir
   directement, *à reprendre à la source primaire* ;
 - **calcul** — obtenu ici à partir d'autres entrées, la formule est dans la
@@ -105,7 +110,9 @@ environnement à monter n'est pas vérifié longtemps.
 ## Ce que ce site ne sait pas
 
 - **Qui gagne et qui perd.** Le chiffrage raisonne sur des moyennes
-  nationales ; il ne dit rien d'un ménage donné dans une commune donnée.
+  nationales ; il ne dit rien d'un ménage donné dans une commune donnée. La
+  page Chiffrage dit précisément quelle microsimulation trancherait, sur
+  quelles données, et quelle clause de sauvegarde tient d'ici là.
 - **Les délais.** Rien n'est daté en trajectoire : entre le vote d'une réforme
   du droit des sols et le premier logement livré, il s'écoule des années.
 - **L'effet exact sur les prix.** Les expériences étrangères citées — Auckland,
@@ -129,11 +136,17 @@ objections sont donc portées par le site, chacune là où elle se pose :
 
 | Objection | Où |
 |---|---|
+| « C'est le coût du crédit, pas le droit des sols » — 412 600 logements en 2021 | [Constat](https://g-pliberal.github.io/logement/#/constat) |
 | « Il y a plus de permis délivrés que de chantiers ouverts » | [Construire](https://g-pliberal.github.io/logement/#/construire) |
 | « Une commune ne peut pas être forcée d'autoriser » | [Construire](https://g-pliberal.github.io/logement/#/construire) |
+| « Trois mois, c'est l'expulsion expresse » — trêve hivernale, DALO | [Louer](https://g-pliberal.github.io/logement/#/louer) |
 | « Vous allez baisser les aides » | [Aider](https://g-pliberal.github.io/logement/#/aider) |
+| « Vous oubliez les loyers imputés » — 11 Md€, le solde refait | [Fiscalité](https://g-pliberal.github.io/logement/#/fiscalite) |
 | « Qui perd ? » — les cinq perdants, nommés | [Fiscalité](https://g-pliberal.github.io/logement/#/fiscalite) |
 | « Sans impôt nouveau » : ce que la suppression d'une niche fait vraiment | [Chiffrage](https://g-pliberal.github.io/logement/#/chiffrage) |
+
+Les réserves que le site porte sur ses propres sources — Auckland, Fack — sont
+écrites à côté des chiffres qu'elles concernent.
 
 ## Apparence
 

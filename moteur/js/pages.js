@@ -12,6 +12,7 @@ import * as g from "./gabarit.js";
 import { echapper } from "./format.js";
 import {
   Donnees, FIABILITES, avecUnite, decimalesUtiles, euros, milliards, nombre,
+  nomFiabilite,
 } from "./chiffres.js";
 import {
   SEUIL_PRIMO, TAUX_SANS_MAJORATION, bornesCheque, chiffrage, coutMutation,
@@ -46,7 +47,7 @@ export const DESCRIPTIONS = Object.freeze({
   "/aider": "Aides personnelles, logement social, file d'attente : ce que les "
     + "aides au logement font vraiment aux loyers, et le chèque logement qui "
     + "les remplace.",
-  "/fiscalite": "Le logement rapporte à l'impôt plus du double de ce qu'il "
+  "/fiscalite": "Le logement rapporte à l'impôt nettement plus qu'il ne "
     + "reçoit : ce que la fiscalité fait au déménagement, à la construction "
     + "et au propriétaire, et le calcul de ce qu'un achat coûte en droits de "
     + "mutation.",
@@ -448,6 +449,38 @@ ${g.cle("On ne construit plus.",
     sources(d, "logements_commences", "logements_autorises",
       "logements_autorises_ecart"), "construction")}
 
+${g.depliant("L'objection : « c'est le coût du crédit, pas le droit des sols »",
+    `<p>C'est l'objection la plus intelligente qu'on nous oppose, et elle a un
+  fait pour elle : en 2021, sous le même ${g.terme("PLU")}, le même
+  ${g.terme("ZAN")} et le même droit du recours, la France a mis en chantier
+  ${nombre(sv(serie, "total", 2021) * 1000, 0)} logements. Deux ans plus tard,
+  le taux des crédits nouveaux à l'habitat était passé de
+  ${vc(d, "taux_credit_bas", 2)} à ${vc(d, "taux_credit_haut", 2)} — il avait
+  plus que triplé — et la construction s'effondrait. Attribuer cet effondrement
+  au droit des sols serait malhonnête, et nous ne le faisons pas.</p>
+  <p>Mais il y a deux horloges, et l'objection les confond. Le cycle du crédit
+  explique pourquoi l'on construit peu <em>en ce moment</em> ; il n'explique
+  pas le niveau où les prix se sont installés depuis un quart de siècle. Or
+  c'est là que le raisonnement se retourne : de 2000 à 2021, le crédit n'a
+  cessé de <em>baisser</em>. Un marché où l'offre répond aurait traduit cet
+  argent moins cher en logements supplémentaires. La France l'a traduit en
+  prix : ${vc(d, "friggit_ecart", 0)} au-dessus du rapport que les prix
+  tenaient au revenu, et une maison individuelle tombée de
+  ${nombre(sv(serie, "individuel", 2006) * 1000, 0)} à
+  ${nombre(sv(serie, "individuel", derniere) * 1000, 0)} mises en chantier.</p>
+  <p><strong class="cle-texte">Vingt ans d'argent bon marché absorbés par le
+  prix plutôt que par la quantité : c'est la signature d'une offre qui ne peut
+  pas répondre.</strong> C'est cela que mesure le droit des sols, et aucun
+  mouvement de taux ne l'explique.</p>
+  <p>La conséquence pratique nous engage autant que nos adversaires. Les taux
+  redescendront, et le plafond, lui, ne bougera pas tout seul : la reprise du
+  crédit retrouvera la même offre bloquée, et repartira dans les prix. À
+  l'inverse, ouvrir le droit de construire ne fera pas sortir un logement de
+  terre tant que le crédit restera cher. Les deux ne sont pas rivaux — mais un
+  seul des deux est entre les mains du législateur.</p>
+  <p class="source">${sources(d, "taux_credit_bas", "taux_credit_haut",
+    "friggit_ecart", "logements_commences")}</p>`, "deux-horloges")}
+
 ${g.cle("Les prix ont quitté les revenus, et n'y sont pas revenus.",
     "De 1965 à 2001, le prix des logements anciens a suivi le revenu des "
     + "ménages à 10&nbsp;% près. Depuis, il s'en est détaché : au premier "
@@ -503,7 +536,15 @@ ${g.cle("Le logement rapporte aux administrations plus du double de ce qu'il leu
   solde budgétaire qu'on pourrait dépenser. Il dit une chose, et une seule :
   <strong class="cle-texte">le logement n'est pas un secteur subventionné, c'est
   un secteur taxé</strong> — et l'idée qu'il faudrait « remettre de l'argent »
-  se heurte d'abord à celui qu'on y prend déjà.</p>`,
+  se heurte d'abord à celui qu'on y prend déjà.</p>
+  <p>Une objection sérieuse manque encore à ce compte : les propriétaires
+  occupants ne sont pas imposés sur le ${g.terme("loyer imputé")} qu'ils se
+  versent à eux-mêmes, et cet avantage vaut
+  ${vc(d, "loyers_imputes_cout")} par an. Il n'entre dans aucune colonne
+  ci-dessus. Le compte refait avec lui donne
+  ${v(d, "solde_public_loyers_imputes")} au lieu de ${v(d, "solde_public")} —
+  le rapport tombe de 2,3 à 1,8 sans s'inverser, et la page
+  <a href="${g.lien("/fiscalite")}">Fiscalité</a> le reprend en entier.</p>`,
     sources(d, "prelevements", "aides_totales_2024", "taxe_fonciere",
       "prelevements_part_pib", "prelevements_part_po"), "argent")}
 
@@ -592,8 +633,10 @@ ${g.depliant("Le zéro artificialisation nette : un plafond de surface là où m
 
 ${g.depliant("Le recours, et le temps qu'il coûte",
     `<p>Un permis délivré n'est pas un permis acquis. Le voisin, l'association,
-  le concurrent peuvent le contester, et la procédure dure
-  ${vc(d, "recours_duree", 0)} en première instance. Sur une opération de
+  le concurrent peuvent le contester, et le Sénat mesurait
+  ${vc(d, "recours_duree", 0)} de délai moyen devant le tribunal administratif
+  en matière d'urbanisme — un an et onze mois —, auxquels s'ajoutent un an et
+  six mois en appel et dix mois au Conseil d'État. Sur une opération de
   trente logements, ce délai suffit à faire passer le plan de financement de
   rentable à impossible ; il suffit surtout à décourager l'opération suivante,
   celle qu'on ne lance pas.</p>
@@ -601,6 +644,10 @@ ${g.depliant("Le recours, et le temps qu'il coûte",
   proroge plus le délai contentieux, et un jugement est attendu sous dix mois
   pour les permis de plus de deux logements. C'est la bonne direction, et c'est
   encore un an pendant lequel rien ne sort de terre.</p>
+  <p>La mesure que nous citons date de ${an(d, "recours_duree")} : c'est la
+  plus récente que nous ayons pu sourcer à une publication officielle, et nous
+  préférons une mesure datée à une estimation ronde. Les délais ont pu bouger
+  depuis, et plutôt à la baisse.</p>
   <p class="source">${sources(d, "recours_duree")}</p>`, "recours")}
 
 ${proposition("Rendre le droit de construire à celui qui construit", [
@@ -732,8 +779,17 @@ function pageLouer(d) {
   const corps = `
 ${g.depliant("L'encadrement des loyers : un transfert, pas une construction",
     `<p>${vc(d, "encadrement_villes", 0)} appliquent aujourd'hui un plafond de
-  loyer par référence à un loyer médian de quartier. L'expérimentation ouverte
-  par la loi ELAN de 2018 s'éteint le 23 novembre 2026 sans loi nouvelle.</p>
+  loyer par référence à un loyer médian de quartier : Paris, Lyon, Lille,
+  Bordeaux, Montpellier, Villeurbanne, deux établissements territoriaux de
+  Seine-Saint-Denis, le Pays basque et Grenoble. L'expérimentation ouverte par
+  la loi ELAN de 2018, prolongée par la loi 3DS, s'éteint le 25 novembre 2026
+  faute de loi nouvelle.</p>
+  <p>Il faut ajouter aussitôt que cette extinction n'est plus acquise, et ne
+  pas faire semblant de l'ignorer : l'Assemblée nationale a adopté le
+  11 décembre 2025, en première lecture, une proposition de loi qui pérennise
+  le dispositif et l'ouvre à toute commune volontaire en zone tendue. Le texte
+  est au Sénat. Notre proposition n'enregistre donc pas une échéance : elle
+  s'oppose à un texte en cours, et elle doit se défendre comme telle.</p>
   <p>Le bilan est celui qu'on attendait. Les loyers des logements concernés
   reculent d'environ ${vc(d, "encadrement_effet", 0)} hors Paris —
   ${vc(d, "encadrement_transfert", 0)} transférés chaque année aux locataires
@@ -832,6 +888,44 @@ ${proposition("Rendre au bail sa liberté, et au loyer sa certitude", [
       + "étudiant, un salarié en mission, une famille qui s'installe pour dix "
       + "ans n'ont pas besoin du même contrat."],
   ])}
+
+${g.depliant("L'objection : « trois mois, c'est l'expulsion expresse »",
+    `<p>Il faut répondre sur le fond, parce que l'accusation est la plus facile
+  à lancer contre nous et la plus coûteuse à laisser sans réponse.</p>
+  <p>Ce que nous raccourcissons est le <em>jugement</em>, non l'exécution.
+  Aujourd'hui, un bailleur attend plus de deux ans pour qu'un tribunal dise si
+  la dette est due ; pendant ces deux ans, le locataire de bonne foi accumule
+  une dette qu'il ne remboursera jamais, et le locataire de mauvaise foi
+  occupe gratuitement. Personne n'y gagne, sauf le second. Un jugement en
+  trois mois est d'abord une protection pour le premier : c'est à ce moment-là
+  que l'accompagnement social, le plan d'apurement et le
+  ${g.terme("FSL")} peuvent encore quelque chose.</p>
+  <p>Trois garanties ne sont pas touchées, et nous les écrivons ici pour qu'on
+  puisse nous les opposer si nous y manquions.</p>
+  ${g.points([
+    ["La trêve hivernale",
+      "Elle est maintenue. Aucune expulsion n'a lieu entre le 1er novembre "
+      + "et le 31 mars, quelle que soit la date du jugement. Accélérer le "
+      + "juge n'est pas remettre des familles dehors en janvier."],
+    ["Le relogement avant la rue",
+      "Le droit au logement opposable n'est ni supprimé ni restreint, et "
+      + "le concours de la force publique reste subordonné à une solution "
+      + "d'hébergement lorsque le ménage est de bonne foi. "
+      + `L'hébergement d'urgence n'est pas touché : `
+      + `<a href="${g.lien("/chiffrage")}">le chiffrage</a> conserve les `
+      + "subventions qui le financent."],
+    ["Le locataire de bonne foi, saisi tôt",
+      "L'accompagnement social est déclenché dès le premier mois "
+      + "d'impayé, et non deux ans plus tard. C'est la contrepartie exacte "
+      + "de l'accélération, et elle coûte : elle fait partie des "
+      + "engagements que notre chiffrage ne chiffre pas encore."],
+  ])}
+  <p>Reste une part d'objection qui tient, et que nous ne pouvons pas dissoudre :
+  un jugement plus rapide rendra quelques expulsions plus rapides aussi. Nous
+  le pensons préférable à un droit qui protège si mal qu'il pousse les
+  bailleurs à ne louer qu'aux dossiers déjà solides — c'est-à-dire à exclure du
+  marché, en amont et sans juge, ceux que la procédure prétend protéger.</p>`,
+    "treve-dalo")}
 `;
 
   return `
@@ -988,9 +1082,10 @@ ${suite("/fiscalite", "Quatrième chantier : la fiscalité")}
 function optionsTaux(d) {
   const majore = n(d, "dmto_taux");
   return [
-    [String(majore), `${nombre(majore, 2)} % — 89 départements`],
+    [String(majore), `${nombre(majore, 2)} % — taux relevé, la plupart `
+      + "des départements"],
     [String(TAUX_SANS_MAJORATION),
-      `${nombre(TAUX_SANS_MAJORATION, 2)} % — 11 départements`],
+      `${nombre(TAUX_SANS_MAJORATION, 2)} % — taux non relevé`],
   ];
 }
 
@@ -1083,6 +1178,35 @@ ${g.depliant("Ce que le logement rapporte",
     "prelevements_part_pib", "prelevements_part_po")}</p>`,
     "rapporte")}
 
+${g.depliant("L'objection : « vous oubliez les loyers imputés »",
+    `<p>Elle vient des économistes, elle est fondée, et nous la posons
+  nous-mêmes plutôt que de l'attendre. Un propriétaire qui occupe son logement
+  perçoit un revenu qu'il ne déclare pas : le loyer qu'il n'a pas à payer. Ce
+  ${g.terme("loyer imputé")} n'est pas imposé, et cette non-imposition est une
+  aide publique aux propriétaires — la première de toutes, et elle ne figure
+  dans aucun compte des aides au logement. L'Insee l'estime à
+  ${vc(d, "loyers_imputes_cout")} par an.</p>
+  <p>Alors refaisons le calcul avec. Aides et avantage réunis :
+  ${milliards(n(d, "aides_totales_2024") + n(d, "loyers_imputes_cout"))} contre
+  ${v(d, "prelevements")} de prélèvements, soit
+  ${vc(d, "solde_public_loyers_imputes")} au lieu de
+  ${v(d, "solde_public")}. Le rapport tombe de 2,3 à 1,8. Il ne s'inverse pas,
+  et la phrase que nous défendons tient : le logement reste, et de loin, un
+  secteur plus taxé qu'aidé.</p>
+  <p>Que proposons-nous d'en faire ? Rien. Imposer un revenu que personne ne
+  perçoit en argent est une idée cohérente sur le papier et intenable en
+  pratique : elle demanderait à un retraité propriétaire sans liquidités de
+  payer l'impôt d'un loyer qu'il ne touche pas. Nous ne le proposons pas, et
+  nous ne le proposerons pas.</p>
+  <p>Reste ce que l'objection établit vraiment, et qui nous donne raison :
+  l'avantage d'être propriétaire est considérable, et il est réservé à ceux qui
+  le sont déjà — les ménages âgés et aisés, dit l'étude. La réponse libérale
+  n'est pas de le confisquer, c'est de l'ouvrir : un chèque qui paie une
+  mensualité aussi bien qu'un loyer, un déménagement qui cesse d'être taxé, et
+  des logements qu'on a le droit de construire.</p>
+  <p class="source">${sources(d, "loyers_imputes_cout",
+    "solde_public_loyers_imputes")}</p>`, "loyers-imputes")}
+
 ${g.depliant("Les droits de mutation taxent le mouvement",
     `<p>Un impôt se juge à ce qu'il décourage. Les ${g.terme("DMTO")}
   découragent le déménagement : ils sont dus à chaque changement de
@@ -1090,10 +1214,10 @@ ${g.depliant("Les droits de mutation taxent le mouvement",
   plus-value réalisée. Le salarié qui suit son emploi à trois cents kilomètres,
   le couple qui se sépare, le retraité qui veut un logement plus petit et moins
   cher à chauffer paient tous le même ticket.</p>
-  <p>Le taux atteint ${vc(d, "dmto_taux", 2)} dans 89 départements depuis que
-  la loi de finances pour 2025 a permis d'ajouter un demi-point, du 1er avril
-  2025 au 30 avril 2028 ; il reste à ${nombre(TAUX_SANS_MAJORATION, 2)}&nbsp;%
-  dans onze. Les primo-accédants en sont exonérés sur la fraction du prix
+  <p>Le taux atteint ${vc(d, "dmto_taux", 2)} dans la grande majorité des
+  départements, qui ont porté leur part de 4,50 à 5,00&nbsp;% comme la loi de
+  finances pour 2025 le permettait, du 1er avril 2025 au 31 mars 2028 ; il
+  reste à ${nombre(TAUX_SANS_MAJORATION, 2)}&nbsp;% dans les autres. Les primo-accédants en sont exonérés sur la fraction du prix
   inférieure à ${euros(SEUIL_PRIMO)}.</p>
   <p>Une économie où l'on ne déménage pas est une économie où l'on accepte de
   moins bons emplois, où les logements sont moins bien occupés — des personnes
@@ -1350,10 +1474,17 @@ ${g.depliant("Ce que ce calcul n'est pas",
       + "suppression des droits de mutation. Tous joueraient dans le sens "
       + "favorable : les compter serait se faire plaisir."],
     ["Aucune montée en charge",
-      "Le compte est celui du régime de croisière. La transition — les "
-      + "baux en cours, les niches à extinction, les engagements "
-      + "pluriannuels déjà pris envers les bailleurs — s'étale sur "
-      + "plusieurs exercices et coûte davantage les premières années."],
+      "Le compte est celui du régime de croisière, et il n'est vrai "
+      + "d'aucune des premières années. Un avantage fiscal accordé en "
+      + "contrepartie d'un engagement de location de six, neuf ou douze "
+      + "ans ne s'interrompt pas : la loi ne défait pas les situations "
+      + "légalement acquises, et le Conseil constitutionnel y veille. Les "
+      + `${v(d, "depenses_fiscales")} de niches s'éteignent donc par `
+      + "extinction des engagements en cours, sur une décennie, tandis que "
+      + "le chèque et la suppression des droits de mutation, eux, coûtent "
+      + "dès le premier exercice. La marge affichée est celle de la fin du "
+      + "chemin ; le début est négatif, et demande un financement de "
+      + "transition que ce compte ne porte pas."],
     ["Aucune redistribution fine",
       "Le chèque est ici un montant moyen. Sa modulation réelle — par "
       + "revenu, par taille de ménage, par zone — décide de qui gagne et "
@@ -1390,6 +1521,47 @@ ${g.depliant("Ce que ce calcul n'est pas",
   Ils sont traités à la page
   <a href="${g.lien("/fiscalite")}">Fiscalité</a>.</p>`, "limites")}
 
+
+${g.depliant("La microsimulation qui manque, et ce qu'elle trancherait",
+    `<p>C'est le trou de ce chiffrage, et le plus grand. Une addition sur
+  moyennes nationales ne dit pas ce que la réforme fait à un ménage : elle dit
+  seulement que l'enveloppe y est. Or la question que tout le monde pose — la
+  seule, en vérité — est « et moi ? ». Tant qu'elle reste sans réponse, chacun
+  y répondra à notre place.</p>
+  <p>Disons donc précisément ce qui manque, plutôt que de le regretter.</p>
+  ${g.points([
+    ["Les données",
+      "L'enquête Revenus fiscaux et sociaux appariée aux données "
+      + "d'allocataires, ou l'Enquête nationale logement : un échantillon "
+      + "de ménages réels portant le revenu, la composition, la zone, le "
+      + "statut d'occupation, le loyer effectif et l'aide perçue. Aucune "
+      + "de ces deux bases n'est publique en accès libre ; elles "
+      + "s'obtiennent sur projet auprès du service statistique."],
+    ["La méthode",
+      "Appliquer à chaque ménage de l'échantillon le barème actuel des "
+      + "aides personnelles, puis le chèque proposé, et lire la "
+      + "différence. C'est un calcul, non un modèle : aucune hypothèse de "
+      + "comportement n'y entre. Le barème des aides est public, le chèque "
+      + "est par construction plus simple."],
+    ["Les trois quantités qu'elle produirait",
+      "La part des ménages aidés qui gagnent et celle qui perdent ; la "
+      + "perte du décile le plus touché, en euros par mois ; et le coût "
+      + "d'une clause de sauvegarde ramenant cette perte à zéro. Les trois "
+      + "décident de la réforme, et aucune des trois n'est ici."],
+    ["Ce à quoi nous nous engageons en attendant",
+      "Une clause de sauvegarde : aucun ménage sous plafond de ressources "
+      + "ne perçoit moins qu'avant la réforme, l'écart lui étant versé en "
+      + "complément dégressif. Son coût n'est pas connu — il l'est dès que "
+      + "la microsimulation est faite — et il est prélevé sur la marge "
+      + "ci-dessus avant tout autre emploi. Si la marge n'y suffisait pas, "
+      + "c'est le montant du chèque qu'il faudrait revoir, non la clause."],
+  ])}
+  <p>Un lecteur peut légitimement conclure que le chiffrage est incomplet. Il
+  l'est. Il établit qu'une enveloppe existe et qu'une règle est meilleure ; il
+  n'établit pas qui paie la transition, et <strong class="cle-texte">aucun
+  programme qui prétend le contraire sans microsimulation ne dit la
+  vérité</strong>.</p>`, "microsimulation")}
+
 ${g.depliant("Les trois leviers, et ce qu'ils déplacent",
     `<p>Le formulaire ci-dessus porte les trois hypothèses qui pèsent. Voici ce
   que chacune vaut.</p>
@@ -1399,6 +1571,16 @@ ${g.depliant("Les trois leviers, et ce qu'ils déplacent",
     ${milliards(10 * 12 * n(d, "menages_aides") / 1000, 2)} par an. C'est le
     levier le plus lourd : doubler l'aide moyenne coûterait davantage que tout
     ce que la réforme supprime.</li>
+    <li><strong>Le nombre de ménages, qui n'est pas un levier ici et devrait
+    l'être.</strong> Le compte retient ${v(d, "menages_aides")} de ménages, le
+    nombre actuel de bénéficiaires. Or le chèque est ouvert aux accédants,
+    quand l'aide personnelle ne l'est presque plus : à barème de ressources
+    inchangé, l'assiette s'élargit donc mécaniquement. Nous ne savons pas de
+    combien — c'est encore la microsimulation qui le dirait — et le compte
+    ci-dessus <em>sous-estime</em> de ce fait le coût du chèque. Chaque
+    tranche de cent mille ménages supplémentaires au montant retenu coûte
+    ${milliards(reglages.chequeMensuel * 12 * 0.1 / 1000, 2)} par an, à titre
+    de repère.</li>
     <li><strong>Les droits de mutation.</strong> Leur suppression coûte
     ${milliards(n(d, "dmto"))} de recettes — un montant qui suit le nombre de
     ventes, et qu'une année basse sous-estime.</li>
@@ -1425,7 +1607,8 @@ ${corps}
 // -- la page Données ---------------------------------------------------------
 
 /** L'ordre d'affichage des niveaux de fiabilité : du plus sûr au moins sûr. */
-const ORDRE_FIABILITE = ["officielle", "academique", "calcul", "presse"];
+const ORDRE_FIABILITE = ["officielle", "academique", "calcul",
+  "partie_prenante", "presse"];
 
 function tableauDonnees(d) {
   const cles = d.toutesLesCles().sort((a, b) => {
@@ -1442,7 +1625,7 @@ function tableauDonnees(d) {
       `${echapper(e.libelle)}<br><span class="precision">${echapper(cle)}</span>`,
       valeur,
       String(e.annee),
-      echapper(e.fiabilite),
+      echapper(nomFiabilite(e.fiabilite)),
       `<a href="${echapper(e.url)}">${echapper(e.source)}</a>`
       + (e.note ? `<br><span class="precision">${echapper(e.note)}</span>` : ""),
       echapper(e.lu_le),
@@ -1463,13 +1646,20 @@ function pageDonnees(d) {
   const corps = `
 ${g.depliant("Ce que chaque niveau de fiabilité veut dire",
     `${g.gloses(ORDRE_FIABILITE.map((niveau) => [
-    `${niveau} (${compte(niveau)} chiffres)`, FIABILITES[niveau],
+    `${nomFiabilite(niveau)} (${compte(niveau)} chiffres)`, FIABILITES[niveau],
   ]))}
   <p>Un chiffre marqué <em>presse</em> n'est pas un chiffre douteux : c'est un
   chiffre lu dans la reprise d'une publication que nous n'avons pas pu ouvrir
   directement, et qui doit être repris à sa source dès qu'elle est accessible.
   Le distinguer est le seul moyen de ne pas laisser un ordre de grandeur
-  prendre, avec le temps, l'autorité d'une mesure.</p>`, "fiabilite")}
+  prendre, avec le temps, l'autorité d'une mesure.</p>
+  <p>Un chiffre marqué <em>partie prenante</em> ne l'est pas davantage, et il
+  pose un autre problème. Les meilleures données sur la demande de logement
+  social viennent de la fédération des bailleurs sociaux ; les meilleures sur
+  le mal-logement, d'une association qui milite pour y remédier. Ce sont des
+  sources primaires, et personne ne publie mieux qu'elles — mais elles ont un
+  intérêt dans la réponse, et plusieurs de nos chiffres les plus frappants sont
+  les leurs. Le dire ici vaut mieux que de se le faire dire ailleurs.</p>`, "fiabilite")}
 
 ${g.depliant("La règle", `
   <p>Tout ce que ce site affiche de chiffré vient d'un seul fichier,

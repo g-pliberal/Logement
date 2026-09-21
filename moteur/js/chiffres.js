@@ -14,12 +14,28 @@ import { formatFixe } from "./format.js";
 /** Espace insécable fin, séparateur de milliers à la française. */
 const FINE = " ";
 
+/**
+ * Le nom d'un niveau tel qu'il se lit : la clé porte un souligné, la page non.
+ * Un niveau absent d'ici s'affiche sous sa clé, qui reste lisible.
+ */
+export const NOM_FIABILITE = Object.freeze({
+  partie_prenante: "partie prenante",
+});
+
+/** Le niveau tel qu'il s'écrit dans une phrase ou une colonne. */
+export function nomFiabilite(niveau) {
+  return NOM_FIABILITE[niveau] ?? niveau;
+}
+
 /** Ce qu'un niveau de fiabilité dit au lecteur, en toutes lettres. */
 export const FIABILITES = Object.freeze({
   officielle: "Service statistique public, juridiction financière ou texte "
     + "officiel. C'est le chiffre tel que l'administration le publie.",
   academique: "Article de recherche à comité de lecture. Le chiffre est une "
     + "estimation, avec sa méthode et son intervalle.",
+  partie_prenante: "Source primaire, publiée par un acteur qui est partie au "
+    + "débat — fédération professionnelle, association. Le chiffre est le "
+    + "sien, et son intérêt aussi : nous le citons en le disant.",
   presse: "Source secondaire — la reprise d'une publication que nous n'avons "
     + "pas pu ouvrir directement. À reprendre à la source primaire.",
   calcul: "Obtenu sur ce site à partir d'autres entrées. La formule est dans "

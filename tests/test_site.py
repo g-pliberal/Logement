@@ -28,7 +28,7 @@ CALCULS = (RACINE / "moteur" / "js" / "calculs.js").read_text(encoding="utf-8")
 INDEX = (RACINE / "index.html").read_text(encoding="utf-8")
 
 CHAMPS = ("libelle", "valeur", "unite", "annee", "fiabilite", "source", "url", "lu_le")
-FIABILITES = ("officielle", "academique", "presse", "calcul")
+FIABILITES = ("officielle", "academique", "partie_prenante", "presse", "calcul")
 DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
 

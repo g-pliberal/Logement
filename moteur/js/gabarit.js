@@ -262,6 +262,17 @@ export function bulle(sujet, texte) {
  * entrée pour entrée — les témoins des pages le vérifient.
  */
 export const GLOSSAIRE = Object.freeze({
+  "FSL":
+    "Le fonds de solidarité pour le logement : une aide départementale qui "
+    + "paie un dépôt de garantie, apure une dette de loyer ou règle une "
+    + "facture d'énergie, pour éviter qu'un impayé ne devienne une expulsion. "
+    + "Il agit tôt ou il n'agit pas.",
+  "loyer imputé":
+    "Le loyer qu'un propriétaire occupant ne paie pas, et qui est pourtant un "
+    + "revenu : s'il louait son logement à un autre, il l'encaisserait. La "
+    + "comptabilité nationale le compte dans la richesse produite ; l'impôt "
+    + "sur le revenu l'ignore. C'est l'avantage le plus important, et le plus "
+    + "invisible, que le droit français accorde au fait d'être propriétaire.",
   "zone tendue":
     "Une commune où la demande de logements dépasse durablement l'offre. "
     + "L'administration en tient la liste — le « zonage » A bis, A, B1, B2, "
