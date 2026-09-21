@@ -930,18 +930,20 @@ const PAS_RONDS = [1.0, 1.5, 2.0, 2.5, 3.0, 4.0, 5.0];
  *
  * Les bornes sont graduées d'office — ce sont elles qui datent la série —, et
  * une décennie trop proche de l'une d'elles ne fait que chevaucher son
- * étiquette. Ce qui se chevauche est une largeur de texte, pas une durée :
- * la règle doit donc s'exprimer en part de l'axe, et non en années. Écrite en
+ * étiquette. Ce qui se chevauche est une largeur de texte, pas une durée : la
+ * règle doit donc s'exprimer en part de l'axe, et non en années. Écrite en
  * années, elle était juste pour la longueur de série qui l'avait vue naître et
- * fausse pour toutes les autres — une série de vingt-six ans y perdait sa
- * graduation de 2020, qu'aucune étiquette ne gênait.
+ * fausse pour toutes les autres — elle amputait les séries courtes de toute
+ * graduation intermédiaire, et laissait « 2060 » toucher « 2070 » sur les
+ * longues.
  *
- * Le chiffre se mesure : l'axe fait 626 unités de viewBox, et « 2020 » en
- * occupe 36 sur un écran large, 50 sur un téléphone où la police du repère est
- * grossie. Le téléphone commande donc, à 8 % de l'axe ; une étiquette et demie
- * — de quoi respirer entre deux — en fait 12.
+ * Le chiffre se mesure : l'axe fait 626 unités de repère, et une année à
+ * quatre chiffres en occupe 56 sur un téléphone, où la police est grossie —
+ * c'est déjà ce que dit `MARGE_DROITE`, qui en réserve la moitié. Onze pour
+ * cent laissent une étiquette et un quart entre deux graduations, et le blanc
+ * minimal tombe à 74 unités sur les séries que les deux sites tracent.
  */
-const PART_MINIMALE_GRADUATIONS = 0.12;
+const PART_MINIMALE_GRADUATIONS = 0.11;
 
 /**
  * Pas admissibles de l'axe des abscisses, du plus fin au plus large. Ce sont des
@@ -1032,11 +1034,8 @@ export function graduationsX(premiere, derniere) {
   // Deux graduations trop proches se chevauchent : on retire la décennie
   // voisine plutôt que la borne, qui porte l'information. L'écart se mesure en
   // part de l'amplitude, jamais en années : c'est une largeur de texte qu'on
-  // évite. Une année entière reste le plancher, faute de quoi une série courte
-  // graduerait entre deux années.
-  const ecartMinimal = Math.max(
-    1, (derniere - premiere) * PART_MINIMALE_GRADUATIONS,
-  );
+  // évite.
+  const ecartMinimal = (derniere - premiere) * PART_MINIMALE_GRADUATIONS;
   return annees.filter(
     (a) => a === premiere || a === derniere
       || (a - premiere >= ecartMinimal && derniere - a >= ecartMinimal),
