@@ -194,14 +194,15 @@
       "note": "Série mise à jour le 9 juillet 2026, France hors Mayotte."
     },
     "logements_commences_sommet": {
-      "libelle": "Logements mis en chantier au plus haut de la décennie",
+      "libelle": "Logements mis en chantier au dernier sommet",
       "valeur": 433.9,
       "unite": "milliers",
       "annee": 2017,
       "fiabilite": "officielle",
       "source": "Insee, d'après SDES, Sitadel2",
       "url": "https://www.insee.fr/fr/statistiques/2015606",
-      "lu_le": "2026-09-20"
+      "lu_le": "2026-09-20",
+      "note": "Sommet de la reprise 2015-2017, et point de comparaison le plus parlant pour la chute récente. Le maximum de la série publiée depuis 2000 est plus haut encore : 493 800 logements en 2006."
     },
     "logements_autorises": {
       "libelle": "Logements autorisés sur douze mois",
@@ -780,6 +781,94 @@
       "url": "https://www.ecologie.gouv.fr/sites/default/files/documents/Les%20attributions%20de%20logement%20social%20en%202024%20en%20%C3%8Ele-de-France.pdf",
       "lu_le": "2026-09-21",
       "note": "Une attribution pour quatorze demandes en 2024 : 65 094 attributions dans 613 communes franciliennes."
+    },
+    "friggit_stabilite": {
+      "libelle": "Amplitude maximale du rapport prix / revenu, de 1965 à 2001",
+      "valeur": 10,
+      "unite": "%",
+      "annee": 2001,
+      "fiabilite": "officielle",
+      "source": "IGEDD (J. Friggit), Prix des logements, loyers et revenu par ménage",
+      "url": "https://www.igedd.developpement-durable.gouv.fr/prix-immobilier-evolution-a-long-terme-a1048.html",
+      "lu_le": "2026-09-21",
+      "note": "Pendant ces trente-six ans, le rapport du prix des logements anciens au revenu par ménage n'a pas varié de plus de dix pour cent. C'est cette stabilité qui fait de la période une référence, et de l'écart actuel une anomalie."
+    },
+    "hausse_cout_abis": {
+      "libelle": "Hausse du prix de revient d'un logement social en zone très tendue",
+      "valeur": 24,
+      "unite": "%",
+      "annee": 2023,
+      "fiabilite": "officielle",
+      "source": "Banque des Territoires, « Le prix de revient des logements sociaux face aux tensions inflationnistes », Éclairages n° 33, décembre 2024",
+      "url": "https://www.banquedesterritoires.fr/sites/default/files/2025-01/Exe%20brochure%20Eclairages%2033%20A4%202024%20vdef.pdf",
+      "lu_le": "2026-09-21",
+      "note": "En cinq ans, de 2019 à 2023, en zone A bis. Dans toutes les autres zones, la hausse est comprise entre 10 et 15 %."
+    },
+    "auckland_part_parc_prudent": {
+      "libelle": "Logements autorisés en plus à Auckland, en part du parc, estimation prudente",
+      "valeur": 4,
+      "unite": "%",
+      "annee": 2021,
+      "fiabilite": "academique",
+      "source": "S. Donovan et M. Maltman, « Dispelling myths: reviewing the evidence on zoning reforms in Auckland », Motu Working Paper 24-07",
+      "url": "https://motu-www.motu.org.nz/wpapers/24_07.pdf",
+      "lu_le": "2026-09-21",
+      "note": "Les 21 808 logements de l'estimation la plus prudente rapportés au parc de l'agglomération."
+    },
+    "auckland_part_parc": {
+      "libelle": "Logements autorisés en plus à Auckland, en part du parc",
+      "valeur": 9,
+      "unite": "%",
+      "annee": 2022,
+      "fiabilite": "academique",
+      "source": "S. Donovan et M. Maltman, « Dispelling myths: reviewing the evidence on zoning reforms in Auckland », Motu Working Paper 24-07",
+      "url": "https://motu-www.motu.org.nz/wpapers/24_07.pdf",
+      "lu_le": "2026-09-21",
+      "note": "Les 43 500 logements de la deuxième estimation rapportés au parc de l'agglomération."
+    },
+    "auckland_hausse_permis": {
+      "libelle": "Hausse des logements autorisés à Auckland par rapport au scénario sans réforme",
+      "valeur": 86.8,
+      "unite": "%",
+      "annee": 2023,
+      "fiabilite": "academique",
+      "source": "R. Greenaway-McGrevy, « Can zoning reform increase housing construction? Evidence from Auckland », Economic Policy Centre Working Paper n° 017, université d'Auckland",
+      "url": "https://www.auckland.ac.nz/assets/business/our-research/docs/economic-policy-centre/EPC-WP017.pdf",
+      "lu_le": "2026-09-21",
+      "note": "Sept ans après la réforme : 112 277 permis délivrés contre 60 105 dans le contrefactuel. C'est la même mesure que les 46,5 %, dite autrement — l'une rapporte au total observé, l'autre au total contrefactuel."
+    },
+    "encadrement_gain_mensuel": {
+      "libelle": "Gain mensuel d'un locataire parisien couvert par l'encadrement",
+      "valeur": 80,
+      "unite": "€",
+      "annee": 2024,
+      "fiabilite": "officielle",
+      "source": "Assemblée nationale, rapport n° 2197 de la mission d'évaluation de l'encadrement des loyers (I. Echaniz), 3 décembre 2025, d'après l'Apur",
+      "url": "https://www.assemblee-nationale.fr/dyn/opendata/RAPPANR5L17B2197.html",
+      "lu_le": "2026-09-21",
+      "note": "Ordre de grandeur du loyer évité chaque mois, entre juillet 2019 et juin 2024, pour un logement dont le loyer est effectivement plafonné."
+    },
+    "san_francisco_mobilite": {
+      "libelle": "Baisse de la mobilité des locataires protégés à San Francisco",
+      "valeur": -20,
+      "unite": "%",
+      "annee": 2019,
+      "fiabilite": "academique",
+      "source": "R. Diamond, T. McQuade, F. Qian, American Economic Review, vol. 109 n° 9",
+      "url": "https://www.aeaweb.org/articles?id=10.1257/aer.20181289",
+      "lu_le": "2026-09-21",
+      "note": "Les locataires couverts par le contrôle déménagent moins et quittent moins la ville. C'est le gain des protégés, et il est réel : il est annulé, à l'échelle de la ville, par la hausse que subissent tous les autres."
+    },
+    "apl_capture_plancher": {
+      "libelle": "Part d'une aide absorbée par le loyer, borne basse de la littérature",
+      "valeur": 60,
+      "unite": "%",
+      "annee": 2006,
+      "fiabilite": "academique",
+      "source": "G. Fack, « Pourquoi les ménages pauvres paient-ils des loyers de plus en plus élevés ? », Économie et Statistique n° 381-382, Insee",
+      "url": "https://www.insee.fr/fr/statistiques/fichier/1376573/es381-382b.pdf",
+      "lu_le": "2026-09-21",
+      "note": "Les travaux postérieurs à Fack situent la fourchette entre 60 et 80 % selon la rigidité de l'offre locale. La borne haute est proche de l'estimation de 78 % retenue ici."
     }
   },
   "series": {

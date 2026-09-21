@@ -19,6 +19,7 @@ const FINE = " ";
  * Un niveau absent d'ici s'affiche sous sa clé, qui reste lisible.
  */
 export const NOM_FIABILITE = Object.freeze({
+  academique: "académique",
   partie_prenante: "partie prenante",
 });
 

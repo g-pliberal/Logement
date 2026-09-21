@@ -153,6 +153,48 @@ class NombresEnDur(unittest.TestCase):
                   for m in self.LITTERAL.finditer(PAGES)]
         self.assertEqual(fautes, [], f"pages.js : nombre écrit en dur, lignes {fautes}")
 
+    #: Un chiffre suivi de son unité dans une phrase : « 24 % », « 80 € ».
+    MESURE = re.compile(
+        r"(?<![\w.])(\d+(?:[,.]\d+)?)"
+        r"(?=&nbsp;%|\s%|&nbsp;€|\s€|\sMd€|\sM€)")
+
+    #: Les seuls nombres qu'une page a le droit d'écrire : ce ne sont pas des
+    #: mesures. Un paramètre de la proposition (« 10 ans de recettes »), un
+    #: taux fixé par la loi (la contribution de sécurité immobilière, le
+    #: barème des droits de mutation), un pas de calcul (« par tranche de
+    #: 10 € »), un zéro d'affichage. Tout le reste mesure quelque chose, et
+    #: ce qui mesure vient de donnees.json, avec sa source et sa date.
+    #: Cette liste est volontairement close : y ajouter une ligne demande de
+    #: dire, ici, pourquoi le nombre n'est pas une mesure.
+    NON_MESURES = {
+        ("10 ans", "ce que la proposition rend à la commune"),
+        ("0 %", "le taux de droits de mutation que la proposition vise"),
+        ("0,10 %", "la contribution de sécurité immobilière, fixée par la loi"),
+        ("4,50", "l'ancien plafond départemental des droits de mutation"),
+        ("5,00", "le plafond départemental ouvert par la loi de finances 2025"),
+        ("0 Md€", "l'affichage d'un poste nul"),
+        ("10 €", "le pas du levier « chèque » sur la page Chiffrage"),
+    }
+
+    def test_une_mesure_ne_s_ecrit_pas_a_la_main(self):
+        """Le site promet que ses mesures viennent toutes des données. Ce test
+        est cette promesse : il refuse un nombre suivi de son unité qui ne
+        serait pas dans la liste, close, de ce qui n'est pas une mesure."""
+        permis = {valeur for valeur, _ in self.NON_MESURES}
+        fautes = []
+        for m in self.MESURE.finditer(PAGES):
+            valeur = m.group(1)
+            if re.fullmatch(r"(19|20)\d\d", valeur):
+                continue  # une année n'est pas une grandeur
+            entier = PAGES[m.start():m.end() + 12]
+            if valeur in permis or any(entier.startswith(v) for v in permis):
+                continue
+            ligne = PAGES[:m.start()].count("\n") + 1
+            fautes.append(f"ligne {ligne} : « {valeur} »")
+        self.assertEqual(fautes, [],
+                         "pages.js : mesure écrite à la main, elle doit venir "
+                         "de donnees.json — " + " ; ".join(fautes))
+
     def test_aucune_grandeur_n_est_ecrite_dans_la_prose(self):
         fautes = []
         for m in self.GRANDEUR.finditer(PAGES):

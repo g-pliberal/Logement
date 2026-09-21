@@ -21,7 +21,7 @@ Les chiffres qui portent cette thèse, tous datés et sourcés :
 
 | | |
 |---|---|
-| 264 800 | logements mis en chantier en 2025, contre 493 800 en 2006 |
+| 264 800 | logements mis en chantier en 2025, contre 433 900 au dernier sommet de 2017 — et 493 800 en 2006 |
 | +55 % | l'écart du prix des logements anciens à la tendance qu'il a suivie de 1965 à 2001, rapporté au revenu par ménage |
 | 2,885 M | ménages en attente d'un logement social fin 2025 — dont 890 000 déjà logés dans le parc — pour 394 000 attributions dans l'année |
 | 99,2 Md€ | prélevés sur le logement en 2024, contre 43,1 Md€ d'aides |
@@ -70,9 +70,13 @@ lui-même les trois hypothèses qui pèsent.
 
 ## La règle des chiffres
 
-**Aucune page n'écrit un nombre en dur.** Tout ce qui est chiffré vient de
-`moteur/donnees.json`, où chaque entrée porte sa source et sa date. Une page qui
-demanderait une clé absente lève, et ne s'affiche pas.
+**Aucune mesure n'est écrite à la main dans une phrase.** Tout ce qui mesure
+quelque chose vient de `moteur/donnees.json`, où chaque entrée porte sa source
+et sa date ; une page qui demanderait une clé absente lève, et ne s'affiche
+pas. Sept nombres échappent à la règle et ce sont les seuls : les paramètres de
+la proposition, deux taux fixés par la loi, le pas d'un curseur et l'affichage
+d'un poste nul. Aucun ne mesure le monde, la liste est close, et elle est tenue
+par un test.
 
 Cinq niveaux de fiabilité sont distingués, et affichés sur la page
 [Données](https://g-pliberal.github.io/logement/#/donnees) :

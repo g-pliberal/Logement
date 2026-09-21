@@ -199,8 +199,9 @@ function engagements(d) {
       "libre, et "
       + '<strong class="cle-texte">un loyer payé</strong>.',
       "L'encadrement des loyers et les interdictions de louer au diagnostic "
-      + "énergétique sont supprimés : ils retirent des logements du marché "
-      + "sans en produire un seul. En échange, le bailleur obtient ce qu'il "
+      + "énergétique sont supprimés : ni l'un ni l'autre ne produit un "
+      + "logement, et le second en retire. En échange, le bailleur obtient "
+      + "ce qu'il "
       + "n'a jamais eu — un impayé jugé en "
       + '<strong class="cle-texte">trois mois</strong>, et une garantie '
       + "publique du loyer pour les locataires que cette sécurité rend enfin "
@@ -220,8 +221,10 @@ function engagements(d) {
       "Les droits de mutation frappent le fait de bouger, pas la fortune : "
       + `${v(d, "dmto")} par an pris à qui change de ville pour un emploi, `
       + "à qui se sépare, à qui vieillit et veut un logement plus petit. Ils "
-      + "sont supprimés, et compensés par la fin des niches et par une taxe "
-      + "foncière enfin assise sur des valeurs de ce siècle."],
+      + "sont supprimés, et compensés à l'euro par la fin des niches. La taxe "
+      + "foncière, elle, est refaite sur des valeurs de ce siècle — à "
+      + "rendement inchangé : on corrige une assiette fausse, on n'augmente "
+      + "pas un impôt."],
   ];
   const corps = cartes.map(([chiffre, promesse, detail], index) => (
     `<div class="engagement"><div class="rang">${String(index + 1).padStart(2, "0")}</div>`
@@ -426,9 +429,11 @@ ${g.depliant("Ce que le logement pèse, avant tout jugement",
     "proprietaires", "aides_hors_fiscales")}</p>`, "masse")}
 
 ${g.cle("On ne construit plus.",
-    `${vc(d, "logements_commences")} de logements ont été mis en chantier en `
+    '<strong class="cle-texte">'
+    + `${nombre(n(d, "logements_commences") * 1000, 0)} logements</strong> `
+    + "ont été mis en chantier en "
     + `${an(d, "logements_commences")}, contre `
-    + `${v(d, "logements_commences_sommet")} en `
+    + `${nombre(n(d, "logements_commences_sommet") * 1000, 0)} en `
     + `${an(d, "logements_commences_sommet")} : `
     + `<strong class="cle-texte">${nombre(chute, 0)}&nbsp;% de moins en huit `
     + "ans</strong>.",
@@ -483,7 +488,8 @@ ${g.depliant("L'objection : « c'est le coût du crédit, pas le droit des sols 
 
 ${g.cle("Les prix ont quitté les revenus, et n'y sont pas revenus.",
     "De 1965 à 2001, le prix des logements anciens a suivi le revenu des "
-    + "ménages à 10&nbsp;% près. Depuis, il s'en est détaché : au premier "
+    + `ménages à ${v(d, "friggit_stabilite")} près. Depuis, il s'en est `
+    + "détaché : au premier "
     + `trimestre ${an(d, "friggit_ecart")}, il dépassait de `
     + `${vc(d, "friggit_ecart", 0)} la tendance qu'il avait suivie jusque-là.`,
     `<p>L'écart ne se lit pas seulement dans un indice. À effort d'épargne et à
@@ -496,7 +502,7 @@ ${g.cle("Les prix ont quitté les revenus, et n'y sont pas revenus.",
   ne dit rien sans le revenu, ni le taux d'intérêt, qui passe. Un prix qui
   décroche du revenu pendant vingt ans n'est pas une bulle qui éclatera, c'est
   une rareté qui dure.</p>`,
-    sources(d, "friggit_ecart"), "prix")}
+    sources(d, "friggit_ecart", "friggit_stabilite"), "prix")}
 
 ${g.cle("La file d'attente s'allonge pendant qu'on distribue.",
     `${vc(d, "demandes_hlm")} de ménages attendaient un logement social fin `
@@ -511,7 +517,7 @@ ${g.cle("La file d'attente s'allonge pendant qu'on distribue.",
   <p>Le parc social compte ${vc(d, "parc_social")} de logements, un ménage sur
   six, et il grandit : ${nombre(n(d, "parc_social_entrees"), 0)} logements y sont
   entrés en ${an(d, "parc_social_entrees")}. La demande, elle, grandit plus vite.
-  Le délai moyen d'obtention atteint
+  Le délai médian d'obtention atteint
   ${vc(d, "delai_hlm_idf", 0)} en Île-de-France pour les demandes satisfaites
   en ${an(d, "delai_hlm_idf")} — la moitié des ménages servis avaient attendu
   davantage. Il s'y compte ${vc(d, "tension_idf", 0)} pour une attribution.</p>
@@ -524,7 +530,9 @@ ${g.cle("La file d'attente s'allonge pendant qu'on distribue.",
 ${g.cle("Le logement rapporte aux administrations plus du double de ce qu'il leur coûte.",
     `${vc(d, "prelevements")} de prélèvements en ${an(d, "prelevements")}, `
     + `${v(d, "aides_totales_2024")} d'aides : il reste `
-    + `${vc(d, "solde_public")}.`,
+    + `${vc(d, "solde_public")}. Le compte ci-dessous porte sur `
+    + `${an(d, "aides_totales_2024")}, dernier exercice publié poste par `
+    + "poste.",
     `${cascadePrelevements(d)}
   <p>Les prélèvements représentent ${v(d, "prelevements_part_pib")} du produit
   intérieur brut et ${v(d, "prelevements_part_po")} de tous les prélèvements
@@ -575,10 +583,10 @@ ${g.cle("Et pourtant, le mal-logement progresse.",
 ${g.affiche(
     "Le constat",
     "Quarante-six milliards,<br>et deux années<br>de construction<br>au plus bas depuis 2000",
-    `L'État consacre ${v(d, "aides_publiques")} par an au logement, soit `
-    + `environ ${v(d, "depense_publique_pib")} — à peu près la moyenne `
-    + "européenne. Le résultat se lit en cinq images, et aucune ne va dans le "
-    + "bon sens.",
+    `L'État et les collectivités consacrent ${v(d, "aides_publiques")} par an `
+    + `au logement en ${an(d, "aides_publiques")}, soit environ `
+    + `${v(d, "depense_publique_pib")} — à peu près la moyenne européenne. Le `
+    + "résultat se lit en cinq images, et aucune ne va dans le bon sens.",
   )}
 ${g.plan(corps, "/constat")}
 ${corps}
@@ -609,13 +617,15 @@ ${g.depliant("Le droit de construire est devenu un droit d'interdire",
   l'écart entre les territoires. Un logement social coûte
   ${vc(d, "surcout_zone_tres_tendue", 0)} de plus à produire en zone très
   tendue — Paris et sa proche couronne — qu'en zone simplement tendue, et son
-  prix de revient y a crû de 24&nbsp;% en cinq ans quand il montait de 10 à
-  15&nbsp;% partout ailleurs. Entre les zones détendues, en revanche, l'écart
+  prix de revient y a crû de ${vc(d, "hausse_cout_abis", 0)} en cinq ans,
+  quand il montait deux fois moins vite partout ailleurs. Entre les zones
+  détendues, en revanche, l'écart
   se compte en quelques pour cent. <strong class="cle-texte">Le coût s'envole
   là où, et seulement là où, la demande se heurte à un plafond.</strong></p>
   <p>On achète donc, à mesure qu'on s'approche des villes où le logement
   manque, de moins en moins un sol et de plus en plus une autorisation.</p>
-  <p class="source">${sources(d, "part_foncier", "surcout_zone_tres_tendue")}</p>`,
+  <p class="source">${sources(d, "part_foncier", "surcout_zone_tres_tendue",
+    "hausse_cout_abis")}</p>`,
     "plu")}
 
 ${g.depliant("Un maire qui construit paie, et ne touche rien",
@@ -638,7 +648,7 @@ ${g.depliant("Le zéro artificialisation nette : un plafond de surface là où m
   exprime.</p>
   <p>La loi TRACE, adoptée en première lecture par le Sénat le 18 mars 2025, en
   a déjà repoussé l'échéance chiffrée de 2031 à 2034 et supprimé le palier
-  intermédiaire de −50&nbsp;%. C'est l'aveu que la trajectoire n'était pas
+  intermédiaire de réduction de moitié. C'est l'aveu que la trajectoire n'était pas
   tenable ; ce n'est pas la correction du principe. Un objectif de surface est
   un instrument juste pour un problème de surface ; le nôtre est un problème de
   logements, et rien n'interdit d'y répondre en hauteur plutôt qu'en largeur —
@@ -702,13 +712,13 @@ ${g.cle("Cela marche-t-il ailleurs ?",
     + "logements autorisés en sept ans le sont du fait de la réforme.",
     `<p>Trois estimations existent, et nous les donnons toutes les trois plutôt
   que la plus flatteuse. La plus prudente compare les quartiers d'Auckland
-  entre eux : ${vc(d, "auckland_permis_prudent", 0)} logements autorisés en
-  plus en cinq ans, environ 4&nbsp;% du parc. La deuxième compare Auckland à
-  des villes néo-zélandaises restées sous l'ancien régime :
-  ${v(d, "auckland_permis", 0)} en six ans, soit 9&nbsp;%. La plus récente,
-  de 2025, porte sur sept ans et attribue à la réforme
-  ${v(d, "auckland_part_permis")} de tous les permis délivrés — 86,8&nbsp;% de
-  plus que sans elle. Sur les loyers, l'écart au scénario sans réforme est
+  entre eux : ${vc(d, "auckland_permis_prudent", 0)} autorisés en plus en
+  cinq ans, soit ${v(d, "auckland_part_parc_prudent")} du parc. La deuxième
+  compare Auckland à des villes néo-zélandaises restées sous l'ancien régime :
+  ${v(d, "auckland_permis", 0)} en six ans, soit
+  ${v(d, "auckland_part_parc")}. La plus récente, de 2025, porte sur sept ans
+  et attribue à la réforme ${v(d, "auckland_part_permis")} de tous les permis
+  délivrés — ${v(d, "auckland_hausse_permis")} de plus que sans elle. Sur les loyers, l'écart au scénario sans réforme est
   estimé à ${vc(d, "auckland_loyers", 0)}.</p>
   <p><strong>Et ailleurs, cela n'a pas marché.</strong> Il faut le dire, parce
   que c'est vrai et parce que c'est instructif. Minneapolis a autorisé en 2019
@@ -739,16 +749,18 @@ ${g.cle("Cela marche-t-il ailleurs ?",
   point qu'une revue de littérature a été écrite pour répondre aux critiques.
   Enfin l'écart sur les loyers n'est pas une baisse constatée : c'est un écart
   au niveau qu'ils auraient atteint sans la réforme.</p>`,
-    sources(d, "auckland_part_permis", "auckland_permis",
-      "auckland_permis_prudent", "auckland_surface_plancher",
+    sources(d, "auckland_part_permis", "auckland_hausse_permis",
+      "auckland_permis", "auckland_part_parc", "auckland_permis_prudent",
+      "auckland_part_parc_prudent", "auckland_surface_plancher",
       "auckland_loyers"),
     "auckland")}
 
 ${g.depliant("L'objection : « il y a plus de permis que de chantiers »",
     `<p>Elle est juste, et c'est la plus sérieuse qu'on nous oppose. Sur les
   douze mois arrêtés à février 2026, ${vc(d, "logements_autorises")} ont été
-  autorisés, quand ${vc(d, "logements_commences")} de logements seulement
-  étaient mis en chantier dans l'année. Si l'autorisation était le seul verrou,
+  autorisés, quand
+  <strong class="cle-texte">${nombre(n(d, "logements_commences") * 1000, 0)}</strong>
+  seulement étaient mis en chantier dans l'année. Si l'autorisation était le seul verrou,
   l'écart serait inverse.</p>
   <p>Trois choses l'expliquent. Un permis n'est pas une opération : il se
   périme, il tombe au contentieux, il porte sur des programmes qui ne se
@@ -835,7 +847,8 @@ ${g.depliant("L'encadrement des loyers : un transfert, pas une construction",
   parlementaire chiffre à
   <strong class="cle-texte">${nombre(Math.abs(n(d, "encadrement_effet")), 1)}&nbsp;%</strong>
   la modération de la hausse des loyers parisiens entre 2019 et 2024, soit
-  environ 80 € par mois pour un locataire concerné. Le rapport note qu'une part importante des
+  environ ${vc(d, "encadrement_gain_mensuel", 0)} par mois pour un locataire
+  concerné. Le rapport note qu'une part importante des
   loyers dépasse encore les plafonds autorisés — un plafond mal respecté
   répartit mal —, mais l'effet est réel et il est mesuré.</p>
   <p>Nous devons même concéder davantage, parce que c'est dans le même
@@ -853,16 +866,19 @@ ${g.depliant("L'encadrement des loyers : un transfert, pas une construction",
   dispositif peut être efficace sur ce qu'il mesure et inutile sur ce qui
   manque. C'est le cas ici, et c'est pour cela, et non pour ses effets sur
   l'offre, que nous ne le reconduisons pas.</p>
-  <p class="source">${sources(d, "encadrement_villes", "encadrement_effet")}</p>`,
+  <p class="source">${sources(d, "encadrement_villes", "encadrement_effet",
+    "encadrement_gain_mensuel")}</p>`,
     "encadrement")}
 
 ${g.cle("Que fait un contrôle des loyers à l'offre ?",
     "À San Francisco, les bailleurs soumis à l'extension du contrôle en 1994 "
-    + `ont retiré ${vc(d, "san_francisco_offre", 0)} de leur offre locative du `
-    + "marché — vente à des occupants, démolition, reconstruction.",
+    + "ont retiré "
+    + `<strong class="cle-texte">${nombre(Math.abs(n(d, "san_francisco_offre")), 0)}&nbsp;%</strong> `
+    + "de leur offre locative du marché — vente à des occupants, démolition, reconstruction.",
     `<p>L'étude de Diamond, McQuade et Qian (<em>American Economic Review</em>,
   2019) est l'une des rares à mesurer les deux effets ensemble. Les locataires
-  protégés y gagnent : ils restent, leur mobilité baisse de 20&nbsp;%, leur
+  protégés y gagnent : ils restent, leur mobilité baisse de
+  ${nombre(Math.abs(n(d, "san_francisco_mobilite")), 0)}&nbsp;%, leur
   déplacement hors de la ville recule. Les logements, eux, sortent du parc
   locatif — et la hausse de loyer qui s'ensuit pour tous les autres annule, à
   l'échelle de la ville, le gain des protégés.</p>
@@ -874,15 +890,16 @@ ${g.cle("Que fait un contrôle des loyers à l'offre ?",
   L'Apur, qui suit l'encadrement français depuis six ans, conclut à l'absence
   de dégradation durable de l'offre locative. Trois raisons peuvent
   l'expliquer, et nous ne savons pas départager : l'encadrement français est
-  bien plus lâche que le contrôle californien, puisqu'il autorise un
-  dépassement de 20&nbsp;% et se réinitialise à chaque relocation ; il est
+  bien plus lâche que le contrôle californien, puisqu'il admet un complément
+  de loyer et se recale sur les loyers constatés à chaque révision, quand le
+  contrôle de San Francisco gelait la progression d'un bail donné ; il est
   récent, quand l'étude américaine mesure sur vingt ans ; et il est mal
   respecté, ce qui atténue mécaniquement ses effets, bons comme mauvais.</p>
   <p>Nous retenons donc de San Francisco ce qu'un plafond <em>strict et
   durable</em> produit, non ce que l'encadrement français aurait déjà produit.
   Et nous fondons notre proposition sur l'argument qui ne dépend pas de ce
   point : un plafond ne construit rien.</p>`,
-    sources(d, "san_francisco_offre"), "controle")}
+    sources(d, "san_francisco_offre", "san_francisco_mobilite"), "controle")}
 
 ${g.depliant("Les interdictions au diagnostic énergétique",
     `<p>Depuis le 1er janvier 2025, un logement classé G au
@@ -997,8 +1014,8 @@ ${g.affiche(
     "Deuxième chantier",
     "Louer",
     "Le droit du bail français protège le locataire en place, et lui seul. "
-    + "Celui qui cherche — le jeune, le mobile, le précaire — affronte un parc "
-    + "qui rétrécit et une sélection qui se durcit. La liberté du loyer et la "
+    + "Celui qui cherche — le jeune, le mobile, le précaire — affronte la même "
+    + "rareté et une sélection qui se durcit. La liberté du loyer et la "
     + "certitude du paiement vont ensemble : l'une sans l'autre est un marché "
     + "de dupes.",
   )}
@@ -1025,8 +1042,9 @@ ${g.cle("Où va une aide au logement ?",
   c'est le prix qui monte. Gabrielle Fack, mesurant l'extension des aides des
   années 1990, trouve que ${vc(d, "apl_capture", 0)} de l'aide supplémentaire
   s'est retrouvée dans le loyer, sans amélioration observée de la qualité des
-  logements. Les travaux postérieurs situent la fourchette entre 60 et
-  80&nbsp;%, d'autant plus haute que l'offre est rigide.</p>
+  logements. Les travaux postérieurs situent la fourchette entre
+  ${v(d, "apl_capture_plancher")} et ${v(d, "apl_capture")}, d'autant plus
+  haute que l'offre est rigide.</p>
   <p>Deux réserves, et nous les portons nous-mêmes. Cette mesure porte sur une
   réforme des années 1990, dans un marché qui n'est plus tout à fait le nôtre ;
   et elle mesure l'effet d'une <em>hausse</em> d'aide, dont on ne peut pas
@@ -1053,13 +1071,13 @@ ${g.cle("Où va une aide au logement ?",
   la question est donc de savoir si l'on a le droit de construire — et c'est
   pourquoi le <a href="${g.lien("/construire")}">premier chantier</a> commande
   celui-ci.</p>`,
-    sources(d, "apl_capture"), "capture")}
+    sources(d, "apl_capture", "apl_capture_plancher"), "capture")}
 
 ${g.depliant("Ce que l'État verse, et à qui",
     `<p>${vc(d, "prestations_sociales")} d'aides personnelles — ${g.terme("APL")},
   ALS, ALF — vont à ${vc(d, "menages_aides")} de ménages, soit environ
   ${euros(moyenne)} par mois et par ménage aidé. S'y ajoutent
-  ${v(d, "subventions")} de ${g.terme("aide à la pierre")},
+  ${v(d, "subventions")} d'${g.terme("aide à la pierre")},
   ${v(d, "bonifications")} de bonifications de taux, et
   ${v(d, "depenses_fiscales")} de ${g.terme("dépense fiscale")} — taux réduit de
   TVA sur l'entretien, réductions d'impôt pour investissement locatif,
@@ -1077,14 +1095,14 @@ ${g.depliant("Le logement social : un parc qui ne circule pas",
   de ${v(d, "loyer_social")} — moitié moins que dans le parc privé des grandes
   villes. C'est un patrimoine considérable, et il est mal employé pour une
   raison précise : il ne circule pas.</p>
-  <p>${v(d, "parc_social_entrees")} de logements y sont entrés en
+  <p>${v(d, "parc_social_entrees")} y sont entrés en
   ${an(d, "parc_social_entrees")}, ${v(d, "parc_social_demolitions")} ont été
   démolis, ${v(d, "parc_social_ventes")} vendus. Les attributions ont été
   ${nombre(n(d, "attributions_hlm"), 0)} en ${an(d, "attributions_hlm")}, pour
   ${v(d, "demandes_hlm")} de ménages en attente — dont
   ${v(d, "demandes_hlm_mutation", 0)} déjà logés dans le parc et qui demandent
   à en changer. En Île-de-France, une attribution pour
-  ${v(d, "tension_idf", 0)} demandes, et un délai médian de
+  ${v(d, "tension_idf", 0)}, et un délai médian de
   ${v(d, "delai_hlm_idf", 0)}. Le ${g.terme("droit au maintien dans les lieux")}
   garantit à l'occupant d'y rester quel que soit son revenu ultérieur : le
   surloyer existe, mais il est plafonné, contourné et, dans les quartiers
@@ -1382,7 +1400,7 @@ ${proposition("Cesser de taxer le mouvement, commencer à taxer juste", [
       + "Toute autre rédaction reviendrait à financer la baisse d'un impôt "
       + "par la hausse d'un autre, et nous ne le proposons pas."],
     ["La fin des niches de l'investissement locatif",
-      `Les ${v(d, "depenses_fiscales")} de dépenses fiscales sont supprimés `
+      `Les ${v(d, "depenses_fiscales")} de dépenses fiscales sont supprimées `
       + "et versés au chèque logement : "
       + `${v(d, "niches_investissement_locatif")} de dispositifs `
       + `d'investissement locatif, ${v(d, "tva_travaux_taux_reduit")} de TVA `
@@ -1425,7 +1443,7 @@ ${g.depliant("L'objection : « qui perd ? »",
       + `<a href="${g.lien("/chiffrage")}">chiffrage</a>, qui y suffit. `
       + "C'est un arbitrage, pas un impensé."],
     ["Les locataires protégés par l'encadrement des loyers",
-      "Environ 80 € par mois à Paris — "
+      `Environ ${v(d, "encadrement_gain_mensuel", 0)} par mois à Paris — `
       + `${nombre(Math.abs(n(d, "encadrement_effet")), 1)} % de modération `
       + "de la hausse — cessent "
       + "de leur être transférés. Ils sont les perdants les plus immédiats "
@@ -1559,8 +1577,10 @@ function pageChiffrage(d, parametres) {
       ["Aides personnelles supprimées", milliards(bilan.prestations)],
       ["Bonifications de taux supprimées", milliards(bilan.bonifications)],
       ["Dépenses fiscales supprimées", milliards(bilan.niches)],
-      ["Subventions à la pierre conservées",
-        `− ${milliards(bilan.subventionsGardees)}`],
+      ...(bilan.subventionsRendues > 0
+        ? [["Subventions à la pierre rendues",
+          milliards(bilan.subventionsRendues)]]
+        : []),
       ["Chèque logement versé", `− ${milliards(bilan.cheque)}`],
       ["Droits de mutation supprimés",
         bilan.perteDmto > 0 ? `− ${milliards(bilan.perteDmto)}` : "0 Md€"],
@@ -1583,7 +1603,13 @@ ${g.cle("Que coûte la proposition ?",
   <p>Le chèque retenu ici représente ${euros(parMenage)} par mois et par ménage
   aidé, contre ${euros(reglages.actuelle)} versés en moyenne aujourd'hui au
   titre des aides personnelles. Il est servi à ${v(d, "menages_aides")} de
-  ménages — le nombre actuel de bénéficiaires, tenu constant.</p>`,
+  ménages — le nombre actuel de bénéficiaires, tenu constant.</p>
+  <p>Une absence se remarque, et c'est voulu : les
+  ${milliards(bilan.subventionsGardees)} de subventions à la pierre que la
+  réforme conserve ne figurent pas dans le compte. Une dépense qu'on ne touche
+  pas ne s'ajoute ni ne se retranche ; elle continue. Le curseur ci-dessus
+  permet d'en rendre une part, et elle apparaît alors en recette. La colonne
+  s'additionne ; les arrondis peuvent en écarter le total d'un dixième.</p>`,
     sources(d, "prestations_sociales", "depenses_fiscales", "dmto",
       "menages_aides"), "compte")}
 
@@ -1626,15 +1652,26 @@ ${g.depliant("Ce que ce calcul n'est pas",
       + "des droits de mutation. Il ne chiffre ni la garantie publique du "
       + "loyer, ni le reversement à la commune de dix ans de recettes du "
       + "logement neuf, ni les moyens de justice qu'un impayé jugé en "
-      + "trois mois demanderait. Les trois coûtent, et leur coût n'est pas "
-      + "établi ici : c'est à cela que la marge dégagée est destinée, et "
-      + "c'est le premier chiffrage à produire."],
+      + "trois mois demanderait. Les trois coûtent, et leur coût n'est "
+      + "pas établi ici : c'est le premier chiffrage à produire."],
   ])}
   <p>Ce que le calcul établit est donc modeste, et suffisant : la réforme
   <strong class="cle-texte">tient dans les agrégats existants</strong>. Elle ne
   crée aucun impôt nouveau, ne suppose ni dette ni baisse de l'enveloppe des
   aides : les sommes qu'elle redéploie sont celles que le compte du logement
   publie chaque année.</p>
+  <p><strong>Ce que la marge peut payer, et dans quel ordre.</strong> Trois
+  emplois la réclament, et ${milliards(bilan.solde)} ne les couvrent pas tous :
+  mieux vaut donc dire lequel passe d'abord. Un, la clause de sauvegarde qui
+  garantit qu'aucun ménage modeste ne perde au change — son coût n'est pas
+  connu, et elle passe avant tout le reste. Deux, les trois engagements que ce
+  compte ne chiffre pas : garantie du loyer, reversement aux communes, moyens
+  de justice. Trois, le maintien du taux réduit de TVA sur les travaux
+  (${milliards(n(d, "tva_travaux_taux_reduit"))}), si le Parlement le juge
+  nécessaire. <strong class="cle-texte">Les trois ensemble dépassent la
+  marge.</strong> C'est alors le montant du chèque — le seul paramètre qui
+  pèse assez — qu'il faudrait revoir. Nous préférons l'écrire que de laisser
+  croire qu'une même somme paie trois fois.</p>
   <p>Une précision s'impose pourtant, parce qu'elle nous sera opposée et
   qu'elle est fondée. <strong class="cle-texte">Supprimer une niche fiscale
   augmente l'impôt de celui qui en bénéficiait.</strong> Aucun taux ne monte,
@@ -1687,9 +1724,10 @@ ${g.depliant("La microsimulation qui manque, et ce qu'elle trancherait",
   programme qui prétend le contraire sans microsimulation ne dit la
   vérité</strong>.</p>`, "microsimulation")}
 
-${g.depliant("Les trois leviers, et ce qu'ils déplacent",
-    `<p>Le formulaire ci-dessus porte les trois hypothèses qui pèsent. Voici ce
-  que chacune vaut.</p>
+${g.depliant("Les leviers, et ce qu'ils déplacent",
+    `<p>Le formulaire ci-dessus porte les trois hypothèses qu'on peut déplacer.
+  Voici ce que chacune vaut — et, en deuxième position, une quatrième qui
+  devrait en être une et n'en est pas encore.</p>
   <ul class="leviers">
     <li><strong>Le chèque.</strong> Chaque tranche de 10 € mensuels sur
     ${v(d, "menages_aides")} de ménages coûte
@@ -1773,11 +1811,14 @@ ${g.depliant("Ce que chaque niveau de fiabilité veut dire",
     `${g.gloses(ORDRE_FIABILITE.map((niveau) => [
     `${nomFiabilite(niveau)} (${compte(niveau)} chiffres)`, FIABILITES[niveau],
   ]))}
-  <p>Un chiffre marqué <em>presse</em> n'est pas un chiffre douteux : c'est un
-  chiffre lu dans la reprise d'une publication que nous n'avons pas pu ouvrir
-  directement, et qui doit être repris à sa source dès qu'elle est accessible.
-  Le distinguer est le seul moyen de ne pas laisser un ordre de grandeur
-  prendre, avec le temps, l'autorité d'une mesure.</p>
+  <p>Un chiffre marqué <em>presse</em> serait un chiffre lu dans la reprise
+  d'une publication que nous n'aurions pas pu ouvrir. <strong>Il n'y en a
+  aucun aujourd'hui</strong>, et c'est récent : les six derniers ont été
+  repris à leur source, et trois d'entre eux étaient faux — une part du
+  foncier deux fois trop grande, un délai d'attente surestimé de moitié, un
+  transfert de loyers que personne ne publiait. Le niveau reste dans la liste
+  parce que la dette reviendra : une actualité se cite d'abord de seconde
+  main.</p>
   <p>Un chiffre marqué <em>partie prenante</em> ne l'est pas davantage, et il
   pose un autre problème. Les meilleures données sur la demande de logement
   social viennent de la fédération des bailleurs sociaux ; les meilleures sur
@@ -1790,9 +1831,17 @@ ${g.depliant("La règle", `
   <p>Tout ce que ce site affiche de chiffré vient d'un seul fichier,
   <code>moteur/donnees.json</code>, où chaque entrée porte sa valeur, son
   unité, l'année qu'elle mesure, sa source, l'adresse de cette source, la date
-  à laquelle elle a été lue et, au besoin, la note qui la situe. Aucune page
-  n'écrit un nombre en dur ; une page qui demanderait une clé absente ne
-  s'afficherait pas.</p>
+  à laquelle elle a été lue et, au besoin, la note qui la situe. Une page qui
+  demanderait une clé absente ne s'afficherait pas.</p>
+  <p>La règle mérite d'être dite exactement, parce qu'une promesse approximative
+  ne vaut rien. <strong class="cle-texte">Aucune mesure n'est écrite à la main
+  dans une phrase</strong> : tout ce qui mesure quelque chose vient du fichier,
+  et un test refuse le contraire. Sept nombres y échappent, et ce sont les
+  seuls : les paramètres de la proposition elle-même — dix ans de recettes
+  rendues à la commune, zéro droit de mutation —, deux taux fixés par la loi,
+  le pas du curseur de la page Chiffrage et l'affichage d'un poste nul. Aucun
+  ne mesure le monde ; ils décrivent ce que nous proposons ou ce que le code
+  général des impôts dispose. La liste est close, et elle est dans le test.</p>
   <p>Cette contrainte a un coût — un chiffre qu'on ne peut pas sourcer ne
   figure pas sur le site — et c'est le but. Les deux calculs du site, le coût
   fiscal d'un achat et le chiffrage de la réforme, n'utilisent eux aussi que
