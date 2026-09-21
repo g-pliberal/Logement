@@ -22,6 +22,7 @@ const {
   enMoisDeLoyer,
 } = await import(join(RACINE, "moteur/js/calculs.js"));
 const { TITRES, rendre } = await import(join(RACINE, "moteur/js/pages.js"));
+const { graduationsX } = await import(join(RACINE, "moteur/js/gabarit.js"));
 
 const d = new Donnees(paquet);
 
@@ -165,4 +166,38 @@ test("un prix saisi donne un résultat, un prix absurde n'en donne pas", () => {
 test("ce qui vient du lecteur est échappé", () => {
   const [, html] = rendre(d, "/fiscalite", { prix: "\"><script>alert(1)</script>" });
   assert.ok(!html.includes("<script>alert(1)</script>"));
+});
+
+test("l'axe des années garde ses graduations quand la série s'allonge", () => {
+  // L'écart minimal entre une décennie et une borne est une part de
+  // l'amplitude, non un nombre d'années : ce qui se chevauche est une largeur
+  // de texte. Écrit en années, il faisait disparaître 2020 d'une série de
+  // vingt-six ans alors que rien ne le gênait.
+  assert.deepEqual(graduationsX(2000, 2025), [2000, 2010, 2020, 2025]);
+  assert.deepEqual(graduationsX(2014, 2025), [2014, 2020, 2025]);
+
+  // La règle sert toujours là où elle a une raison d'être : sur un siècle et
+  // quart, « 2020 » et « 2025 » se toucheraient, et la décennie cède.
+  const long = graduationsX(1900, 2025);
+  assert.ok(!long.includes(2020), "2020 colle à la borne sur une série longue");
+  assert.equal(long[0], 1900);
+  assert.equal(long[long.length - 1], 2025);
+
+  // Les deux bornes sont graduées d'office, et jamais en double.
+  for (const [a, b] of [[2000, 2025], [2014, 2025], [1900, 2025], [2020, 2024]]) {
+    const gr = graduationsX(a, b);
+    assert.equal(gr[0], a);
+    assert.equal(gr[gr.length - 1], b);
+    assert.equal(new Set(gr).size, gr.length, `doublon dans ${a}-${b}`);
+    assert.deepEqual([...gr].sort((x, y) => x - y), gr, `désordre dans ${a}-${b}`);
+  }
+
+  // Aucune graduation ne tombe à moins d'une largeur d'étiquette d'une autre.
+  for (const [a, b] of [[2000, 2025], [1975, 2025], [1900, 2025]]) {
+    const gr = graduationsX(a, b);
+    for (let i = 1; i < gr.length; i += 1) {
+      assert.ok((gr[i] - gr[i - 1]) / (b - a) >= 0.08,
+        `${gr[i - 1]} et ${gr[i]} se chevaucheraient sur un téléphone`);
+    }
+  }
 });
