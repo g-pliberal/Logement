@@ -50,8 +50,12 @@ Le livrable est le site statique ; voir `README.md`.
 - **Tous les chiffres sont dans `moteur/donnees.json`, et nulle part ailleurs.**
   Chaque entrée porte sa valeur, son unité, l'année qu'elle mesure, sa source,
   l'adresse de cette source, la date de lecture et un niveau de fiabilité
-  (`officielle`, `academique`, `presse`, `calcul`). Aucune page n'écrit un
-  nombre en dur ; une page qui demande une clé absente lève.
+  (`officielle`, `academique`, `partie_prenante`, `presse`, `calcul`). Aucune
+  page n'écrit une mesure à la main ; une page qui demande une clé absente
+  lève. Sept nombres échappent à la règle et ce sont les seuls — les
+  paramètres de la proposition, deux taux fixés par la loi, le pas d'un
+  curseur, l'affichage d'un zéro : aucun ne mesure le monde. La liste est
+  close, et elle est dans `tests/test_site.py`.
 - **Un chiffre qu'on ne peut pas sourcer ne figure pas sur le site.** C'est la
   contrainte principale, et elle coûte : elle a écarté plusieurs affirmations
   vraies mais invérifiables. Une déduction n'est pas une lecture ; une mémoire
@@ -61,6 +65,17 @@ Le livrable est le site statique ; voir `README.md`.
   faire passer la ligne en `officielle`, est toujours un travail utile.
 - **Un chiffre présent mais jamais affiché est refusé par les tests** : il
   vieillirait sans que personne le voie. Soit on le cite, soit on le retire.
+- **Un fait daté porte son échéance.** Un chiffre vieillit visiblement, son
+  année est à côté de lui ; une phrase, non. « L'expérimentation s'éteint le
+  25 novembre 2026 », « le texte est au Sénat », « les classes F suivront en
+  2028 » sont vraies le jour où on les écrit et fausses un jour, sans rien
+  casser. Chacune est déclarée dans le bloc `echeances` de `donnees.json` — ce
+  qu'elle affirme, jusqu'à quand, où elle est écrite, quoi aller vérifier — et
+  cinq tests la tiennent, dont un qui fait échouer `verifier.sh` le jour venu.
+  Quand il sonne, deux réponses : corriger le site, ou reporter l'échéance
+  parce qu'on a vérifié qu'elle tient encore. Jamais supprimer la ligne.
+  Écrire une date à venir sans la déclarer est refusé — c'est ainsi qu'on
+  repose une bombe à retardement.
 - Les pages : `moteur/js/pages.js`. Les deux seuls calculs :
   `moteur/js/calculs.js`. Le rendu : `moteur/js/gabarit.js`. L'accès aux
   données : `moteur/js/chiffres.js`.
