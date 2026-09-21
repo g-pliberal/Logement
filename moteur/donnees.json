@@ -1,6 +1,6 @@
 {
   "_lisez_moi": "Toutes les valeurs du site sont ici, et nulle part ailleurs. Chaque entrée porte sa source, son adresse, l'année qu'elle mesure et la date à laquelle elle a été lue. tests/test_donnees.py refuse une entrée incomplete, et refuse qu'une page cite une clé qui n'existe pas. Fiabilite : 'officielle' = service statistique public ou juridiction financiere ; 'academique' = article a comite de lecture ; 'presse' = source secondaire, a reprendre a la source primaire des qu'elle est accessible ; 'calcul' = obtenu ici a partir d'autres entrees, la formule est dans 'note'.",
-  "lu_le": "2026-09-20",
+  "lu_le": "2026-09-21",
   "chiffres": {
     "depense_nationale": {
       "libelle": "Dépense nationale de logement",
@@ -130,7 +130,7 @@
       "note": "Moyenne Union européenne : 1,0 %. Zone euro : 1,2 %."
     },
     "prelevements": {
-      "libelle": "Prélèvements assis sur le logement",
+      "libelle": "Prélèvements assis sur le logement (État et collectivités)",
       "valeur": 99.2,
       "unite": "Md€",
       "annee": 2024,
@@ -172,7 +172,7 @@
       "note": "Année de transactions basse : le rendement des DMTO suit le nombre de ventes, qui est reparti en 2025."
     },
     "solde_public": {
-      "libelle": "Ce que le logement rapporte à l'État net des aides",
+      "libelle": "Ce que le logement rapporte aux administrations, net des aides",
       "valeur": 56.1,
       "unite": "Md€",
       "annee": 2024,
@@ -180,7 +180,7 @@
       "source": "Calcul du site : prélèvements − aides",
       "url": "https://www.fipeco.fr/fiche/La-politique-du-logement",
       "lu_le": "2026-09-20",
-      "note": "99,2 − 43,1 = 56,1 Md€. Un ordre de grandeur, pas un solde budgétaire : les deux agrégats sont mesurés par le même compte, mais aides et prélèvements n'ont ni les mêmes redevables ni les mêmes bénéficiaires."
+      "note": "99,2 − 43,1 = 56,1 Md€. Un ordre de grandeur, pas un solde budgétaire : les deux agrégats sont mesurés par le même compte, mais aides et prélèvements n'ont ni les mêmes redevables ni les mêmes bénéficiaires, et ils ne sont pas perçus par les mêmes administrations — la taxe foncière revient aux communes, les droits de mutation aux départements."
     },
     "logements_commences": {
       "libelle": "Logements mis en chantier",
@@ -304,25 +304,25 @@
     },
     "demandes_hlm": {
       "libelle": "Ménages en attente d'un logement social",
-      "valeur": 2.87,
+      "valeur": 2.885,
       "unite": "millions",
       "annee": 2025,
       "fiabilite": "presse",
-      "source": "Union sociale pour l'habitat, USH Statistiques n° 3, situation à mi-2025",
-      "url": "https://www.union-habitat.org/centre-de-ressources/economie-financement/la-demande-et-les-attributions-situation-mi-2025-et",
-      "lu_le": "2026-09-20",
-      "note": "Au 30 juin 2025. Près de 2,94 millions au premier trimestre 2026 ; +52 % depuis 2015. Chiffres relevés dans la reprise de cette publication ; à reprendre à la source dès qu'elle est accessible."
+      "source": "Union sociale pour l'habitat, USH Statistiques n° 4, « La demande et les attributions de logement social à fin 2025 »",
+      "url": "https://www.union-habitat.org/centre-de-ressources/economie-financement/la-demande-et-les-attributions-de-logement-social-fin-0",
+      "lu_le": "2026-09-21",
+      "note": "Au 31 décembre 2025, en hausse de 4 % sur un an. Ce total comprend les demandes de mutation, déposées par des ménages déjà logés dans le parc social. Chiffre relevé dans la reprise de cette publication ; à reprendre à la source dès qu'elle est accessible."
     },
     "attributions_hlm": {
-      "libelle": "Attributions de logements sociaux par an",
-      "valeur": 450000,
+      "libelle": "Attributions de logements sociaux dans l'année",
+      "valeur": 394000,
       "unite": "attributions",
       "annee": 2025,
       "fiabilite": "presse",
-      "source": "Union sociale pour l'habitat",
-      "url": "https://www.union-habitat.org/centre-de-ressources/economie-financement/la-demande-et-les-attributions-situation-mi-2025-et",
-      "lu_le": "2026-09-20",
-      "note": "Ordre de grandeur annuel, mobilité interne comprise."
+      "source": "Union sociale pour l'habitat, USH Statistiques n° 4, « La demande et les attributions de logement social à fin 2025 »",
+      "url": "https://www.union-habitat.org/centre-de-ressources/economie-financement/la-demande-et-les-attributions-de-logement-social-fin-0",
+      "lu_le": "2026-09-21",
+      "note": "En hausse de 3 % sur un an, après plusieurs années de baisse, et à un niveau qui reste faible. Mobilité interne au parc comprise."
     },
     "delai_hlm": {
       "libelle": "Délai moyen d'obtention d'un logement social",
@@ -330,9 +330,9 @@
       "unite": "mois",
       "annee": 2024,
       "fiabilite": "presse",
-      "source": "Cour des comptes, rapport public annuel 2026",
-      "url": "https://www.ccomptes.fr/",
-      "lu_le": "2026-09-20",
+      "source": "Cour des comptes, rapport public annuel 2026, « Faciliter le parcours d'accès au logement social dans les territoires »",
+      "url": "https://www.ccomptes.fr/sites/default/files/2026-03/20260325-RPA-2026-I-4-Faciliter-le-parcours-d-acces-au-logement-social.pdf",
+      "lu_le": "2026-09-21",
       "note": "Demandes satisfaites en 2024 ; 39,5 mois en Île-de-France. Chiffre relevé dans la reprise du rapport ; à reprendre au rapport lui-même."
     },
     "friggit_ecart": {
@@ -484,21 +484,203 @@
       "unite": "%",
       "annee": 2006,
       "fiabilite": "academique",
-      "source": "G. Fack, « Are housing benefits an effective way to redistribute income? », Labour Economics",
+      "source": "G. Fack, « Pourquoi les ménages pauvres paient-ils des loyers de plus en plus élevés ? », Économie et Statistique n° 381-382, Insee",
       "url": "https://www.insee.fr/fr/statistiques/fichier/1376573/es381-382b.pdf",
-      "lu_le": "2026-09-20",
-      "note": "Extension des aides au logement des années 1990 en France : 78 % de l'aide supplémentaire est passée dans le loyer, sans amélioration observée de la qualité. Les travaux postérieurs situent la fourchette entre 60 % et 80 %, d'autant plus haute que l'offre est rigide."
+      "lu_le": "2026-09-21",
+      "note": "Extension des aides au logement des années 1990 en France : 78 % de l'aide supplémentaire est passée dans le loyer, sans amélioration observée de la qualité. Le même résultat est établi dans « Are housing benefits an effective way to redistribute income? », Labour Economics, 2006. Les travaux postérieurs situent la fourchette entre 60 % et 80 %, d'autant plus haute que l'offre est rigide."
     },
     "menages_aides": {
       "libelle": "Ménages recevant une aide personnelle au logement",
-      "valeur": 5.54,
+      "valeur": 5.9,
       "unite": "millions",
+      "annee": 2023,
+      "fiabilite": "officielle",
+      "source": "Drees, « Les aides au logement », Minima sociaux et prestations sociales, édition 2025",
+      "url": "https://drees.solidarites-sante.gouv.fr/sites/default/files/2025-12/MS2025%20-%20Fiche%2034%20-%20Les%20aides%20au%20logement.pdf",
+      "lu_le": "2026-09-21",
+      "note": "Fin 2023, en baisse de 1,8 % sur un an. Avec les conjoints et les enfants, 11,2 millions de personnes vivent dans un ménage aidé, soit environ 16 % de la population."
+    },
+    "prelevements_part_pib": {
+      "libelle": "Part des prélèvements sur le logement dans le PIB",
+      "valeur": 3.4,
+      "unite": "%",
+      "annee": 2024,
+      "fiabilite": "officielle",
+      "source": "FIPECO, « La politique du logement », d'après le compte du logement",
+      "url": "https://www.fipeco.fr/fiche/La-politique-du-logement",
+      "lu_le": "2026-09-21"
+    },
+    "prelevements_part_po": {
+      "libelle": "Part du logement dans les prélèvements obligatoires",
+      "valeur": 7.9,
+      "unite": "%",
+      "annee": 2024,
+      "fiabilite": "officielle",
+      "source": "FIPECO, « La politique du logement », d'après le compte du logement",
+      "url": "https://www.fipeco.fr/fiche/La-politique-du-logement",
+      "lu_le": "2026-09-21"
+    },
+    "part_vacants": {
+      "libelle": "Part des logements vacants dans le parc",
+      "valeur": 7.7,
+      "unite": "%",
       "annee": 2025,
+      "fiabilite": "officielle",
+      "source": "Insee Focus n° 359",
+      "url": "https://www.insee.fr/fr/statistiques/8640662",
+      "lu_le": "2026-09-21",
+      "note": "Contre 8,1 % en 2019 : la vacance recule."
+    },
+    "sans_domicile_2020": {
+      "libelle": "Personnes sans domicile, cinq ans plus tôt",
+      "valeur": 300000,
+      "unite": "personnes",
+      "annee": 2020,
       "fiabilite": "presse",
-      "source": "Cnaf, chiffres clés repris par moncalcul.fr",
-      "url": "https://moncalcul.fr/guides/chiffres-cles-caf",
-      "lu_le": "2026-09-20",
-      "note": "2,7 millions pour l'APL, 2,2 millions pour l'ALS, 0,7 million pour l'ALF. Environ 10 à 11 millions de personnes couvertes avec les autres membres du foyer. À reprendre aux publications de la Cnaf et de la Drees."
+      "source": "Fondation pour le logement des défavorisés, 31e rapport",
+      "url": "https://www.fondationpourlelogement.fr/31e-rapport-sur-letat-du-mal-logement-en-france-en-2026/",
+      "lu_le": "2026-09-21",
+      "note": "Point de comparaison du chiffre de 2026 : le nombre de personnes sans domicile a crû d'un sixième en cinq ans. Chiffre relevé dans la reprise du rapport ; à reprendre à la source dès qu'elle est accessible."
+    },
+    "heberges_tiers": {
+      "libelle": "Personnes hébergées chez un tiers faute de logement autonome",
+      "valeur": 600000,
+      "unite": "personnes",
+      "annee": 2026,
+      "fiabilite": "presse",
+      "source": "Fondation pour le logement des défavorisés, 31e rapport",
+      "url": "https://www.fondationpourlelogement.fr/31e-rapport-sur-letat-du-mal-logement-en-france-en-2026/",
+      "lu_le": "2026-09-21",
+      "note": "Un mal-logement qui n'apparaît dans aucune statistique de loyer."
+    },
+    "delai_hlm_idf": {
+      "libelle": "Délai moyen d'obtention d'un logement social, Île-de-France",
+      "valeur": 39.5,
+      "unite": "mois",
+      "annee": 2024,
+      "fiabilite": "presse",
+      "source": "Cour des comptes, rapport public annuel 2026, « Faciliter le parcours d'accès au logement social dans les territoires »",
+      "url": "https://www.ccomptes.fr/sites/default/files/2026-03/20260325-RPA-2026-I-4-Faciliter-le-parcours-d-acces-au-logement-social.pdf",
+      "lu_le": "2026-09-21",
+      "note": "Demandes satisfaites en 2024, contre 19 mois pour la France entière. Chiffre relevé dans la reprise du rapport ; à reprendre au rapport lui-même."
+    },
+    "demandes_hlm_mutation": {
+      "libelle": "Demandes de logement social émanant de locataires du parc social",
+      "valeur": 890000,
+      "unite": "ménages",
+      "annee": 2024,
+      "fiabilite": "presse",
+      "source": "Union sociale pour l'habitat, USH Statistiques n° 1, « La demande et les attributions de logement social à fin 2024 »",
+      "url": "https://www.union-habitat.org/sites/default/files/articles/pdf/2025-09/ush_stats_1_demandevdef.pdf",
+      "lu_le": "2026-09-21",
+      "note": "Soit 32 % des demandeurs à fin 2024 : des ménages déjà logés dans le parc social qui souhaitent en changer. Les deux tiers restants sont des ménages qui attendent d'y entrer."
+    },
+    "logements_autorises_ecart": {
+      "libelle": "Écart des autorisations à la moyenne des cinq années précédentes",
+      "valeur": -5.1,
+      "unite": "%",
+      "annee": 2026,
+      "fiabilite": "officielle",
+      "source": "SDES, Sit@del, résultats à fin février 2026",
+      "url": "https://www.statistiques.developpement-durable.gouv.fr/construction-de-logements-resultats-fin-fevrier-2026-france-entiere",
+      "lu_le": "2026-09-21"
+    },
+    "parc_social_demolitions": {
+      "libelle": "Logements sociaux démolis dans l'année",
+      "valeur": 18100,
+      "unite": "logements",
+      "annee": 2024,
+      "fiabilite": "officielle",
+      "source": "SDES, RPLS au 1er janvier 2025",
+      "url": "https://www.statistiques.developpement-durable.gouv.fr/54-millions-de-logements-locatifs-sociaux-en-france-au-1er-janvier-2025",
+      "lu_le": "2026-09-21"
+    },
+    "parc_social_ventes": {
+      "libelle": "Logements sociaux vendus dans l'année",
+      "valeur": 10900,
+      "unite": "logements",
+      "annee": 2024,
+      "fiabilite": "officielle",
+      "source": "SDES, RPLS au 1er janvier 2025",
+      "url": "https://www.statistiques.developpement-durable.gouv.fr/54-millions-de-logements-locatifs-sociaux-en-france-au-1er-janvier-2025",
+      "lu_le": "2026-09-21"
+    },
+    "auckland_permis_prudent": {
+      "libelle": "Logements autorisés en plus à Auckland, estimation la plus prudente",
+      "valeur": 21800,
+      "unite": "logements",
+      "annee": 2021,
+      "fiabilite": "academique",
+      "source": "R. Greenaway-McGrevy, travaux sur l'Auckland Unitary Plan (2016)",
+      "url": "https://motu-www.motu.org.nz/wpapers/24_07.pdf",
+      "lu_le": "2026-09-21",
+      "note": "Cinq ans après la réforme, seconde méthode : environ 4 % du parc, contre 9 % pour la première."
+    },
+    "encadrement_transfert": {
+      "libelle": "Loyers transférés chaque année aux locataires en place par l'encadrement",
+      "valeur": 700,
+      "unite": "M€",
+      "annee": 2026,
+      "fiabilite": "presse",
+      "source": "Rapport d'évaluation de l'expérimentation, repris par MoneyVox",
+      "url": "https://www.moneyvox.fr/immobilier/actualites/108939/encadrement-des-loyers-un-rapport-pose-la-question-de-la-poursuite-du-dispositif",
+      "lu_le": "2026-09-21",
+      "note": "Ordre de grandeur annuel du transfert, pour zéro logement construit."
+    },
+    "part_foncier_paris": {
+      "libelle": "Part du terrain dans le coût d'une opération, à Paris",
+      "valeur": 50,
+      "unite": "%",
+      "annee": 2023,
+      "fiabilite": "presse",
+      "source": "Sénat, exposé des motifs de la proposition de loi n° 548 (2024-2025) sur le prix du foncier",
+      "url": "https://www.senat.fr/leg/exposes-des-motifs/ppl24-548-expose.html",
+      "lu_le": "2026-09-21",
+      "note": "Contre environ 25 % en province, sur le marché libre."
+    },
+    "dpe_reclasses": {
+      "libelle": "Logements sortis du statut de passoire par le seul changement de méthode",
+      "valeur": 850000,
+      "unite": "logements",
+      "annee": 2026,
+      "fiabilite": "officielle",
+      "source": "Ministère de la Transition écologique, évolution du calcul du DPE au 1er janvier 2026",
+      "url": "https://www.ecologie.gouv.fr/presse/evolution-du-calcul-du-dpe-1er-janvier-2026-favoriser-lelectrification-du-chauffage",
+      "lu_le": "2026-09-21",
+      "note": "Le coefficient de conversion de l'électricité passe de 2,3 à 1,9 au 1er janvier 2026. Sur la base du parc au 1er janvier 2023, environ 850 000 logements, principalement chauffés à l'électricité, cessent d'être classés F ou G sans qu'un mur ait bougé."
+    },
+    "passoires": {
+      "libelle": "Résidences principales classées F ou G au diagnostic énergétique",
+      "valeur": 4.8,
+      "unite": "millions",
+      "annee": 2023,
+      "fiabilite": "officielle",
+      "source": "Ministère de la Transition écologique, évolution du calcul du DPE au 1er janvier 2026",
+      "url": "https://www.ecologie.gouv.fr/presse/evolution-du-calcul-du-dpe-1er-janvier-2026-favoriser-lelectrification-du-chauffage",
+      "lu_le": "2026-09-21",
+      "note": "Parc de résidences principales au 1er janvier 2023."
+    },
+    "tva_travaux_taux_reduit": {
+      "libelle": "TVA à taux réduit sur l'entretien et l'amélioration",
+      "valeur": 4.5,
+      "unite": "Md€",
+      "annee": 2024,
+      "fiabilite": "officielle",
+      "source": "FIPECO, « La politique du logement », d'après le compte du logement",
+      "url": "https://www.fipeco.fr/fiche/La-politique-du-logement",
+      "lu_le": "2026-09-21",
+      "note": "La première des dépenses fiscales du logement. La supprimer ramènerait les travaux au taux normal : c'est une hausse d'impôt pour tout propriétaire qui fait refaire une toiture ou une chaudière."
+    },
+    "niches_investissement_locatif": {
+      "libelle": "Dispositifs fiscaux d'investissement locatif",
+      "valeur": 2.3,
+      "unite": "Md€",
+      "annee": 2024,
+      "fiabilite": "officielle",
+      "source": "FIPECO, « La politique du logement », d'après le compte du logement",
+      "url": "https://www.fipeco.fr/fiche/La-politique-du-logement",
+      "lu_le": "2026-09-21",
+      "note": "Réductions d'impôt accordées en contrepartie d'un engagement de location. Leur bénéfice est concentré sur les ménages les plus imposés."
     }
   },
   "series": {
@@ -506,11 +688,25 @@
       "libelle": "Logements mis en chantier, en milliers",
       "unite": "milliers de logements",
       "fiabilite": "officielle",
-      "source": "Insee, d'après SDES, Sitadel2 — série mise à jour le 9 juillet 2026",
+      "source": "Insee, d'après SDES, Sitadel2 — données brutes arrêtées à fin mai 2026",
       "url": "https://www.insee.fr/fr/statistiques/2015606",
-      "lu_le": "2026-09-20",
-      "note": "France hors Mayotte. Le collectif comprend les résidences pour personnes âgées et étudiants.",
+      "lu_le": "2026-09-21",
+      "note": "France hors Mayotte, en date réelle estimée. Le collectif comprend les logements en résidence (personnes âgées, étudiants, tourisme). La série publiée par l'Insee commence en 2000 : elle est reprise ici en entier, pour que le niveau de chaque année se compare à tous les autres et non au seul point de départ choisi.",
       "annees": [
+        2000,
+        2001,
+        2002,
+        2003,
+        2004,
+        2005,
+        2006,
+        2007,
+        2008,
+        2009,
+        2010,
+        2011,
+        2012,
+        2013,
         2014,
         2015,
         2016,
@@ -525,6 +721,20 @@
         2025
       ],
       "total": [
+        337.6,
+        337.2,
+        342.4,
+        363.9,
+        414.4,
+        464.9,
+        493.8,
+        488.9,
+        398.4,
+        345.6,
+        412.2,
+        430.1,
+        382.3,
+        357.9,
         336.8,
         340.9,
         369.4,
@@ -539,6 +749,20 @@
         264.8
       ],
       "individuel": [
+        211.5,
+        209.7,
+        211.0,
+        218.0,
+        239.7,
+        253.2,
+        259.6,
+        252.6,
+        215.5,
+        173.9,
+        205.0,
+        212.6,
+        185.5,
+        171.3,
         144.5,
         141.6,
         152.2,
@@ -553,6 +777,20 @@
         94.3
       ],
       "collectif": [
+        126.1,
+        127.5,
+        131.4,
+        145.9,
+        174.7,
+        211.7,
+        234.3,
+        236.3,
+        182.9,
+        171.7,
+        207.2,
+        217.5,
+        196.8,
+        186.6,
         192.3,
         199.3,
         217.2,

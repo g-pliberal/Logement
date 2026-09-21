@@ -21,9 +21,9 @@ Les chiffres qui portent cette thèse, tous datés et sourcés :
 
 | | |
 |---|---|
-| 264 800 | logements mis en chantier en 2025, contre 433 900 en 2017 |
+| 264 800 | logements mis en chantier en 2025, contre 493 800 en 2006 |
 | +55 % | l'écart du prix des logements anciens à la tendance qu'il a suivie de 1965 à 2001, rapporté au revenu par ménage |
-| 2,87 M | ménages en attente d'un logement social au 30 juin 2025, pour ~450 000 attributions par an |
+| 2,885 M | ménages en attente d'un logement social fin 2025 — dont 890 000 déjà logés dans le parc — pour 394 000 attributions dans l'année |
 | 99,2 Md€ | prélevés sur le logement en 2024, contre 43,1 Md€ d'aides |
 
 ## Les cinq engagements
@@ -114,8 +114,26 @@ environnement à monter n'est pas vérifié longtemps.
 - **Le détail des collectivités.** La compensation de la suppression des droits
   de mutation est posée en principe ; sa répartition entre départements demande
   un travail qui n'est pas fait ici.
+- **Le coût de trois engagements sur cinq.** Le chiffrage porte sur le chèque
+  logement et sur les droits de mutation. La garantie publique du loyer, le
+  reversement à la commune de dix ans de recettes du logement neuf et les
+  moyens de justice d'un impayé jugé en trois mois ne sont pas chiffrés — c'est
+  à cela que la marge dégagée est destinée, et c'est le prochain travail.
 
 Ces limites sont écrites sur le site lui-même, et non reléguées ici.
+
+## Les objections, traitées dans la page qui les appelle
+
+Un programme se juge sur ce qu'il oppose à ses propres chiffres. Cinq
+objections sont donc portées par le site, chacune là où elle se pose :
+
+| Objection | Où |
+|---|---|
+| « Il y a plus de permis délivrés que de chantiers ouverts » | [Construire](https://g-pliberal.github.io/logement/#/construire) |
+| « Une commune ne peut pas être forcée d'autoriser » | [Construire](https://g-pliberal.github.io/logement/#/construire) |
+| « Vous allez baisser les aides » | [Aider](https://g-pliberal.github.io/logement/#/aider) |
+| « Qui perd ? » — les cinq perdants, nommés | [Fiscalité](https://g-pliberal.github.io/logement/#/fiscalite) |
+| « Sans impôt nouveau » : ce que la suppression d'une niche fait vraiment | [Chiffrage](https://g-pliberal.github.io/logement/#/chiffrage) |
 
 ## Apparence
 

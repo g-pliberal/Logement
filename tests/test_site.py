@@ -68,6 +68,24 @@ class Chiffres(unittest.TestCase):
                 for champ in ("source", "url", "lu_le", "fiabilite"):
                     self.assertIn(champ, serie)
 
+    def test_une_source_designe_un_document_et_non_un_site(self):
+        """Renvoyer à l'accueil d'une institution n'est pas citer : le lecteur
+        qui veut vérifier doit tomber sur la publication, pas sur un menu."""
+        for cle, entree in DONNEES["chiffres"].items():
+            with self.subTest(chiffre=cle):
+                chemin = entree["url"].split("//", 1)[1]
+                self.assertIn("/", chemin.rstrip("/"),
+                              f"{cle} : l'adresse ne désigne aucun document")
+
+    def test_une_reprise_dit_qu_elle_en_est_une(self):
+        """« presse » est une dette : elle doit être écrite quelque part, ou
+        personne ne la remboursera."""
+        for cle, entree in DONNEES["chiffres"].items():
+            if entree["fiabilite"] == "presse":
+                with self.subTest(chiffre=cle):
+                    self.assertIn("note", entree,
+                                  f"{cle} : une reprise sans note ne dit pas sa dette")
+
     def test_le_solde_public_est_la_difference_annoncee(self):
         """Le seul chiffre calculé du paquet : il doit tomber juste."""
         chiffres = DONNEES["chiffres"]
@@ -109,6 +127,40 @@ class Citations(unittest.TestCase):
         for cle in DONNEES["series"]:
             with self.subTest(serie=cle):
                 self.assertIn(f'serie("{cle}")', PAGES)
+
+
+class NombresEnDur(unittest.TestCase):
+    """Aucune page n'écrit un nombre.
+
+    C'est la règle du dépôt, et elle s'était desserrée sans bruit : des
+    chiffres étaient réapparus dans la prose, hors données, hors source, hors
+    date. Ils y vieillissaient seuls, et divergeaient de la valeur que la même
+    page affichait deux lignes plus haut. Ces deux tests referment la porte.
+    """
+
+    #: `nombre(3.4, 1)` : une statistique passée en clair au formateur.
+    #: Une expression (`milliards(10 * 12 * n(d, "x") / 1000)`) reste permise :
+    #: ses facteurs sont des constantes de calcul, non des mesures.
+    LITTERAL = re.compile(
+        r"(?:nombre|milliards|euros|avecUnite)\(\s*-?\d+(?:\.\d+)?\s*[,)]")
+
+    #: « 850 000 », « 18 100 » : un nombre séparé par milliers, donc une
+    #: grandeur, écrite à la main dans une phrase.
+    GRANDEUR = re.compile(r"\d{1,3}[\u00a0\u202f ]\d{3}(?![\d])")
+
+    def test_aucune_statistique_n_est_passee_en_clair_au_formateur(self):
+        fautes = [PAGES[:m.start()].count("\n") + 1
+                  for m in self.LITTERAL.finditer(PAGES)]
+        self.assertEqual(fautes, [], f"pages.js : nombre écrit en dur, lignes {fautes}")
+
+    def test_aucune_grandeur_n_est_ecrite_dans_la_prose(self):
+        fautes = []
+        for m in self.GRANDEUR.finditer(PAGES):
+            ligne = PAGES[:m.start()].count("\n") + 1
+            fautes.append(f"ligne {ligne} : « {m.group(0)} »")
+        self.assertEqual(fautes, [],
+                         "pages.js : grandeur écrite à la main, "
+                         "elle doit venir de donnees.json — " + " ; ".join(fautes))
 
 
 class Autonomie(unittest.TestCase):
