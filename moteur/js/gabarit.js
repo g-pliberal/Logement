@@ -262,6 +262,11 @@ export function bulle(sujet, texte) {
  * entrée pour entrée — les témoins des pages le vérifient.
  */
 export const GLOSSAIRE = Object.freeze({
+  "upzoning":
+    "L'ouverture des droits à bâtir : relever ce qu'un règlement d'urbanisme "
+    + "autorise sur une parcelle — nombre de logements, hauteur, surface. Le "
+    + "mot est anglais parce que la littérature qui l'évalue l'est aussi ; en "
+    + "français, c'est l'inverse exact d'un plafond qu'on abaisse.",
   "FSL":
     "Le fonds de solidarité pour le logement : une aide départementale qui "
     + "paie un dépôt de garantie, apure une dette de loyer ou règle une "

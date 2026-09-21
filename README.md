@@ -145,8 +145,21 @@ objections sont donc portées par le site, chacune là où elle se pose :
 | « Qui perd ? » — les cinq perdants, nommés | [Fiscalité](https://g-pliberal.github.io/logement/#/fiscalite) |
 | « Sans impôt nouveau » : ce que la suppression d'une niche fait vraiment | [Chiffrage](https://g-pliberal.github.io/logement/#/chiffrage) |
 
+| « Une ville en Nouvelle-Zélande ne prouve rien » — Minneapolis et la Californie ont échoué, et on dit pourquoi | [Construire](https://g-pliberal.github.io/logement/#/construire) |
+| « Un rapport officiel recommande l'inverse » — l'IGF sur le Pinel | [Fiscalité](https://g-pliberal.github.io/logement/#/fiscalite) |
+
 Les réserves que le site porte sur ses propres sources — Auckland, Fack — sont
 écrites à côté des chiffres qu'elles concernent.
+
+## Ce qui appuie les deux thèses causales
+
+Le programme affirme deux mécanismes, et chacun est appuyé par plus d'une
+mesure — une étrangère, une française, la française étant la plus récente :
+
+| Mécanisme | Les preuves |
+|---|---|
+| Ouvrir le droit de construire fait construire | Auckland, trois estimations concordantes (4 %, 9 % du parc ; 46,5 % des permis de sept ans) — **et deux échecs**, Minneapolis et la Californie, qui n'ont relevé ni l'ampleur ni le gabarit |
+| Une aide indexée sur le loyer finit dans le loyer | Fack (Insee, 78 %) ; Grislain-Letrémy et Trevien (Banque de France, 2022), qui montrent que la hausse s'arrête là où l'offre répond ; IGF-CGEDD sur le Pinel (2019) : 9,3 % de la réduction d'impôt parvient au locataire |
 
 ## Apparence
 

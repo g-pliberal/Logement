@@ -682,29 +682,53 @@ ${proposition("Rendre le droit de construire à celui qui construit", [
   ])}
 
 ${g.cle("Cela marche-t-il ailleurs ?",
-    "Auckland a ouvert les droits à bâtir sur les trois quarts de son sol "
-    + `urbain en 2016. Six ans après, ${vc(d, "auckland_permis")} de plus y `
-    + "avaient été autorisés, et les loyers y étaient "
-    + `${vc(d, "auckland_loyers", 0)} en dessous de ce qu'ils auraient été `
-    + "sans la réforme.",
-    `<p>C'est l'expérience naturelle la mieux documentée du domaine : une
-  métropole d'un million et demi d'habitants, une réforme datée, des villes
-  comparables restées sous l'ancien régime. Deux méthodes ont été employées, et
-  nous donnons les deux : ${vc(d, "auckland_permis_prudent", 0)} autorisés en
-  plus en cinq ans pour la plus prudente, environ 4&nbsp;% du parc ;
-  ${v(d, "auckland_permis", 0)} en six ans pour l'autre, soit 9&nbsp;%.</p>
-  <p>Trois réserves, qu'il vaut mieux poser soi-même. Auckland partait d'un
-  zonage pavillonnaire extrême, et la Nouvelle-Zélande n'a ni nos communes, ni
-  notre droit des sols. L'estimation sur les loyers repose sur un contrôle
-  synthétique — une ville comparée à une moyenne de villes fabriquée pour lui
-  ressembler —, méthode reconnue mais dont les résultats se discutent, et
-  discutés ils l'ont été. Enfin l'écart mesuré n'est pas une baisse des loyers
-  constatée : c'est un écart au niveau qu'ils auraient atteint sans la
-  réforme.</p>
-  <p>Le point n'est donc pas le chiffre, c'est le sens, et il est robuste aux
-  trois réserves : quand le droit de construire s'ouvre, on construit, et les
-  loyers montent moins vite qu'ils ne l'auraient fait.</p>`,
-    sources(d, "auckland_permis", "auckland_permis_prudent", "auckland_loyers"),
+    "Parfois, et pas toujours — et ce qui sépare les réussites des échecs est "
+    + "précisément ce que nous proposons. À Auckland, qui a ouvert les droits "
+    + "à bâtir sur les trois quarts de son sol urbain en 2016, "
+    + `<strong class="cle-texte">${v(d, "auckland_part_permis")}</strong> des `
+    + "logements autorisés en sept ans le sont du fait de la réforme.",
+    `<p>Trois estimations existent, et nous les donnons toutes les trois plutôt
+  que la plus flatteuse. La plus prudente compare les quartiers d'Auckland
+  entre eux : ${vc(d, "auckland_permis_prudent", 0)} logements autorisés en
+  plus en cinq ans, environ 4&nbsp;% du parc. La deuxième compare Auckland à
+  des villes néo-zélandaises restées sous l'ancien régime :
+  ${v(d, "auckland_permis", 0)} en six ans, soit 9&nbsp;%. La plus récente,
+  de 2025, porte sur sept ans et attribue à la réforme
+  ${v(d, "auckland_part_permis")} de tous les permis délivrés — 86,8&nbsp;% de
+  plus que sans elle. Sur les loyers, l'écart au scénario sans réforme est
+  estimé à ${vc(d, "auckland_loyers", 0)}.</p>
+  <p><strong>Et ailleurs, cela n'a pas marché.</strong> Il faut le dire, parce
+  que c'est vrai et parce que c'est instructif. Minneapolis a autorisé en 2019
+  jusqu'à trois logements par parcelle sans toucher aux règles de surface : les
+  petits collectifs restent une fraction marginale des permis. La Californie a
+  ouvert la division parcellaire sans obtenir grand-chose, les communes ayant
+  trouvé de quoi la neutraliser. Et la littérature est nette sur les
+  ouvertures ponctuelles : les études d'${g.terme("upzoning")} localisé
+  « trouvent souvent une réponse de l'offre faible ou nulle ».</p>
+  <p>Qu'est-ce qui sépare Auckland de Minneapolis ? Deux choses, et ce sont les
+  deux que porte notre proposition. <strong class="cle-texte">L'ampleur</strong>
+  — trois quarts du sol urbain d'un coup, non quelques parcelles : une
+  ouverture localisée déplace la construction au lieu de l'augmenter, et fait
+  monter le prix du terrain ouvert. Et <strong class="cle-texte">le
+  gabarit</strong> : Auckland n'a pas seulement permis plus de logements par
+  parcelle, elle a relevé la surface constructible de
+  ${vc(d, "auckland_surface_plancher", 1)} en zone de densité moyenne, et
+  triplé la capacité de l'agglomération. Minneapolis a compté les logements
+  sans toucher aux mètres carrés, et n'a rien obtenu.</p>
+  <p>C'est exactement la raison pour laquelle notre proposition s'écrit en
+  hauteur, emprise et niveaux opposables, et non en nombre de logements
+  autorisés. Une réforme qui ne ferait pas cela échouerait, et les échecs
+  ci-dessus disent pourquoi.</p>
+  <p>Restent les réserves, que nous posons nous-mêmes. Auckland partait d'un
+  zonage pavillonnaire extrême, et la Nouvelle-Zélande n'a ni nos communes ni
+  notre droit des sols. Les estimations reposent sur des contrefactuels
+  construits, méthode reconnue mais discutée — et discutée elle l'a été, au
+  point qu'une revue de littérature a été écrite pour répondre aux critiques.
+  Enfin l'écart sur les loyers n'est pas une baisse constatée : c'est un écart
+  au niveau qu'ils auraient atteint sans la réforme.</p>`,
+    sources(d, "auckland_part_permis", "auckland_permis",
+      "auckland_permis_prudent", "auckland_surface_plancher",
+      "auckland_loyers"),
     "auckland")}
 
 ${g.depliant("L'objection : « il y a plus de permis que de chantiers »",
@@ -971,7 +995,24 @@ ${g.cle("Où va une aide au logement ?",
   et c'est de ce mécanisme, non du chiffre, que la proposition se déduit.</p>
   <p>Ce résultat ne dit pas qu'il faut cesser d'aider. Il dit que l'aide doit
   cesser d'être <em>indexée sur le loyer</em> : c'est ce lien qui la fait
-  remonter dans le prix, et c'est le seul point que la proposition change.</p>`,
+  remonter dans le prix, et c'est le seul point que la proposition change.</p>
+  <p>Une seconde mesure française l'a confirmé depuis, et elle est plus utile
+  encore parce qu'elle dit <em>quand</em> le mécanisme joue. Céline
+  Grislain-Letrémy et Corentin Trevien, à la
+  <a href="https://publications.banque-france.fr/limpact-long-terme-des-aides-au-logement-sur-le-secteur-locatif-lexemple-francais">Banque
+  de France</a>, suivent les deux décennies qui ont suivi les réformes des
+  années 1990 : les aides ont poussé les loyers à la hausse durablement, y
+  compris pour les locataires qui n'en touchaient pas, sans amélioration de la
+  qualité. Mais pas partout de la même façon. Sur les petits logements — une et
+  deux pièces —, la hausse des loyers s'est arrêtée à la fin des années 1990,
+  et le nombre de ces logements a augmenté, constructions neuves comprises. Sur
+  les grands, l'offre n'a pas suivi et les loyers ont continué de monter.</p>
+  <p>C'est notre thèse entière, écrite par une banque centrale :
+  <strong class="cle-texte">une aide ne finit dans le prix que là où l'offre ne
+  peut pas répondre</strong>. Là où elle le peut, elle finit en logements. Toute
+  la question est donc de savoir si l'on a le droit de construire — et c'est
+  pourquoi le <a href="${g.lien("/construire")}">premier chantier</a> commande
+  celui-ci.</p>`,
     sources(d, "apl_capture"), "capture")}
 
 ${g.depliant("Ce que l'État verse, et à qui",
@@ -1238,6 +1279,44 @@ ${g.depliant("La taxe foncière repose sur des valeurs de 1970",
   des années, et reportée d'autant. C'est le préalable de toute réforme qui
   déplacerait le poids de la mutation vers la détention : on ne peut pas
   renforcer un impôt dont l'assiette est fausse.</p>`, "fonciere")}
+
+${g.cle("Une niche française, évaluée par l'État",
+    "Le dispositif Pinel a été évalué en 2019 par l'Inspection générale des "
+    + "finances. Sur chaque euro de réduction d'impôt accordé, "
+    + `<strong class="cle-texte">${v(d, "pinel_part_loyer")}</strong> `
+    + "seulement se retrouvent dans une baisse de loyer pour le locataire.",
+    `<p>C'est la vérification française de tout ce qui précède, et elle ne vient
+  pas de nous : « Seuls ${nombre(n(d, "pinel_part_loyer"), 1)}&nbsp;% du
+  montant accordé par l'État au titre de la réduction d'impôt se traduisent par
+  des baisses de loyer », écrit la mission —
+  ${vc(d, "pinel_economie_loyer", 0)} d'économies de loyer sur neuf ans, pour
+  ${vc(d, "pinel_cout_neuf_ans", 0)} de coût public. Les neuf dixièmes
+  de la dépense vont ailleurs : au promoteur, au vendeur du terrain, à
+  l'investisseur. Une niche destinée à loger moins cher loge à peine moins
+  cher, et finance surtout le prix du bien qu'elle vise.</p>
+  <p><strong>Mais le même rapport porte l'objection la plus sérieuse qu'on
+  puisse nous faire</strong>, et nous ne la contournerons pas. Le Pinel est
+  aussi un déclencheur : ${vc(d, "pinel_part_vefa", 0)} des ventes en l'état
+  futur d'achèvement le mobilisent, et il est la motivation principale de
+  quatre investisseurs sur cinq. La mission en conclut qu'il faut le faire
+  évoluer <em>plutôt que le supprimer</em>, une suppression risquant
+  « des perturbations dans la capacité de construction d'une ampleur et d'une
+  durée difficile à anticiper ». C'est un rapport officiel qui recommande
+  l'inverse de ce que nous proposons.</p>
+  <p>Notre réponse tient en un point, et il est vérifiable. Ce que la mission
+  craint est la suppression de la niche <em>toutes choses égales par
+  ailleurs</em> — c'est-à-dire dans le monde où construire reste interdit. Dans
+  ce monde-là, elle a raison : retirer la béquille sans réparer la jambe fait
+  tomber. Notre proposition ne supprime pas la niche toutes choses égales par
+  ailleurs ; elle la supprime en même temps qu'elle ouvre le droit de
+  construire, et l'ordre compte. Le <a href="${g.lien("/chiffrage")}">
+  chiffrage</a> le dit déjà des aides ; il vaut ici mot pour mot.</p>
+  <p>Il reste que cet ordre est une promesse, et qu'une promesse de
+  simultanéité est ce qu'un législateur tient le moins bien. Si le droit des
+  sols ne s'ouvrait pas, la suppression des niches devrait être différée : nous
+  l'écrivons ici pour qu'on puisse nous le rappeler.</p>`,
+    sources(d, "pinel_part_loyer", "pinel_economie_loyer",
+      "pinel_cout_neuf_ans", "pinel_part_vefa"), "pinel")}
 
 ${proposition("Cesser de taxer le mouvement, commencer à taxer juste", [
     ["La suppression des droits de mutation",

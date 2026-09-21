@@ -449,12 +449,12 @@
       "libelle": "Logements autorisés en plus après l'ouverture des droits à bâtir à Auckland",
       "valeur": 43500,
       "unite": "logements",
-      "annee": 2023,
+      "annee": 2022,
       "fiabilite": "academique",
-      "source": "R. Greenaway-McGrevy, travaux sur l'Auckland Unitary Plan (2016)",
+      "source": "S. Donovan et M. Maltman, « Dispelling myths: reviewing the evidence on zoning reforms in Auckland », Motu Working Paper 24-07",
       "url": "https://motu-www.motu.org.nz/wpapers/24_07.pdf",
-      "lu_le": "2026-09-20",
-      "note": "Six ans après la réforme, par comparaison avec des villes néo-zélandaises comparables : environ 9 % du parc. Une seconde méthode, plus prudente, donne 21 800 logements en cinq ans, soit 4 % du parc."
+      "lu_le": "2026-09-21",
+      "note": "Estimation de Greenaway-McGrevy (2023), qui compare Auckland à des villes néo-zélandaises n'ayant pas ouvert leurs droits à bâtir : 43 500 logements autorisés en plus six ans après la réforme, soit environ 9 % du parc. Chiffre repris de la revue de littérature de Donovan et Maltman, écrite pour répondre aux critiques faites à ces travaux."
     },
     "auckland_loyers": {
       "libelle": "Écart de loyer à Auckland par rapport au scénario sans réforme",
@@ -607,14 +607,14 @@
     },
     "auckland_permis_prudent": {
       "libelle": "Logements autorisés en plus à Auckland, estimation la plus prudente",
-      "valeur": 21800,
+      "valeur": 21808,
       "unite": "logements",
       "annee": 2021,
       "fiabilite": "academique",
-      "source": "R. Greenaway-McGrevy, travaux sur l'Auckland Unitary Plan (2016)",
+      "source": "S. Donovan et M. Maltman, « Dispelling myths: reviewing the evidence on zoning reforms in Auckland », Motu Working Paper 24-07",
       "url": "https://motu-www.motu.org.nz/wpapers/24_07.pdf",
       "lu_le": "2026-09-21",
-      "note": "Cinq ans après la réforme, seconde méthode : environ 4 % du parc, contre 9 % pour la première."
+      "note": "Estimation de Greenaway-McGrevy et Phillips (2023), qui compare les quartiers d'Auckland entre eux plutôt qu'Auckland à d'autres villes : 21 808 logements autorisés en plus cinq ans après la réforme, soit environ 4 % du parc. C'est la méthode la plus prudente des trois, et la revue qui la rapporte juge qu'elle sous-estime plutôt qu'elle n'exagère."
     },
     "encadrement_transfert": {
       "libelle": "Loyers transférés chaque année aux locataires en place par l'encadrement",
@@ -725,6 +725,72 @@
       "url": "https://www.insee.fr/fr/statistiques/7738724",
       "lu_le": "2026-09-21",
       "note": "99,2 − 43,1 − 11,0 = 45,1 Md€. C'est le solde tel que le calcule l'objection la plus sérieuse qu'on nous fasse : compter parmi les aides l'avantage que les propriétaires occupants tirent de ne pas être imposés sur le loyer qu'ils ne se paient pas. Le rapport des prélèvements aux aides tombe alors de 2,3 à 1,8 — il ne s'inverse pas."
+    },
+    "auckland_part_permis": {
+      "libelle": "Part des logements autorisés à Auckland attribuable à la réforme",
+      "valeur": 46.5,
+      "unite": "%",
+      "annee": 2023,
+      "fiabilite": "academique",
+      "source": "R. Greenaway-McGrevy, « Can zoning reform increase housing construction? Evidence from Auckland », Economic Policy Centre Working Paper n° 017, université d'Auckland",
+      "url": "https://www.auckland.ac.nz/assets/business/our-research/docs/economic-policy-centre/EPC-WP017.pdf",
+      "lu_le": "2026-09-21",
+      "note": "Sur les sept années qui suivent la réforme, 112 277 logements ont été autorisés ; 52 172 le sont du fait de la réforme, selon la méthode du contrôle synthétique — soit 86,8 % de plus que sans elle. Les permis par millier d'habitants passent de 5,95 en 2015 à 12,57 en 2022. Estimation de septembre 2025, la plus récente."
+    },
+    "auckland_surface_plancher": {
+      "libelle": "Hausse de la surface constructible autorisée par la réforme d'Auckland",
+      "valeur": 92.8,
+      "unite": "%",
+      "annee": 2016,
+      "fiabilite": "academique",
+      "source": "R. Greenaway-McGrevy, « Can zoning reform increase housing construction? Evidence from Auckland », Economic Policy Centre Working Paper n° 017, université d'Auckland",
+      "url": "https://www.auckland.ac.nz/assets/business/our-research/docs/economic-policy-centre/EPC-WP017.pdf",
+      "lu_le": "2026-09-21",
+      "note": "Surface de plancher permise par l'emprise au sol et la hauteur, en zone de densité moyenne urbaine, par rapport à la zone pavillonnaire qu'elle remplace ; +257,1 % en zone de maisons de ville. La capacité constructible de l'agglomération a été environ triplée. C'est le point décisif : la réforme n'a pas seulement autorisé plus de logements par parcelle, elle a relevé le gabarit."
+    },
+    "pinel_part_loyer": {
+      "libelle": "Part de la réduction d'impôt Pinel qui se traduit par une baisse de loyer",
+      "valeur": 9.3,
+      "unite": "%",
+      "annee": 2019,
+      "fiabilite": "officielle",
+      "source": "IGF et CGEDD, « Évaluation du dispositif d'aide fiscale à l'investissement locatif Pinel », novembre 2019",
+      "url": "https://www.vie-publique.fr/files/rapport/pdf/271773.pdf",
+      "lu_le": "2026-09-21",
+      "note": "« Seuls 9,3 % du montant accordé par l'État au titre de la réduction d'impôt se traduisent par des baisses de loyer » : 107 M€ d'économies de loyer sur neuf ans pour 1 147 M€ de coût public. Les neuf dixièmes de la dépense vont ailleurs."
+    },
+    "pinel_part_vefa": {
+      "libelle": "Part des ventes en l'état futur d'achèvement qui mobilisent le Pinel",
+      "valeur": 50,
+      "unite": "%",
+      "annee": 2019,
+      "fiabilite": "officielle",
+      "source": "IGF et CGEDD, « Évaluation du dispositif d'aide fiscale à l'investissement locatif Pinel », novembre 2019",
+      "url": "https://www.vie-publique.fr/files/rapport/pdf/271773.pdf",
+      "lu_le": "2026-09-21",
+      "note": "La moitié des VEFA sont réalisées en mobilisant le dispositif, et la réduction d'impôt est « la motivation principale de 80 % des investisseurs ». C'est pourquoi la mission recommande de faire évoluer le dispositif plutôt que de le supprimer : une suppression « entraînerait des perturbations dans la capacité de construction d'une ampleur et d'une durée difficile à anticiper ». C'est l'objection la plus sérieuse à notre proposition, et elle vient d'un rapport officiel."
+    },
+    "pinel_economie_loyer": {
+      "libelle": "Économies de loyer permises par le Pinel, sur neuf ans",
+      "valeur": 107,
+      "unite": "M€",
+      "annee": 2019,
+      "fiabilite": "officielle",
+      "source": "IGF et CGEDD, « Évaluation du dispositif d'aide fiscale à l'investissement locatif Pinel », novembre 2019",
+      "url": "https://www.vie-publique.fr/files/rapport/pdf/271773.pdf",
+      "lu_le": "2026-09-21",
+      "note": "Ce que les plafonds de loyer du dispositif font gagner aux locataires sur la durée de l'engagement."
+    },
+    "pinel_cout_neuf_ans": {
+      "libelle": "Coût du Pinel pour les finances publiques, sur neuf ans",
+      "valeur": 1147,
+      "unite": "M€",
+      "annee": 2019,
+      "fiabilite": "officielle",
+      "source": "IGF et CGEDD, « Évaluation du dispositif d'aide fiscale à l'investissement locatif Pinel », novembre 2019",
+      "url": "https://www.vie-publique.fr/files/rapport/pdf/271773.pdf",
+      "lu_le": "2026-09-21",
+      "note": "À comparer aux 107 M€ d'économies de loyer : le rapport des deux est la part de 9,3 % qui parvient au locataire."
     }
   },
   "series": {
