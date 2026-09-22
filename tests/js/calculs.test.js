@@ -208,7 +208,8 @@ test("les réglages du chiffrage suivent les liens de la page", () => {
 function lignesDuTableau(html) {
   const tableau = html.match(/<table id="mesures">([\s\S]*?)<\/table>/);
   assert.ok(tableau, "le tableau mesure par mesure manque");
-  const texte = (cellule) => cellule.replace(/<[^>]+>/g, "").trim();
+  const texte = (cellule) => cellule.replace(/<[^>]+>/g, "")
+    .replace(/&nbsp;/g, " ").trim();
   return [...tableau[1].matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/g)].map(([, rangee]) => (
     [...rangee.matchAll(/<(?:th|td)[^>]*>([\s\S]*?)<\/(?:th|td)>/g)]
       .map(([, cellule]) => texte(cellule))));
@@ -219,16 +220,34 @@ function effetLu(texte) {
   return Number(texte.replace("−", "-").replace(/[   ]/g, "").replace(",", "."));
 }
 
+/** Une estimation telle qu'elle est écrite — « ≈ −0,9 », « −0,1 à −0,9 » —,
+ * rendue en bornes basse et haute. */
+function bornesLues(texte) {
+  const nombres = texte.replace("≈", "").split(" à ").map(effetLu);
+  return [Math.min(...nombres), Math.max(...nombres)];
+}
+
+/** Un effet mesuré s'écrit comme un nombre seul ; une estimation, non. */
+const MESURE = /^[+−]?\d+(?:,\d)?$/;
+const ESTIMATION = /^≈|\sà\s/;
+
 test("la page Chiffrage met chaque chantier face à aujourd'hui", () => {
   const [, html] = rendre(d, "/chiffrage", {});
   const lignes = lignesDuTableau(html);
   const intertitres = lignes.filter((l) => l.length === 1).map((l) => l[0]);
   assert.deepEqual(intertitres,
     ["Construire", "Louer", "Aider", "Fiscalité", "Au total"]);
-  // Les mesures qu'on ne sait pas chiffrer le disent, et ne portent aucun
-  // nombre inventé.
-  const sansChiffre = lignes.filter((l) => l[3] === "non chiffré");
-  assert.ok(sansChiffre.length >= 4, "les lignes sans chiffre doivent le dire");
+  // Chaque effet est un nombre mesuré, une estimation écrite comme telle, ou
+  // l'aveu qu'on ne sait pas : jamais un nombre inventé qui se donnerait pour
+  // une mesure.
+  const effets = lignes.filter((l) => l.length === 4 && l[0] !== "Mesure")
+    .map((l) => l[3]);
+  for (const effet of effets) {
+    assert.ok(MESURE.test(effet) || ESTIMATION.test(effet) || effet === "non chiffré",
+      `effet illisible : « ${effet} »`);
+  }
+  assert.ok(effets.some((effet) => ESTIMATION.test(effet)),
+    "les lignes estimées doivent l'être en toutes lettres");
 });
 
 test("la colonne des effets s'additionne, dans toutes les configurations", () => {
@@ -237,17 +256,32 @@ test("la colonne des effets s'additionne, dans toutes les configurations", () =>
     const [, html] = rendre(d, "/chiffrage", parametres);
     const lignes = lignesDuTableau(html);
     const total = lignes.findIndex((l) => l.length === 1 && l[0] === "Au total");
-    const mesures = lignes.slice(0, total)
-      .filter((l) => l.length === 4 && l[3] !== "non chiffré" && l[0] !== "Mesure");
+    const ligne = (libelle) => lignes.slice(total).find((l) => l[0] === libelle);
+    const corps = lignes.slice(0, total)
+      .filter((l) => l.length === 4 && l[0] !== "Mesure");
+    const mesures = corps.filter((l) => MESURE.test(l[3]));
     const somme = mesures.reduce((s, l) => s + effetLu(l[3]), 0);
-    const solde = effetLu(lignes[lignes.length - 1][3]);
+    const solde = effetLu(ligne("Solde des lignes mesurées")[3]);
     // Chaque ligne est arrondie au dixième : la somme lue peut s'écarter du
     // solde d'un demi-dixième par ligne arrondie, et pas davantage.
     assert.ok(Math.abs(somme - solde) <= 0.05 * mesures.length + 1e-9,
       `${JSON.stringify(parametres)} : ${somme} lus, ${solde} annoncés`);
-    const plus = effetLu(lignes[lignes.length - 3][3]);
-    const moins = effetLu(lignes[lignes.length - 2][3]);
+    const plus = effetLu(ligne("Ce que la réforme cesse de verser ou commence à percevoir")[3]);
+    const moins = effetLu(ligne("Ce qu'elle verse en plus ou cesse de percevoir")[3]);
     assert.ok(Math.abs(plus + moins - solde) <= 0.1 + 1e-9);
+
+    // Les estimations s'additionnent à part, borne par borne, et le solde qui
+    // les compte est le solde mesuré plus elles.
+    const estimees = corps.filter((l) => ESTIMATION.test(l[3]));
+    const [bas, haut] = estimees.map((l) => bornesLues(l[3]))
+      .reduce(([b, h], [x, y]) => [b + x, h + y], [0, 0]);
+    const [basLu, hautLu] = bornesLues(ligne("Lignes estimées")[3]);
+    const marge = 0.05 * estimees.length + 1e-9;
+    assert.ok(Math.abs(bas - basLu) <= marge && Math.abs(haut - hautLu) <= marge,
+      `${JSON.stringify(parametres)} : estimations ${bas}/${haut} lues, ${basLu}/${hautLu} annoncées`);
+    const [soldeBas, soldeHaut] = bornesLues(ligne("Solde, estimations comprises")[3]);
+    assert.ok(Math.abs(soldeBas - (solde + basLu)) <= 0.1 + 1e-9);
+    assert.ok(Math.abs(soldeHaut - (solde + hautLu)) <= 0.1 + 1e-9);
   }
 });
 

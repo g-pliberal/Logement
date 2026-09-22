@@ -546,6 +546,39 @@
       "lu_le": "2026-09-21",
       "note": "Fin 2023, en baisse de 1,8 % sur un an. Avec les conjoints et les enfants, 11,2 millions de personnes vivent dans un ménage aidé, soit environ 16 % de la population."
     },
+    "accedants": {
+      "libelle": "Ménages accédants à la propriété (résidences principales)",
+      "valeur": 7.09,
+      "unite": "millions",
+      "annee": 2024,
+      "fiabilite": "officielle",
+      "source": "SDES, Rapport du compte du logement 2024",
+      "url": "https://www.statistiques.developpement-durable.gouv.fr/rapport-du-compte-du-logement-2024",
+      "lu_le": "2026-09-22",
+      "note": "Partie 2, figure 2.1 : 7 087 milliers de résidences principales occupées par des propriétaires qui remboursent encore un emprunt, contre 5 271 milliers en 1994."
+    },
+    "accedants_aides": {
+      "libelle": "Part des ménages accédants qui reçoivent une aide personnelle au logement",
+      "valeur": 1.4,
+      "unite": "%",
+      "annee": 2024,
+      "fiabilite": "officielle",
+      "source": "SDES, Rapport du compte du logement 2024",
+      "url": "https://www.statistiques.developpement-durable.gouv.fr/rapport-du-compte-du-logement-2024",
+      "lu_le": "2026-09-22",
+      "note": "Partie 5, figure 5.7 (APL, ALS, ALF, hors hébergement collectif). Elle était de 19,1 % en 1994. « Les APL accession ont été supprimées par la loi de finances pour 2018 » : les prêts signés depuis le 1er janvier 2018 n'y ouvrent plus droit, sauf exceptions éteintes en 2020."
+    },
+    "accedants_aides_2017": {
+      "libelle": "Même part en 2017, dernière année avant la suppression de l'aide personnelle à l'accession",
+      "valeur": 6.2,
+      "unite": "%",
+      "annee": 2017,
+      "fiabilite": "officielle",
+      "source": "SDES, Rapport du compte du logement 2024",
+      "url": "https://www.statistiques.developpement-durable.gouv.fr/rapport-du-compte-du-logement-2024",
+      "lu_le": "2026-09-22",
+      "note": "Partie 5, figure 5.7. C'est le repère de l'estimation : un chèque qui paie de nouveau une mensualité d'emprunt, sous les mêmes conditions de ressources, ramène la part des accédants aidés à ce qu'elle était quand l'aide leur était encore ouverte."
+    },
     "visale_enveloppe": {
       "libelle": "Enveloppe de la garantie Visale, convention 2023-2027",
       "valeur": 520,

@@ -160,15 +160,18 @@ environnement à monter n'est pas vérifié longtemps.
 - **Le détail des collectivités.** La compensation de la suppression des droits
   de mutation est posée en principe ; sa répartition entre départements demande
   un travail qui n'est pas fait ici.
-- **Le coût de six lignes du compte.** Le tableau mesure par mesure les
-  nomme, chacune avec la raison de son absence et le repère qui existe quand il
-  en existe un : la garantie publique du loyer (Visale, qui coûte de l'ordre de
-  0,1 Md€ par an, sert de repère), les juges et travailleurs sociaux d'un impayé
-  jugé en trois mois (le jugement prend aujourd'hui 5,1 mois), la clause de
-  sauvegarde, l'ouverture du chèque à l'accession, le délai fixe des recours et
-  le régime unique des revenus fonciers. Le reversement aux communes, lui, est
-  chiffré comme ce qu'il est : un transfert de l'État aux communes, qui ne
-  change pas le total. Chiffrer les six est le prochain travail.
+- **Le coût des lignes sans mesure publiée.** Le tableau mesure par mesure
+  les estime quand une source le permet, sur des hypothèses écrites en toutes
+  lettres, et additionne ces estimations à part : le solde des lignes mesurées
+  ne les contient pas. L'ouverture du chèque à l'accession est estimée (la part
+  des accédants aidés revient à celle de 2017, dernière année où l'aide leur
+  était ouverte : de l'ordre de 0,9 Md€ par an au chèque par défaut). La
+  garantie publique du loyer, les juges et travailleurs sociaux d'un impayé
+  jugé en trois mois, la clause de sauvegarde, le délai fixe des recours et le
+  régime unique des revenus fonciers restent sans chiffre, chacun avec la
+  raison de son absence et le repère qui existe quand il y en a un. Le
+  reversement aux communes est chiffré comme ce qu'il est : un transfert de
+  l'État aux communes, qui ne change pas le total.
 
 Ces limites sont écrites sur le site lui-même, et non reléguées ici.
 

@@ -87,6 +87,21 @@ function poste(cle, sens, aujourdhui, programme) {
 }
 
 /**
+ * Une ligne qu'aucun agrégat publié ne mesure, estimée sur des hypothèses que
+ * la page écrit en toutes lettres. Elle rend une fourchette en milliards
+ * d'euros par an, au signe des effets — négative quand la mesure coûte —, et
+ * `bas` est toujours la borne la plus défavorable au solde. Une estimation sans
+ * fourchette a deux bornes égales.
+ *
+ * Les estimations ne se mêlent pas aux postes : le solde des postes est une
+ * addition d'agrégats publiés, celui des estimations dépend d'hypothèses. Les
+ * additionner sans le dire ferait passer les secondes pour les premiers.
+ */
+function estimation(cle, bas, haut = bas) {
+  return { cle, bas: Math.min(bas, haut), haut: Math.max(bas, haut) };
+}
+
+/**
  * L'arithmétique de la proposition, en milliards d'euros par an.
  *
  * Elle pose ses gestes poste par poste, chacun face à ce qu'il est aujourd'hui,
@@ -148,6 +163,18 @@ export function chiffrage(donnees, reglages) {
   const plus = somme((effet) => effet > 0);
   const moins = somme((effet) => effet < 0);
 
+  // L'ouverture du chèque à l'accession : les ménages accédants aidés
+  // retrouvent la part qu'ils avaient en 2017, dernière année où l'aide
+  // personnelle leur était ouverte, et chacun reçoit le chèque retenu.
+  const accedantsNouveaux = (donnees.valeur("accedants")
+    * (donnees.valeur("accedants_aides_2017") - donnees.valeur("accedants_aides"))) / 100;
+
+  const estimations = [
+    estimation("accession", -(chequeMensuel * 12 * accedantsNouveaux) / 1000),
+  ];
+  const estimeBas = estimations.reduce((total, e) => total + e.bas, 0);
+  const estimeHaut = estimations.reduce((total, e) => total + e.haut, 0);
+
   return {
     allocations,
     prestations,
@@ -165,6 +192,12 @@ export function chiffrage(donnees, reglages) {
     plus,
     moins,
     solde: plus + moins,
+    accedantsNouveaux,
+    estimations,
+    estimeBas,
+    estimeHaut,
+    soldeBas: plus + moins + estimeBas,
+    soldeHaut: plus + moins + estimeHaut,
     // Ce que reçoit un ménage aidé aujourd'hui, en moyenne et par mois : le
     // point de comparaison du chèque, et il se déduit des deux agrégats.
     aideMoyenneActuelle: (allocations * 1000) / (menages * 12),

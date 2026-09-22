@@ -1694,6 +1694,18 @@ const EN_LETTRES = Object.freeze([
   "dix-sept", "dix-huit", "dix-neuf", "vingt",
 ]);
 
+/** Une liste en français : « a », « a et b », « a, b et c ». */
+function enumeration(mots) {
+  return mots.length > 1
+    ? `${mots.slice(0, -1).join(", ")} et ${mots[mots.length - 1]}`
+    : (mots[0] ?? "");
+}
+
+/** La première lettre en capitale : une énumération qui ouvre une phrase. */
+function capitale(texte) {
+  return texte.charAt(0).toUpperCase() + texte.slice(1);
+}
+
 function enLettres(entier, capitale = false) {
   const mot = EN_LETTRES[entier] ?? String(entier);
   return capitale ? mot.charAt(0).toUpperCase() + mot.slice(1) : mot;
@@ -1730,10 +1742,40 @@ function celluleEffet(effet, plusGrand) {
   if (effet === null) {
     return '<span class="discret">non chiffré</span>';
   }
+  if (typeof effet === "object") {
+    return new g.Cellule(`<span class="estime">${fourchette(effet)}</span>`,
+      (effet.bas + effet.haut) / 2 / plusGrand / 2);
+  }
   if (effet === 0) {
     return nombre(effet, 0);
   }
   return new g.Cellule(g.signeCascade(effet, 1), effet / plusGrand);
+}
+
+/**
+ * Une estimation telle qu'elle s'écrit : « ≈ −0,9 » quand elle n'a qu'une
+ * valeur, « −0,1 à −0,9 » quand elle a deux bornes — de la plus petite à la
+ * plus grande en valeur absolue, comme on dit « de cent à neuf cents millions ».
+ * Le signe reste celui du compte : − pour ce qui coûte.
+ */
+function fourchette({ bas, haut }) {
+  const [a, b] = [bas, haut].map((valeur) => g.signeCascade(valeur, 1));
+  if (a === b) {
+    return `≈&nbsp;${a}`;
+  }
+  return haut <= 0 ? `${b} à ${a}` : `${a} à ${b}`;
+}
+
+/**
+ * La même dans une phrase, suivie de son unité : « de l'ordre de » devant une
+ * valeur seule, rien devant une fourchette, qui dit déjà qu'elle est une
+ * estimation.
+ */
+function fourchetteEnMots(bas, haut) {
+  const texte = fourchette({ bas, haut });
+  return texte.startsWith("≈")
+    ? `l'ordre de ${texte.replace("≈&nbsp;", "")} Md€`
+    : `${texte} Md€`;
 }
 
 /**
@@ -1748,6 +1790,7 @@ function celluleEffet(effet, plusGrand) {
  */
 function lignesDuCompte(d, bilan, reglages) {
   const poste = (cle) => bilan.postes.find((p) => p.cle === cle);
+  const estime = (cle) => bilan.estimations.find((e) => e.cle === cle);
   const menages = v(d, "menages_aides");
   const parMenage = (bilan.cheque * 1000) / (n(d, "menages_aides") * 12);
   const parBail = n(d, "visale_enveloppe") / n(d, "visale_contrats");
@@ -1771,7 +1814,7 @@ function lignesDuCompte(d, bilan, reglages) {
       + "taxe foncière, déjà à la commune et à l'intercommunalité",
       "Une part de la TVA à la commune, dix ans, avec la taxe foncière",
       0, "transfert"),
-    ligneDuCompte("Le recours contre un permis, jugé dans un délai fixe",
+    ligneDuCompte("Le recours contre un permis jugé dans un délai fixe",
       "Tenir un délai fixe demande des juges, et aucune donnée publique ne "
       + "permet de dire combien.",
       `${v(d, "recours_duree", 0)} devant le tribunal administratif `
@@ -1822,12 +1865,17 @@ function lignesDuCompte(d, bilan, reglages) {
       "—",
       `${euros(parMenage)} par mois à ${menages} de ménages`),
     ligneDuCompte("Le chèque ouvert à l'accession",
-      "Il paie aussi une mensualité d'emprunt, ce que l'aide personnelle ne fait "
-      + "presque plus : plus de ménages y auront droit, sans qu'on sache "
-      + "combien. Chaque tranche de cent mille ménages coûte "
-      + `${milliards(reglages.chequeMensuel * 12 * 0.1 / 1000, 2)} par an.`,
-      "L'aide personnelle ne va presque plus aux accédants",
-      "Le même chèque pour louer ou pour acheter", null, "inconnu"),
+      "Il paie aussi une mensualité d'emprunt, ce que l'aide personnelle ne "
+      + "fait plus depuis 2018. Estimé en ramenant la part des accédants aidés "
+      + `à ce qu'elle était en ${an(d, "accedants_aides_2017")}, dernière `
+      + "année où l'aide leur était ouverte : "
+      + `${v(d, "accedants_aides_2017")} au lieu de ${v(d, "accedants_aides")}, `
+      + `soit ${nombre(Math.round(bilan.accedantsNouveaux * 1000) * 1000, 0)} `
+      + "ménages de plus au chèque retenu.",
+      `${v(d, "accedants_aides")} des ${v(d, "accedants")} de ménages `
+      + "accédants sont aidés",
+      "Le même chèque pour louer ou pour acheter", estime("accession"),
+      "estime"),
     ligneDuPoste(poste("bonifications"),
       "Les bonifications de taux",
       "Le prêt à taux zéro et les prêts aidés, dont "
@@ -1903,9 +1951,11 @@ function lignesDuCompte(d, bilan, reglages) {
 /** Le tableau du compte mesure par mesure, et ses trois totaux. */
 function tableauDesMesures(bilan, lignes) {
   const mesures = lignes.filter((ligne) => !(ligne instanceof g.Intertitre));
+  const ampleur = (effet) => (typeof effet === "object"
+    ? Math.max(Math.abs(effet.bas), Math.abs(effet.haut)) : Math.abs(effet));
   const plusGrand = Math.max(...mesures
     .filter((ligne) => ligne.effet !== null)
-    .map((ligne) => Math.abs(ligne.effet)));
+    .map((ligne) => ampleur(ligne.effet)));
   // L'intitulé des deux colonnes de phrases est redit dans chaque cellule, et
   // ne s'affiche que sur un téléphone, où le tableau se défait en fiches.
   const rangees = lignes.map((ligne) => (ligne instanceof g.Intertitre ? ligne : [
@@ -1920,8 +1970,14 @@ function tableauDesMesures(bilan, lignes) {
       g.signeCascade(bilan.plus, 1)],
     ["Ce qu'elle verse en plus ou cesse de percevoir", "", "",
       g.signeCascade(bilan.moins, 1)],
-    ["Solde des lignes chiffrées", "", "",
+    ["Solde des lignes mesurées", "", "",
       `<strong>${g.signeCascade(bilan.solde, 1)}</strong>`],
+    ["Lignes estimées", "", "",
+      `<span class="estime">${fourchette({
+        bas: bilan.estimeBas, haut: bilan.estimeHaut })}</span>`],
+    ["Solde, estimations comprises", "", "",
+      `<strong class="estime">${fourchette({
+        bas: bilan.soldeBas, haut: bilan.soldeHaut })}</strong>`],
   );
   return g.tableau(
     ["Mesure", "Aujourd'hui", "Avec le programme", "Effet, Md€ par an"],
@@ -1953,7 +2009,20 @@ function pageChiffrage(d, parametres) {
     .filter((ligne) => natures.includes(ligne.nature)).length;
   const portent = combien("compte");
   const sansCout = combien("regle", "garde", "transfert");
-  const sansChiffre = combien("inconnu");
+  const estimees = mesures.filter((ligne) => ligne.nature === "estime");
+  const inconnues = mesures.filter((ligne) => ligne.nature === "inconnu");
+  const nommer = (liste) => enumeration(liste.map((ligne) => (
+    ligne.nom.charAt(0).toLowerCase() + ligne.nom.slice(1))));
+  const estimeesTexte = estimees.length
+    ? `Le tableau estime ${nommer(estimees)} sur des hypothèses qu'il écrit en `
+      + "toutes lettres ; ces estimations sont comptées à part, en fourchette, et "
+      + "n'entrent pas dans le solde des lignes mesurées. "
+    : "";
+  const inconnuesTexte = inconnues.length
+    ? `${capitale(nommer(inconnues))} ${inconnues.length > 1 ? "restent" : "reste"} `
+      + "sans chiffre, faute de source : chaque ligne dit pourquoi, et donne le "
+      + "repère qui existe quand il y en a un. "
+    : "";
   const reste = bilan.solde >= 0
     ? `laissent <strong class="cle-texte">${milliards(bilan.solde)} par an`
       + "</strong>"
@@ -1993,16 +2062,11 @@ function pageChiffrage(d, parametres) {
       + "dans le prix des logements est probable — c'est ce que fait tout "
       + "allègement sur un marché contraint. C'est précisément pourquoi "
       + "elle ne vaut qu'accompagnée du premier chantier."],
-    [`${enLettres(sansChiffre, true)} lignes sans chiffre`,
-      "Le tableau mesure par mesure les nomme : la garantie publique du "
-      + "loyer, les juges et les travailleurs sociaux d'un impayé jugé en "
-      + "trois mois, la clause de sauvegarde, l'ouverture du chèque à "
-      + "l'accession, le délai des recours, le régime unique des revenus "
-      + "fonciers. Aucune n'a de coût qu'on puisse sourcer ; chacune dit "
-      + "pourquoi, et donne le repère qui existe quand il y en a un. Le "
-      + "reversement aux communes, lui, n'est plus un trou : c'est un "
-      + "transfert de l'État aux communes, qui ne change pas le total, et "
-      + "le tableau en donne le prix pour l'État."],
+    [`${enLettres(estimees.length + inconnues.length, true)} lignes sans `
+      + "mesure publiée",
+      `${estimeesTexte}${inconnuesTexte}Le reversement aux communes, lui, `
+      + "n'est pas un trou : c'est un transfert de l'État aux communes, qui ne "
+      + "change pas le total, et le tableau en donne le prix pour l'État."],
     ["Des aides qui ne sont pas toutes de l'argent public",
       "Le compte suit la convention du compte du logement, qui range "
       + `parmi les aides les ${v(d, "bonifications")} de bonifications de `
@@ -2053,26 +2117,34 @@ ${g.cle("Qu'est-ce qui change, mesure par mesure, par rapport à aujourd'hui ?",
     + `de percevoir. Elles ${reste}. `
     + `${enLettres(sansCout, true)} ne coûtent rien : elles changent une `
     + "règle, gardent une dépense ou la font passer d'une administration à une "
-    + `autre. ${enLettres(sansChiffre, true)} restent sans chiffre, et chacune `
-    + "dit pourquoi.",
+    + "autre."
+    + (estimees.length
+      ? ` ${enLettres(estimees.length, true)} ${estimees.length > 1
+        ? "sont estimées" : "est estimée"} sur des hypothèses écrites, pour un `
+        + `effet de ${fourchetteEnMots(bilan.estimeBas, bilan.estimeHaut)} par an.`
+      : "")
+    + (inconnues.length
+      ? ` ${enLettres(inconnues.length, true)} ${inconnues.length > 1
+        ? "restent" : "reste"} sans chiffre, et chacune dit pourquoi.`
+      : ""),
     `${tableauDesMesures(bilan, lignes)}
   <p><strong>Comment le lire.</strong> Chaque ligne met une proposition en face
   de ce qui existe aujourd'hui. Le signe + dit ce que la réforme cesse de
   verser ou commence à percevoir ; le signe −, ce qu'elle verse en plus ou
   cesse de percevoir. Un zéro n'est pas un oubli : la mesure change une règle,
   garde une dépense telle qu'elle est, ou fait passer de l'argent d'une
-  administration à une autre sans changer le total. « Non chiffré » n'en est
-  pas un non plus : la ligne dit pourquoi, et donne le repère qui existe quand
-  il en existe un. La colonne s'additionne ; les arrondis peuvent en écarter le
-  total d'un dixième.</p>
-  <p><strong>Ce que pèsent les lignes sans chiffre.</strong> Elles ne jouent pas
-  toutes dans le même sens. La garantie du loyer, les juges et les travailleurs
-  sociaux de l'impayé, la clause de sauvegarde et l'ouverture du chèque à
-  l'accession coûtent, et c'est sur le solde qu'ils se paient. Le délai des
-  recours et le régime unique des revenus fonciers peuvent coûter ou rapporter.
-  Le solde n'est donc pas une marge acquise : c'est ce qui reste pour elles.
-  Ce qu'il peut payer, et dans quel ordre, est dit plus bas, sous « Ce que ce
-  calcul n'est pas ».</p>`,
+  administration à une autre sans changer le total. Un effet précédé de ≈, ou
+  donné en fourchette, est une estimation : la ligne dit sur quelle hypothèse,
+  et les estimations sont additionnées à part. « Non chiffré » n'est pas un
+  oubli non plus : la ligne dit pourquoi. La colonne des lignes mesurées
+  s'additionne ; les arrondis peuvent en écarter le total d'un dixième.</p>
+  <p><strong>Ce que pèsent les lignes sans mesure publiée.</strong> Leur effet
+  ne se lit dans aucun agrégat : il dépend d'hypothèses, que chaque ligne écrit.
+  C'est pourquoi le tableau donne deux soldes — celui des lignes mesurées, et
+  celui qui compte aussi les estimations. ${inconnuesTexte}Le solde mesuré n'est
+  donc pas une marge acquise : c'est ce qui reste pour elles. Ce qu'il peut
+  payer, et dans quel ordre, est dit plus bas, sous « Ce que ce calcul n'est
+  pas ».</p>`,
     sources(d, "allocations_logement", "bonifications_etat", "tva_neuf",
       "visale_enveloppe", "decisions_bail", "recours_duree",
       "encadrement_gain_mensuel", "encadrement_villes", "taxe_fonciere"),
@@ -2093,9 +2165,9 @@ ${g.depliant("Ce que ce calcul n'est pas",
   mieux vaut donc dire lequel passe d'abord. Un, la clause de sauvegarde qui
   garantit qu'aucun ménage modeste ne perde au change — son coût n'est pas
   connu, et elle passe avant tout le reste. Deux, les lignes du tableau qui
-  coûtent sans être chiffrées : garantie du loyer, moyens de justice, ouverture
-  du chèque à l'accession. Trois, si le Parlement les juge nécessaires, le
-  maintien du taux réduit de TVA sur les travaux
+  coûtent et que le solde mesuré ne contient pas : garantie du loyer, moyens de
+  justice, ouverture du chèque à l'accession. Trois, si le Parlement les juge
+  nécessaires, le maintien du taux réduit de TVA sur les travaux
   (${milliards(n(d, "tva_travaux_taux_reduit"))}) ou celui des avantages
   fiscaux du logement social (${milliards(n(d, "niches_secteur_social"))}).
   <strong class="cle-texte">Les trois ensemble dépassent la marge.</strong>
