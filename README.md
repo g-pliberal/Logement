@@ -161,17 +161,22 @@ environnement à monter n'est pas vérifié longtemps.
   de mutation est posée en principe ; sa répartition entre départements demande
   un travail qui n'est pas fait ici.
 - **Le coût des lignes sans mesure publiée.** Le tableau mesure par mesure
-  les estime quand une source le permet, sur des hypothèses écrites en toutes
-  lettres, et additionne ces estimations à part : le solde des lignes mesurées
-  ne les contient pas. L'ouverture du chèque à l'accession est estimée (la part
-  des accédants aidés revient à celle de 2017, dernière année où l'aide leur
-  était ouverte : de l'ordre de 0,9 Md€ par an au chèque par défaut). La
-  garantie publique du loyer, les juges et travailleurs sociaux d'un impayé
-  jugé en trois mois, la clause de sauvegarde, le délai fixe des recours et le
-  régime unique des revenus fonciers restent sans chiffre, chacun avec la
-  raison de son absence et le repère qui existe quand il y en a un. Le
-  reversement aux communes est chiffré comme ce qu'il est : un transfert de
-  l'État aux communes, qui ne change pas le total.
+  les estime toutes, sur des hypothèses écrites en toutes lettres, et
+  additionne ces estimations à part : le solde des lignes mesurées ne les
+  contient pas. Au chèque par défaut, elles pèsent de 1,4 à 2,5 Md€ par an, et
+  le solde qui les compte va de +5,0 à +6,2 Md€. Chacune a sa fragilité, et la
+  dit. La clause de sauvegarde (de l'ordre de 0,7 Md€ la première année)
+  repose sur une microsimulation de 2015 d'une aide voisine, lue de la façon la
+  plus coûteuse ; la garantie du loyer va de rien, si la prime couvre le
+  risque, à l'estimation officielle de 2013 d'une garantie de tout le parc
+  privé ; l'impayé jugé en trois mois étend à tous les ménages en impayé
+  l'enquête sociale de 2013, à son coût d'alors ; l'accession ramène la part
+  des accédants aidés à celle de 2017 ; le recours compte pour zéro, parce que
+  le délai fixe et l'instance unique existent déjà ; le régime unique des
+  revenus fonciers n'est chiffré que pour la location meublée, et pour
+  l'impôt sur le revenu seul. Le reversement aux communes est chiffré comme ce
+  qu'il est : un transfert de l'État aux communes, qui ne change pas le
+  total.
 
 Ces limites sont écrites sur le site lui-même, et non reléguées ici.
 

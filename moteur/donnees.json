@@ -489,7 +489,18 @@
       "source": "Sénat, rapport d'information « Droit de l'urbanisme et de la construction : l'urgence de simplifier » (n° 720, 2015-2016)",
       "url": "https://www.senat.fr/rap/r15-720-1/r15-720-127.html",
       "lu_le": "2026-09-21",
-      "note": "Un an et onze mois : délai moyen de jugement des tribunaux administratifs en matière d'urbanisme. S'y ajoutent un an et six mois en appel et dix mois au Conseil d'État, soit plus de quatre ans quand la procédure va à son terme. C'est la mesure officielle la plus récente que nous ayons pu sourcer ; la loi du 26 novembre 2025 vise désormais dix mois en première instance pour les permis de plus de deux logements."
+      "note": "Un an et onze mois : délai moyen de jugement des tribunaux administratifs en matière d'urbanisme. S'y ajoutent un an et six mois en appel et dix mois au Conseil d'État, soit plus de quatre ans quand la procédure va à son terme. C'est la mesure officielle la plus récente que nous ayons pu sourcer ; depuis 2018, le juge doit statuer en dix mois sur les permis de plus de deux logements (voir recours_delai_legal), et nous n'avons trouvé aucune mesure publiée du délai effectif depuis."
+    },
+    "recours_delai_legal": {
+      "libelle": "Délai dans lequel le juge doit statuer sur un permis de plus de deux logements",
+      "valeur": 10,
+      "unite": "mois",
+      "annee": 2018,
+      "fiabilite": "officielle",
+      "source": "Code de l'urbanisme, article R. 600-6, cité par le Sénat, avis n° 684 (2024-2025) de la commission des lois sur la proposition de loi de simplification du droit de l'urbanisme et du logement",
+      "url": "https://www.senat.fr/rap/a24-684/a24-6841.pdf",
+      "lu_le": "2026-09-22",
+      "note": "« Depuis 2018, en vertu de l'article R. 600-6 du code de l'urbanisme et par dérogation au droit commun, le juge statue dans un délai de dix mois sur les recours contre les permis de construire un bâtiment comportant plus de deux logements » (p. 35) ; la cour administrative d'appel statue dans le même délai. En zone tendue, l'appel est supprimé : le tribunal administratif statue en premier et dernier ressort sur ces permis, pour les recours introduits jusqu'au 31 décembre 2027 (article R. 811-1-1 du code de justice administrative). Un délai plus court demanderait des juges : les juridictions « semblent […] avoir atteint un plafond difficilement dépassable en termes de productivité », rapporte le Sénat (p. 36)."
     },
     "auckland_permis": {
       "libelle": "Logements autorisés en plus après l'ouverture des droits à bâtir à Auckland",
@@ -579,27 +590,82 @@
       "lu_le": "2026-09-22",
       "note": "Partie 5, figure 5.7. C'est le repère de l'estimation : un chèque qui paie de nouveau une mensualité d'emprunt, sous les mêmes conditions de ressources, ramène la part des accédants aidés à ce qu'elle était quand l'aide leur était encore ouverte."
     },
-    "visale_enveloppe": {
-      "libelle": "Enveloppe de la garantie Visale, convention 2023-2027",
-      "valeur": 520,
-      "unite": "M€",
-      "annee": 2023,
-      "fiabilite": "officielle",
-      "source": "Convention quinquennale 2023-2027 entre l'État et Action Logement, dossier de presse du Premier ministre, 16 juin 2023",
-      "url": "https://www.info.gouv.fr/upload/media/content/0001/07/5557026e248ab5df7d9b469b824dd3460db8fde0.pdf",
+    "ipp_neutres": {
+      "libelle": "Ménages que ne touche pas une aide au logement qui cesse de dépendre du loyer, à budget constant",
+      "valeur": 80,
+      "unite": "%",
+      "annee": 2013,
+      "fiabilite": "academique",
+      "source": "Institut des politiques publiques, A. Bozio, G. Fack, J. Grenet et al., « Réformer les aides personnelles au logement », rapport IPP n° 10, juin 2015",
+      "url": "https://hal.science/hal-02464103/document",
       "lu_le": "2026-09-22",
-      "note": "Pour les cinq années de la convention. Visale garantit gratuitement le loyer de jeunes et de salariés ; elle est financée par Action Logement, c'est-à-dire par les employeurs, et non par l'État."
+      "note": "Scénario de « découplage partiel », tableau 4.1 : l'aide dépend du revenu, de la composition du ménage et de la zone, non du loyer, et chaque type de ménage garde dans chaque zone le budget de la législation de 2013. Microsimulation statique TAXIPP sur l'enquête Revenus fiscaux et sociaux 2011, réalisée pour la Cour des comptes. Les pourcentages portent sur l'ensemble des ménages : c'est la seule population sur laquelle les lignes du tableau par secteur et par loyer se recomposent. Les 80 % non touchés sont pour l'essentiel ceux qui ne reçoivent pas l'aide ; les 20 % touchés, ses allocataires."
     },
-    "visale_contrats": {
-      "libelle": "Contrats Visale prévus par la convention 2023-2027",
-      "valeur": 2.1,
-      "unite": "millions",
-      "annee": 2023,
-      "fiabilite": "officielle",
-      "source": "Convention quinquennale 2023-2027 entre l'État et Action Logement, dossier de presse du Premier ministre, 16 juin 2023",
-      "url": "https://www.info.gouv.fr/upload/media/content/0001/07/5557026e248ab5df7d9b469b824dd3460db8fde0.pdf",
+    "ipp_perdants": {
+      "libelle": "Ménages qui perdent à cette aide découplée du loyer",
+      "valeur": 17,
+      "unite": "%",
+      "annee": 2013,
+      "fiabilite": "academique",
+      "source": "Institut des politiques publiques, A. Bozio, G. Fack, J. Grenet et al., « Réformer les aides personnelles au logement », rapport IPP n° 10, juin 2015",
+      "url": "https://hal.science/hal-02464103/document",
       "lu_le": "2026-09-22",
-      "note": "Objectif sur les cinq années de la convention, pour l'enveloppe de visale_enveloppe. Un contrat garantit un bail."
+      "note": "Même tableau. Les gagnants, 3 %, gagnent 801 € par an en moyenne ; les perdants, plus nombreux, perdent peu. La Cour des comptes, qui reprend l'étude dans sa communication au Sénat de juillet 2015 (annexe du rapport n° 687, 2014-2015), rapporte les 80 % de non-touchés aux seuls allocataires : lue ainsi, la perte totale serait cinq fois moindre. Le chiffrage retient la lecture la plus coûteuse."
+    },
+    "ipp_perte_moyenne": {
+      "libelle": "Perte moyenne des ménages qui perdent à cette aide découplée du loyer",
+      "valeur": 143,
+      "unite": "€ par an",
+      "annee": 2013,
+      "fiabilite": "academique",
+      "source": "Institut des politiques publiques, A. Bozio, G. Fack, J. Grenet et al., « Réformer les aides personnelles au logement », rapport IPP n° 10, juin 2015",
+      "url": "https://hal.science/hal-02464103/document",
+      "lu_le": "2026-09-22",
+      "note": "Même tableau : « 801 euros de gain moyen contre 143 euros de perte moyenne. Au total, les gains et les pertes s'égalisent puisque le scénario est calibré pour s'effectuer à budget constant. »"
+    },
+    "ipp_aide_moyenne": {
+      "libelle": "Aide au logement moyenne par ménage allocataire, simulée sur la législation de 2013",
+      "valeur": 2856,
+      "unite": "€ par an",
+      "annee": 2013,
+      "fiabilite": "academique",
+      "source": "Institut des politiques publiques, A. Bozio, G. Fack, J. Grenet et al., « Réformer les aides personnelles au logement », rapport IPP n° 10, juin 2015",
+      "url": "https://hal.science/hal-02464103/document",
+      "lu_le": "2026-09-22",
+      "note": "« L'aide moyenne, égale à 2 856 euros par an selon nos simulations de la législation 2013, passe à 2 880 euros » (section 4.3.1). Avec ipp_neutres, ipp_perdants et ipp_perte_moyenne, elle donne la part de l'enveloppe que perdent les perdants : 17 × 143 € pour 20 × 2 856 €, soit 4,3 %."
+    },
+    "gul_besoin": {
+      "libelle": "Coût annuel d'une garantie universelle des loyers couvrant presque tout le parc privé, évalué en 2013",
+      "valeur": 700,
+      "unite": "M€",
+      "annee": 2013,
+      "fiabilite": "officielle",
+      "source": "Étude d'impact du projet de loi pour l'accès au logement et un urbanisme rénové, juin 2013, d'après la mission de l'IGF et du CGEDD de mars 2013",
+      "url": "https://www.assemblee-nationale.fr/14/projets/pl1179-ei.asp",
+      "lu_le": "2026-09-22",
+      "note": "« La mission évalue globalement autour de 700 millions d'euros le besoin de financement d'une garantie universelle locative étendue à 91 % du parc privé, qui comprend au total 6,7 millions de ménages locataires. » Hypothèses : 2,5 % de sinistres, un loyer moyen de 650 €, huit mois de sinistre, 862 € de gestion par dossier. C'est le coût du risque entier, avant toute prime ni cotisation : la borne défavorable de la ligne du chiffrage, où la garantie ne couvre que les revenus modestes ou irréguliers, et contre une prime."
+    },
+    "visale_sinistres": {
+      "libelle": "Impayés pris en charge par la garantie Visale, nets des sommes recouvrées",
+      "valeur": 63,
+      "unite": "M€",
+      "annee": 2024,
+      "fiabilite": "officielle",
+      "source": "ANCOLS, Rapport annuel statistique et financier pour l'exercice 2024",
+      "url": "https://www.ancols.fr/publications/etudes/rapport-annuel-statistique-et-financier-pour-l-exercice-2024",
+      "lu_le": "2026-09-22",
+      "note": "« VISALE (mises en jeu nettes, frais de procédure inclus) » : 63 M€ engagés en 2024, pour 100 M€ prévus par la convention quinquennale entre l'État et Action Logement (p. 37). Visale garantit gratuitement le loyer de jeunes et de salariés ; elle est payée par Action Logement, c'est-à-dire par la participation des employeurs, et non par l'État."
+    },
+    "visale_gestion": {
+      "libelle": "Frais de fonctionnement de la garantie Visale",
+      "valeur": 56.4,
+      "unite": "M€",
+      "annee": 2024,
+      "fiabilite": "officielle",
+      "source": "ANCOLS, Rapport annuel statistique et financier pour l'exercice 2024",
+      "url": "https://www.ancols.fr/publications/etudes/rapport-annuel-statistique-et-financier-pour-l-exercice-2024",
+      "lu_le": "2026-09-22",
+      "note": "« 2024 : 980 149 demandes instruites / 56.39 M€ de frais de fonctionnement dédiés à Visale » (p. 150). Ajoutés aux impayés pris en charge, ils font le coût de la garantie gratuite qui existe aujourd'hui."
     },
     "decisions_bail": {
       "libelle": "Décisions de justice entre bailleurs et locataires",
@@ -622,6 +688,94 @@
       "url": "https://www.justice.gouv.fr/documentation/etudes-et-statistiques/lexpulsion-du-locataire-demandee-neuf-affaires-dix",
       "lu_le": "2026-09-22",
       "note": "De la délivrance de l'assignation à la décision, au fond ou en référé : 3,8 mois jusqu'à l'audience, 1,3 mois jusqu'au jugement. Le commandement de payer qui précède l'assignation, et l'exécution qui suit la décision, n'y sont pas."
+    },
+    "menages_impayes": {
+      "libelle": "Ménages qui connaissent un retard ou un impayé de loyer dans l'année",
+      "valeur": 1.5,
+      "unite": "million",
+      "annee": 2025,
+      "fiabilite": "officielle",
+      "source": "Ministère chargé du logement, communiqué du 5 mai 2025 sur la réunion de l'Observatoire national des impayés de loyer et de charges locatives",
+      "url": "https://www.ecologie.gouv.fr/presse/reunion-lobservatoire-national-impayes-loyer-charges-locatives-valerie-letard-mobilise",
+      "lu_le": "2026-09-22",
+      "note": "« Chaque année, environ 1,5 million de ménages se retrouvent à un moment donné en situation de retard ou d'impayés. » Un ordre de grandeur donné par le ministère, sans méthode publiée. C'est la borne haute de l'accompagnement social dès le premier mois d'impayé."
+    },
+    "commandements_payer": {
+      "libelle": "Ménages qui reçoivent un commandement de payer leur loyer dans l'année",
+      "valeur": 500000,
+      "unite": "ménages",
+      "annee": 2025,
+      "fiabilite": "officielle",
+      "source": "Ministère chargé du logement, communiqué du 5 mai 2025 sur la réunion de l'Observatoire national des impayés de loyer et de charges locatives",
+      "url": "https://www.ecologie.gouv.fr/presse/reunion-lobservatoire-national-impayes-loyer-charges-locatives-valerie-letard-mobilise",
+      "lu_le": "2026-09-22",
+      "note": "« Parmi eux, environ 500 000 ménages reçoivent un commandement de payer, première étape de la procédure judiciaire engagée en cas de contentieux avec le propriétaire » ; la moitié dans le parc privé, la moitié dans le parc social. C'est la borne basse de l'accompagnement social dès le premier mois d'impayé : les impayés qui deviennent un litige."
+    },
+    "enquetes_sociales": {
+      "libelle": "Enquêtes sociales réalisées chaque année avant l'audience d'expulsion",
+      "valeur": 75000,
+      "unite": "enquêtes",
+      "annee": 2013,
+      "fiabilite": "officielle",
+      "source": "IGA, IGAS, CGEDD et IGSJ, « Évaluation de la politique de prévention des expulsions locatives », 2014",
+      "url": "https://mobile.interieur.gouv.fr/content/download/77623/571688/file/14059-13132b-01%20-%20MAP%20Expulsions%20locatives.pdf",
+      "lu_le": "2026-09-22",
+      "note": "« Au niveau national comme il est estimé que la moitié des assignations donnent lieu à enquête (soit près de 75 000 enquêtes/an), en négligeant la part des « portes closes », le coût annuel des enquêtes est estimé à 12 M€ » (p. 140). Une enquête complète revient à 159 € dans le Pas-de-Calais en 2013, à 165 € dans le Gard."
+    },
+    "enquetes_sociales_cout": {
+      "libelle": "Coût annuel de ces enquêtes sociales",
+      "valeur": 12,
+      "unite": "M€",
+      "annee": 2013,
+      "fiabilite": "officielle",
+      "source": "IGA, IGAS, CGEDD et IGSJ, « Évaluation de la politique de prévention des expulsions locatives », 2014",
+      "url": "https://mobile.interieur.gouv.fr/content/download/77623/571688/file/14059-13132b-01%20-%20MAP%20Expulsions%20locatives.pdf",
+      "lu_le": "2026-09-22",
+      "note": "Même page. Environ 160 € par enquête : c'est le coût que le chiffrage applique à l'accompagnement dès le premier mois d'impayé. Une enquête est un diagnostic, non un suivi de plusieurs mois ; l'aide au paiement elle-même, celle des fonds de solidarité logement, n'est pas touchée par la proposition."
+    },
+    "etp_magistrats_expulsions": {
+      "libelle": "Magistrats occupés par le contentieux des expulsions, en équivalents temps plein",
+      "valeur": 137,
+      "unite": "magistrats",
+      "annee": 2012,
+      "fiabilite": "officielle",
+      "source": "IGA, IGAS, CGEDD et IGSJ, « Évaluation de la politique de prévention des expulsions locatives », 2014",
+      "url": "https://mobile.interieur.gouv.fr/content/download/77623/571688/file/14059-13132b-01%20-%20MAP%20Expulsions%20locatives.pdf",
+      "lu_le": "2026-09-22",
+      "note": "« En 2012 selon la DSJ, le contentieux des expulsions mobilise 137 ETP de magistrats et 229 ETP de greffiers » (p. 143). La direction des services judiciaires est la source ; le rapport la cite. C'est la dernière mesure publiée que nous ayons trouvée."
+    },
+    "etp_greffiers_expulsions": {
+      "libelle": "Greffiers occupés par le contentieux des expulsions, en équivalents temps plein",
+      "valeur": 229,
+      "unite": "greffiers",
+      "annee": 2012,
+      "fiabilite": "officielle",
+      "source": "IGA, IGAS, CGEDD et IGSJ, « Évaluation de la politique de prévention des expulsions locatives », 2014",
+      "url": "https://mobile.interieur.gouv.fr/content/download/77623/571688/file/14059-13132b-01%20-%20MAP%20Expulsions%20locatives.pdf",
+      "lu_le": "2026-09-22",
+      "note": "Même phrase, même page que etp_magistrats_expulsions."
+    },
+    "cout_magistrat": {
+      "libelle": "Coût annuel moyen d'un magistrat de l'ordre judiciaire, charges comprises, hors pensions",
+      "valeur": 87374,
+      "unite": "€",
+      "annee": 2025,
+      "fiabilite": "officielle",
+      "source": "Projet annuel de performances « Justice », projet de loi de finances pour 2025, programme 166 « Justice judiciaire »",
+      "url": "https://www2.assemblee-nationale.fr/static/17/Annexes-DL/PLF-2025/Justice.pdf",
+      "lu_le": "2026-09-22",
+      "note": "Coût global moyen chargé, hors contribution au compte d'affectation spéciale des pensions, dans le tableau des coûts d'entrée et de sortie (p. 61). Pensions comprises, le coût est plus élevé, sans que l'ordre de grandeur de la ligne du chiffrage en change."
+    },
+    "cout_greffier": {
+      "libelle": "Coût annuel moyen d'un agent de greffe de catégorie B, charges comprises, hors pensions",
+      "valeur": 41896,
+      "unite": "€",
+      "annee": 2025,
+      "fiabilite": "officielle",
+      "source": "Projet annuel de performances « Justice », projet de loi de finances pour 2025, programme 166 « Justice judiciaire »",
+      "url": "https://www2.assemblee-nationale.fr/static/17/Annexes-DL/PLF-2025/Justice.pdf",
+      "lu_le": "2026-09-22",
+      "note": "Même tableau que cout_magistrat, ligne « B métiers du greffe et du commandement » (p. 61)."
     },
     "prelevements_part_pib": {
       "libelle": "Part des prélèvements sur le logement dans le PIB",
@@ -782,6 +936,28 @@
       "url": "https://www.fipeco.fr/fiche/La-politique-du-logement",
       "lu_le": "2026-09-21",
       "note": "Réductions d'impôt accordées en contrepartie d'un engagement de location. Leur bénéfice est concentré sur les ménages les plus imposés."
+    },
+    "meuble_regime_foncier": {
+      "libelle": "Impôt sur le revenu supplémentaire si la location meublée passe au régime de la location nue, abattement de 40 %",
+      "valeur": 266,
+      "unite": "M€",
+      "annee": 2021,
+      "fiabilite": "officielle",
+      "source": "A. Le Meur, avec l'IGF et l'IGEDD, « Propositions de réforme de la fiscalité locative », rapport au Premier ministre, mai 2024 ; chiffrage de la direction de la législation fiscale",
+      "url": "https://www.info.gouv.fr/upload/media/content/0001/11/63206ab0cf86146c6b1ea9db025fde1fed0f3bef.pdf",
+      "lu_le": "2026-09-22",
+      "note": "Scénario 1 : tous les revenus locatifs, hors loueurs professionnels, deviennent des revenus fonciers ; le micro-foncier, relevé à 30 000 €, porte un abattement de 40 % ; le régime réel ne déduit plus d'amortissement. « Il conduit à un gain budgétaire estimé à 266 M€ » (synthèse et tableau 18). Revenus de 2021 : les lois votées depuis sur la location meublée n'y sont pas. Les prélèvements sociaux non plus, « que la DLF indique n'être pas en mesure de chiffrer » : ils ajouteraient au gain. Deux effets de sens contraire sont laissés de côté, et se compensent à peu près : 270 M€ de coût si des bailleurs au réel passent au micro, 250 M€ de gain si des loueurs en déficit deviennent imposables."
+    },
+    "meuble_regime_foncier_50": {
+      "libelle": "Le même, avec un abattement de 50 %",
+      "valeur": 25,
+      "unite": "M€",
+      "annee": 2021,
+      "fiabilite": "officielle",
+      "source": "A. Le Meur, avec l'IGF et l'IGEDD, « Propositions de réforme de la fiscalité locative », rapport au Premier ministre, mai 2024 ; chiffrage de la direction de la législation fiscale",
+      "url": "https://www.info.gouv.fr/upload/media/content/0001/11/63206ab0cf86146c6b1ea9db025fde1fed0f3bef.pdf",
+      "lu_le": "2026-09-22",
+      "note": "Variante 1 bis : « un taux d'abattement dans le régime micro de 50 %, conduisant [à] un gain budgétaire réduit à 25 M€, qui permet de limiter fortement le nombre de foyers fiscaux perdants (166 000 au lieu de 586 000 dans le scénario 1) » (synthèse)."
     },
     "loyers_imputes_cout": {
       "libelle": "Coût de la non-imposition des loyers imputés des propriétaires",
@@ -1169,12 +1345,13 @@
       "verifier": "Même question que pour les classes F, dont la réponse commandera probablement celle-ci.",
       "url": "https://www.ecologie.gouv.fr/politiques-publiques/diagnostic-performance-energetique-dpe"
     },
-    "visale_convention": {
-      "libelle": "La convention entre l'État et Action Logement fixe l'enveloppe de Visale jusqu'à fin 2027",
+    "appel_zones_tendues": {
+      "libelle": "En zone tendue, un recours contre un permis de logements est jugé sans appel, s'il est introduit avant la fin de 2027",
       "echeance": "2027-12-31",
-      "ou": "/chiffrage, section « mesures », ligne de la garantie publique du loyer ; notes de visale_enveloppe et visale_contrats",
-      "verifier": "La convention suivante est-elle signée ? Quelle enveloppe donne-t-elle à Visale, et pour combien de contrats ? Reprendre visale_enveloppe et visale_contrats, et le coût par bail que la page Chiffrage en tire comme repère pour la garantie publique du loyer.",
-      "url": "https://www.info.gouv.fr/upload/media/content/0001/07/5557026e248ab5df7d9b469b824dd3460db8fde0.pdf"
+      "ecrit": "31 décembre 2027",
+      "ou": "/construire, section « recours » ; /chiffrage, tableau mesure par mesure, ligne du recours ; note de recours_delai_legal",
+      "verifier": "La dérogation de l'article R. 811-1-1 du code de justice administrative a-t-elle été prorogée, rendue définitive, ou laissée s'éteindre ? Si l'appel revient, la page Construire doit le dire, et la ligne du recours, estimée à zéro parce que le programme généralise une instance unique qui existe, doit être relue.",
+      "url": "https://codes.droit.org/PDF/Code%20de%20justice%20administrative.pdf"
     }
   }
 }

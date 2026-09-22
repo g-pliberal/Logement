@@ -13,7 +13,8 @@
  *     du compte du logement, poste par poste et face à aujourd'hui. Ce n'est
  *     PAS un modèle budgétaire — il n'y a ni comportement, ni montée en
  *     charge, ni retour d'activité —, c'est une addition posée, et la page le
- *     dit.
+ *     dit. Les mesures qu'aucun agrégat ne mesure y sont estimées à part, en
+ *     fourchette, sur des hypothèses que la page écrit.
  */
 
 /** Le taux réduit, hors majoration départementale de 0,5 point. */
@@ -102,6 +103,81 @@ function estimation(cle, bas, haut = bas) {
 }
 
 /**
+ * Une garantie publique du loyer, contre une prime : rien si la prime couvre
+ * le risque, comme le programme le veut ; au plus, si l'État le portait seul,
+ * ce que coûterait une garantie de presque tout le parc privé, telle que le
+ * Gouvernement l'évaluait en 2013.
+ */
+function garantie(donnees) {
+  return estimation("garantie", -donnees.valeur("gul_besoin") / 1000, 0);
+}
+
+/**
+ * Un impayé jugé en trois mois, avec l'accompagnement social dès le premier
+ * mois d'impayé.
+ *
+ * L'accompagnement : l'enquête sociale qu'une partie des ménages assignés
+ * reçoit aujourd'hui, à son coût unitaire, offerte à chaque ménage en impayé —
+ * au moins à ceux qui reçoivent un commandement de payer, au plus à tous ceux
+ * qui connaissent un retard dans l'année —, moins ce qui s'y dépense déjà.
+ * Les juges : rien si le délai tient par la procédure, au plus le double des
+ * magistrats et des greffiers que le contentieux des expulsions occupe.
+ */
+function impaye(donnees) {
+  const parEnquete = (donnees.valeur("enquetes_sociales_cout") * 1e6)
+    / donnees.valeur("enquetes_sociales");
+  const accompagner = (menages) => (menages * parEnquete) / 1e9
+    - donnees.valeur("enquetes_sociales_cout") / 1000;
+  const juges = (donnees.valeur("etp_magistrats_expulsions") * donnees.valeur("cout_magistrat")
+    + donnees.valeur("etp_greffiers_expulsions") * donnees.valeur("cout_greffier")) / 1e9;
+  return {
+    ...estimation("impaye",
+      -(accompagner(donnees.valeur("menages_impayes") * 1e6) + juges),
+      -accompagner(donnees.valeur("commandements_payer"))),
+    parEnquete,
+    juges,
+  };
+}
+
+/**
+ * La clause de sauvegarde, à son coût de la première année : le complément y
+ * est entier, et il décroît ensuite jusqu'à s'éteindre.
+ *
+ * À enveloppe constante, la perte des ménages aidés est celle que l'IPP a
+ * simulée pour une aide qui dépend du revenu, de la taille du ménage et de la
+ * zone, et non du loyer. Ses perdants perdent en moyenne une somme donnée ;
+ * ses allocataires — les ménages que la réforme touche — reçoivent en moyenne
+ * une aide donnée ; le rapport des deux dit quelle part de l'enveloppe les
+ * perdants perdent.
+ *
+ * `ecart` est ce que le chèque retenu retire aux ménages aidés, en milliards
+ * par an, face à l'aide moyenne d'aujourd'hui ; négatif, il leur donne. La
+ * clause rend ce qu'il retire, au moins aux perdants et au plus à tous ; ce
+ * qu'il donne réduit les pertes, au plus d'autant, sans les rendre négatives.
+ */
+function clause(donnees, allocations, ecart) {
+  const touches = 100 - donnees.valeur("ipp_neutres");
+  const perdants = donnees.valeur("ipp_perdants") / touches;
+  const part = (perdants * donnees.valeur("ipp_perte_moyenne"))
+    / donnees.valeur("ipp_aide_moyenne");
+  const perte = part * allocations;
+  const [moins, plus] = ecart >= 0
+    ? [perte + ecart * perdants, perte + ecart]
+    : [Math.max(0, perte + ecart * perdants), perte];
+  return { ...estimation("clause", -plus, -moins), part };
+}
+
+/**
+ * Le régime unique des revenus fonciers, sur la seule part que
+ * l'administration a chiffrée : la location meublée rangée sous le régime de la
+ * location nue, selon l'abattement retenu. Impôt sur le revenu seul.
+ */
+function regime(donnees) {
+  return estimation("regime", donnees.valeur("meuble_regime_foncier_50") / 1000,
+    donnees.valeur("meuble_regime_foncier") / 1000);
+}
+
+/**
  * L'arithmétique de la proposition, en milliards d'euros par an.
  *
  * Elle pose ses gestes poste par poste, chacun face à ce qu'il est aujourd'hui,
@@ -122,6 +198,12 @@ function estimation(cle, bas, haut = bas) {
  * aujourd'hui doit montrer ce qu'il garde, et non seulement ce qu'il change.
  * Le solde est la somme des effets, et rien d'autre ; il est positif quand la
  * réforme dégage une marge, négatif quand elle demande un financement.
+ *
+ * Les mesures qu'aucun agrégat publié ne mesure — le recours, l'impayé, la
+ * garantie du loyer, l'accession, la clause de sauvegarde, le régime unique
+ * des revenus fonciers — sont estimées et additionnées à part : `estimeBas` et
+ * `estimeHaut` bornent leur total, `soldeBas` et `soldeHaut` le solde qui les
+ * compte.
  *
  * Aucun effet de comportement n'est modélisé : ni la construction que la
  * libération du droit des sols déclencherait, ni les recettes qu'elle
@@ -168,9 +250,19 @@ export function chiffrage(donnees, reglages) {
   // personnelle leur était ouverte, et chacun reçoit le chèque retenu.
   const accedantsNouveaux = (donnees.valeur("accedants")
     * (donnees.valeur("accedants_aides_2017") - donnees.valeur("accedants_aides"))) / 100;
+  const aideMoyenneActuelle = (allocations * 1000) / (menages * 12);
 
+  // Le recours jugé dans un délai fixe : le délai existe, l'instance unique
+  // aussi en zone tendue ; les étendre ne demande pas de juge, en supprimer
+  // l'appel en libère. Compté pour zéro, et la ligne dit pourquoi.
   const estimations = [
+    estimation("recours", 0),
+    impaye(donnees),
+    garantie(donnees),
     estimation("accession", -(chequeMensuel * 12 * accedantsNouveaux) / 1000),
+    clause(donnees, allocations,
+      ((aideMoyenneActuelle - chequeMensuel) * 12 * menages) / 1000),
+    regime(donnees),
   ];
   const estimeBas = estimations.reduce((total, e) => total + e.bas, 0);
   const estimeHaut = estimations.reduce((total, e) => total + e.haut, 0);
@@ -200,7 +292,7 @@ export function chiffrage(donnees, reglages) {
     soldeHaut: plus + moins + estimeHaut,
     // Ce que reçoit un ménage aidé aujourd'hui, en moyenne et par mois : le
     // point de comparaison du chèque, et il se déduit des deux agrégats.
-    aideMoyenneActuelle: (allocations * 1000) / (menages * 12),
+    aideMoyenneActuelle,
   };
 }
 

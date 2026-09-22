@@ -98,15 +98,17 @@ export function nombre(valeur, decimales = 1) {
  * Un chiffre tel qu'il se lit dans une phrase : la valeur, puis son unité.
  *
  * Les unités du paquet sont écrites pour être lues telles quelles — « Md€ »,
- * « % », « millions » —, et celles qui commencent par un signe se collent au
- * nombre là où les autres s'en séparent d'une espace insécable.
+ * « % », « millions » —. Un pourcentage et un montant en euros se collent au
+ * nombre par une espace fine insécable, comme le fait `euros` : « 63 M€ » ne
+ * doit pas se couper en fin de ligne. Les autres unités, des mots, s'en
+ * séparent d'une espace.
  */
 export function avecUnite(valeur, unite, decimales = 1) {
   const texte = nombre(valeur, decimales);
   if (unite === "%") {
     return `${texte}${FINE}%`;
   }
-  if (unite === "Md€" || unite === "€/m²") {
+  if (unite === "Md€" || unite === "M€" || unite.startsWith("€")) {
     return `${texte}${FINE}${unite}`;
   }
   return `${texte} ${unite}`;

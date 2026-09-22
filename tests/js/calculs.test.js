@@ -169,6 +169,56 @@ test("un chèque assez gros renverse le solde", () => {
   assert.ok(bilan.solde < 0, "à 900 € par mois, la réforme doit être à financer");
 });
 
+test("chaque ligne estimée tient ses bornes, et le sens qu'elle annonce", () => {
+  const menages = d.valeur("menages_aides");
+  const bilan = chiffrage(d, { chequeMensuel: 225, menages });
+  const e = (cle) => bilan.estimations.find((x) => x.cle === cle);
+  for (const x of bilan.estimations) {
+    assert.ok(x.bas <= x.haut, `${x.cle} : bornes inversées`);
+  }
+  presque(bilan.estimeBas, bilan.estimations.reduce((s, x) => s + x.bas, 0), 1e-12);
+  presque(bilan.estimeHaut, bilan.estimations.reduce((s, x) => s + x.haut, 0), 1e-12);
+  // Le recours ne coûte rien ; la garantie, de rien à tout le risque sans prime.
+  assert.ok(e("recours").bas === 0 && e("recours").haut === 0);
+  presque(e("garantie").bas, -d.valeur("gul_besoin") / 1000, 1e-12);
+  assert.ok(e("garantie").haut === 0);
+  // Le régime unique rapporte, selon l'abattement retenu.
+  presque(e("regime").bas, d.valeur("meuble_regime_foncier_50") / 1000, 1e-12);
+  presque(e("regime").haut, d.valeur("meuble_regime_foncier") / 1000, 1e-12);
+  // L'impayé : l'enquête sociale au coût d'aujourd'hui, pour chaque ménage qui
+  // reçoit un commandement de payer, moins ce qui s'y dépense déjà. Les juges
+  // n'entrent que dans la borne défavorable.
+  const parEnquete = (d.valeur("enquetes_sociales_cout") * 1e6) / d.valeur("enquetes_sociales");
+  presque(e("impaye").haut, -((d.valeur("commandements_payer") * parEnquete) / 1e9
+    - d.valeur("enquetes_sociales_cout") / 1000), 1e-12);
+  assert.ok(e("impaye").bas < e("impaye").haut && e("impaye").haut < 0);
+});
+
+test("la clause de sauvegarde rend ce que le chèque retire aux ménages aidés", () => {
+  const menages = d.valeur("menages_aides");
+  const { actuelle } = bornesCheque(d, menages);
+  const clause = (bilan) => bilan.estimations.find((x) => x.cle === "clause");
+  const a = chiffrage(d, { chequeMensuel: actuelle, menages });
+  const b = chiffrage(d, { chequeMensuel: actuelle - 50, menages });
+  const retire = (50 * 12 * menages) / 1000;
+  // À l'aide moyenne d'aujourd'hui, la clause coûte la perte simulée, et elle
+  // seule : ses deux bornes se confondent.
+  assert.equal(clause(a).bas, clause(a).haut);
+  assert.ok(clause(a).haut < 0);
+  // Sous la moyenne, elle rend au plus tout ce que le chèque retire, au moins
+  // ce qu'il retire à ceux qui perdaient déjà.
+  const perdants = d.valeur("ipp_perdants") / (100 - d.valeur("ipp_neutres"));
+  presque(clause(a).bas - clause(b).bas, retire, 1e-9);
+  presque(clause(a).haut - clause(b).haut, retire * perdants, 1e-9);
+  // Baisser le chèque n'améliore donc le solde le plus défavorable que de ce
+  // que l'accession coûte en moins.
+  presque(b.soldeBas - a.soldeBas, (50 * 12 * a.accedantsNouveaux) / 1000, 1e-9);
+  // Au-dessus de la moyenne, elle réduit les pertes sans devenir une recette.
+  const c = chiffrage(d, { chequeMensuel: actuelle + 200, menages });
+  assert.ok(clause(c).haut === 0);
+  assert.equal(clause(c).bas, clause(a).bas);
+});
+
 // -- les données -------------------------------------------------------------
 
 test("un chiffre absent lève plutôt que de rendre une valeur vide", () => {

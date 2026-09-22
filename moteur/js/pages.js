@@ -727,15 +727,20 @@ ${g.depliant("Le recours, et le temps qu'il coûte",
   trente logements, ce délai suffit à faire passer le plan de financement de
   rentable à impossible ; il suffit surtout à décourager l'opération suivante,
   celle qu'on ne lance pas.</p>
-  <p>La loi du 26 novembre 2025 a resserré les délais : le recours gracieux ne
-  proroge plus le délai contentieux, et un jugement est attendu sous dix mois
-  pour les permis de plus de deux logements. C'est la bonne direction, et c'est
-  encore un an pendant lequel rien ne sort de terre.</p>
+  <p>Les délais ont été resserrés depuis. Le juge doit statuer en
+  ${v(d, "recours_delai_legal", 0)} sur un permis de plus de deux logements,
+  en première instance comme en appel, depuis ${an(d, "recours_delai_legal")} ;
+  en zone tendue, l'appel est supprimé pour les recours introduits jusqu'au
+  31 décembre 2027 ; et depuis la loi du 26 novembre 2025, un recours gracieux
+  ne proroge plus le délai pour saisir le juge. C'est la bonne direction, et
+  c'est encore ${v(d, "recours_delai_legal", 0)} pendant lesquels rien ne sort
+  de terre.</p>
   <p>La mesure que nous citons date de ${an(d, "recours_duree")} : c'est la
   plus récente que nous ayons pu sourcer à une publication officielle, et nous
   préférons une mesure datée à une estimation ronde. Les délais ont pu bouger
   depuis, et plutôt à la baisse.</p>
-  <p class="source">${sources(d, "recours_duree")}</p>`, "recours")}
+  <p class="source">${sources(d, "recours_duree", "recours_delai_legal")}</p>`,
+    "recours")}
 
 ${proposition("Rendre le droit de construire à celui qui construit", [
     ["Un gabarit de droit dans les zones tendues",
@@ -1064,8 +1069,9 @@ ${g.depliant("L'objection : « trois mois, c'est l'expulsion expresse »",
     ["Le locataire de bonne foi, saisi tôt",
       "L'accompagnement social est déclenché dès le premier mois "
       + "d'impayé, et non deux ans plus tard. C'est la contrepartie exacte "
-      + "de l'accélération, et elle coûte : elle fait partie des "
-      + "engagements que notre chiffrage ne chiffre pas encore."],
+      + "de l'accélération, et elle coûte : "
+      + `<a href="${g.lien("/chiffrage")}">le chiffrage</a> l'estime, avec `
+      + "les juges que demande le délai, sur des hypothèses qu'il écrit."],
   ])}
   <p>Reste une part d'objection qui tient, et que nous ne pouvons pas dissoudre :
   un jugement plus rapide rendra quelques expulsions plus rapides aussi. Nous
@@ -1332,21 +1338,31 @@ function calculetteMutation(d, parametres) {
 }
 
 function pageFiscalite(d, parametres) {
-  // La marge que le chiffrage dégage, aux réglages du lecteur : c'est sur elle
-  // que se paierait le maintien d'une niche. Dire si elle y suffit se calcule ;
-  // l'écrire en dur, c'est promettre une phrase que la prochaine mise à jour
-  // des données rendra fausse sans que rien ne le signale.
-  const marge = chiffrage(d, reglagesChiffrage(d, parametres)).solde;
+  // La marge que le chiffrage dégage, aux réglages du lecteur, une fois
+  // payées les lignes qu'il estime : c'est sur elle que se paierait le
+  // maintien d'une niche. Dire si elle y suffit se calcule ; l'écrire en dur,
+  // c'est promettre une phrase que la prochaine mise à jour des données rendra
+  // fausse sans que rien ne le signale.
+  const bilan = chiffrage(d, reglagesChiffrage(d, parametres));
   const solde = soldeDuLogement(d);
   const travaux = n(d, "tva_travaux_taux_reduit");
   const social = n(d, "niches_secteur_social");
-  const suffitTravaux = marge >= travaux ? "qui y suffit" : "qui n'y suffit pas";
-  let suffitSocial = "qui n'y suffit pas";
-  if (marge >= social + travaux) {
+  const SUFFIRE = {
+    toujours: "qui y suffit",
+    parfois: "qui n'y suffit que dans le haut de sa fourchette",
+    jamais: "qui n'y suffit pas",
+  };
+  const suffitTravaux = SUFFIRE[tientDans(bilan, travaux)];
+  const seul = tientDans(bilan, social);
+  const avecTravaux = tientDans(bilan, social + travaux);
+  let suffitSocial = SUFFIRE[seul];
+  if (avecTravaux === "toujours") {
     suffitSocial = "qui y suffit, même avec le taux réduit des travaux";
-  } else if (marge >= social) {
-    suffitSocial = "qui y suffit, mais pas en même temps qu'au taux réduit des "
-      + "travaux";
+  } else if (seul !== "jamais") {
+    suffitSocial += avecTravaux === "jamais"
+      ? ", mais pas en même temps qu'au taux réduit des travaux"
+      : ", et avec le taux réduit des travaux dans le haut de sa fourchette "
+        + "seulement";
   }
 
   const corps = `
@@ -1539,8 +1555,9 @@ ${g.depliant("L'objection : « qui perd ? »",
       + "l'APL n'est pas. Et si le Parlement juge le taux réduit "
       + "nécessaire — parce qu'il tient aussi le travail déclaré dans le "
       + "bâtiment —, le maintenir coûte "
-      + `${v(d, "tva_travaux_taux_reduit")} sur la marge dégagée par le `
-      + `<a href="${g.lien("/chiffrage")}">chiffrage</a>, ${suffitTravaux}. `
+      + `${v(d, "tva_travaux_taux_reduit")} sur la marge que le `
+      + `<a href="${g.lien("/chiffrage")}">chiffrage</a> laisse une fois ses `
+      + `estimations payées, ${suffitTravaux}. `
       + "C'est un arbitrage, pas un impensé."],
     ["Le logement social",
       "C'est le plus lourd des perdants, et ce n'est pas un ménage. Les "
@@ -1555,8 +1572,9 @@ ${g.depliant("L'objection : « qui perd ? »",
       + "logement social coûtera donc plus cher. La proposition les supprime "
       + "avec les autres ; si le Parlement jugeait les avantages fiscaux "
       + "nécessaires, les maintenir coûterait "
-      + `${v(d, "niches_secteur_social")} sur la marge du `
-      + `<a href="${g.lien("/chiffrage")}">chiffrage</a>, ${suffitSocial}.`],
+      + `${v(d, "niches_secteur_social")} sur la marge que le `
+      + `<a href="${g.lien("/chiffrage")}">chiffrage</a> laisse une fois ses `
+      + `estimations payées, ${suffitSocial}.`],
     ["Les locataires protégés par l'encadrement des loyers",
       `Environ ${v(d, "encadrement_gain_mensuel", 0)} par mois à Paris — `
       + `${nombre(Math.abs(n(d, "encadrement_effet")), 1)} % de modération `
@@ -1678,13 +1696,6 @@ function cascadeChiffrage(d, bilan) {
 }
 
 /**
- * La convention qui dote Visale court sur cinq exercices, de 2023 à 2027 inclus.
- * C'est sa durée, non une mesure : elle ne sert qu'à ramener l'enveloppe à
- * l'année, pour la comparer aux autres lignes du compte.
- */
-const EXERCICES_CONVENTION_VISALE = 5;
-
-/**
  * Les petits nombres s'écrivent en lettres dans une phrase. Au féminin : on y
  * compte des lignes et des mesures.
  */
@@ -1716,12 +1727,13 @@ function enLettres(entier, capitale = false) {
  * chiffre est ce qu'il est, ce qui existe aujourd'hui, ce que le programme met
  * à la place, et l'effet sur le compte.
  *
- * `effet` est un montant, zéro, ou `null` — l'aveu qu'on ne sait pas le
- * chiffrer, que la ligne écrit alors en toutes lettres. `nature` range la
- * ligne pour la phrase qui résume le tableau : `compte` porte de l'argent,
- * `regle` change une règle, `garde` conserve une dépense telle qu'elle est,
- * `transfert` fait passer de l'argent d'une administration à une autre sans
- * changer le total, `inconnu` n'est pas chiffré.
+ * `effet` est un montant, zéro, une estimation — deux bornes, que le calcul
+ * rend —, ou `null` : l'aveu qu'on ne sait pas le chiffrer, que la ligne écrit
+ * alors en toutes lettres. `nature` range la ligne pour la phrase qui résume le
+ * tableau : `compte` porte de l'argent, `regle` change une règle, `garde`
+ * conserve une dépense telle qu'elle est, `transfert` fait passer de l'argent
+ * d'une administration à une autre sans changer le total, `estime` est estimé
+ * sur des hypothèses que la ligne écrit, `inconnu` n'est pas chiffré.
  */
 function ligneDuCompte(nom, pourquoi, aujourdhui, programme, effet, nature) {
   return { nom, pourquoi, aujourdhui, programme, effet, nature };
@@ -1779,6 +1791,30 @@ function fourchetteEnMots(bas, haut) {
 }
 
 /**
+ * Un coût estimé dans une phrase, sans signe : « de tant à tant », ou une
+ * seule valeur quand ses deux bornes s'écrivent pareil.
+ */
+function entre(a, b) {
+  const [petit, grand] = [Math.min(a, b), Math.max(a, b)];
+  return nombre(petit, 1) === nombre(grand, 1)
+    ? milliards(grand)
+    : `de ${nombre(petit, 1)} à ${milliards(grand)}`;
+}
+
+/**
+ * Ce qu'un emploi de la marge devient face au solde qui compte les
+ * estimations : il y tient quelle que soit l'estimation, dans le haut de la
+ * fourchette seulement, ou jamais. La phrase qui le dit se calcule : écrite en
+ * dur, elle deviendrait fausse à la première mise à jour des agrégats.
+ */
+function tientDans(bilan, montant) {
+  if (bilan.soldeBas >= montant) {
+    return "toujours";
+  }
+  return bilan.soldeHaut >= montant ? "parfois" : "jamais";
+}
+
+/**
  * Le programme mesure par mesure, face à aujourd'hui.
  *
  * C'est la question que pose tout lecteur d'un chiffrage — qu'est-ce qui
@@ -1793,8 +1829,8 @@ function lignesDuCompte(d, bilan, reglages) {
   const estime = (cle) => bilan.estimations.find((e) => e.cle === cle);
   const menages = v(d, "menages_aides");
   const parMenage = (bilan.cheque * 1000) / (n(d, "menages_aides") * 12);
-  const parBail = n(d, "visale_enveloppe") / n(d, "visale_contrats");
-  const visaleParAn = n(d, "visale_enveloppe") / 1000 / EXERCICES_CONVENTION_VISALE;
+  const impaye = estime("impaye");
+  const clause = estime("clause");
   const garde = reglages.partSubventions === 1 ? "Conservées"
     : (reglages.partSubventions > 0 ? "La moitié conservée" : "Supprimées");
 
@@ -1815,11 +1851,18 @@ function lignesDuCompte(d, bilan, reglages) {
       "Une part de la TVA à la commune, dix ans, avec la taxe foncière",
       0, "transfert"),
     ligneDuCompte("Le recours contre un permis jugé dans un délai fixe",
-      "Tenir un délai fixe demande des juges, et aucune donnée publique ne "
-      + "permet de dire combien.",
-      `${v(d, "recours_duree", 0)} devant le tribunal administratif `
-      + `(${an(d, "recours_duree")})`,
-      "Une seule instance, un délai fixe", null, "inconnu"),
+      `Le délai fixe existe déjà : depuis ${an(d, "recours_delai_legal")}, le `
+      + `juge doit statuer en ${v(d, "recours_delai_legal", 0)} sur un permis `
+      + "de plus de deux logements, et en zone tendue l'appel est supprimé "
+      + "pour les recours introduits jusqu'au 31 décembre 2027. Estimé à zéro, "
+      + "en gardant ce délai et en supprimant l'appel partout : il n'y a pas "
+      + "de juge à ajouter, et il y en a à libérer. Un délai plus court en "
+      + "demanderait : selon le ministère de la Justice, cité par le Sénat, "
+      + "les juridictions sont au plafond de ce qu'elles peuvent juger.",
+      `${v(d, "recours_delai_legal", 0)} en principe, et un appel hors zone `
+      + `tendue ; ${v(d, "recours_duree", 0)} mesurés en `
+      + `${an(d, "recours_duree")}`,
+      "Une seule instance, un délai fixe", estime("recours"), "estime"),
 
     new g.Intertitre(`<a href="${g.lien("/louer")}">Louer</a>`),
     ligneDuCompte("La fin de l'encadrement des loyers",
@@ -1835,22 +1878,35 @@ function lignesDuCompte(d, bilan, reglages) {
       "Un logement classé G ne se loue plus",
       "Le diagnostic est affiché, la location permise", 0, "regle"),
     ligneDuCompte("Un impayé jugé en trois mois",
-      "Avec l'accompagnement social dès le premier mois d'impayé. Le coût tient "
-      + "aux juges et aux travailleurs sociaux qu'il faut ajouter, et aucune "
-      + "statistique publique ne permet de l'estimer.",
+      "Avec l'accompagnement social dès le premier mois d'impayé. Estimé en "
+      + "offrant à chaque ménage en impayé l'enquête sociale que reçoit "
+      + "aujourd'hui une partie des ménages assignés, à son coût d'alors — "
+      + `${v(d, "enquetes_sociales_cout", 0)} pour ${v(d, "enquetes_sociales")} `
+      + `par an, soit ${euros(impaye.parEnquete)} l'une —, de `
+      + `${v(d, "commandements_payer")}, ceux qui reçoivent un commandement de `
+      + `payer, à ${v(d, "menages_impayes")}, tous ceux qui connaissent un `
+      + "retard dans l'année. Les juges pèsent moins : le contentieux des "
+      + "expulsions occupait l'équivalent de "
+      + `${v(d, "etp_magistrats_expulsions")} et `
+      + `${v(d, "etp_greffiers_expulsions")} à temps plein en `
+      + `${an(d, "etp_magistrats_expulsions")}, et en doubler l'effectif `
+      + `coûterait ${milliards(impaye.juges, 2)} par an.`,
       `${v(d, "decisions_bail")} en ${an(d, "decisions_bail")}, rendues en `
       + `${v(d, "delai_decision_bail")} en moyenne après l'assignation`,
-      "Trois mois, délai fixe", null, "inconnu"),
+      "Trois mois, délai fixe ; l'accompagnement dès le premier mois",
+      impaye, "estime"),
     ligneDuCompte("Une garantie publique du loyer",
       "Pour tout locataire au revenu modeste ou irrégulier, contre une prime. "
-      + "Son coût dépend du nombre de baux couverts et de la prime, que le "
-      + "programme ne fixe pas. Repère : la convention qui finance Visale "
-      + `prévoit environ ${euros(parBail)} par bail garanti, de l'ordre de `
-      + `${milliards(visaleParAn)} par an.`,
-      `Visale, la garantie gratuite d'Action Logement : `
-      + `${v(d, "visale_enveloppe")} pour ${v(d, "visale_contrats")} de baux, `
-      + "2023-2027",
-      "Une garantie de l'État, payée par une prime", null, "inconnu"),
+      + "Rien si la prime couvre le risque, comme le programme le veut. Au "
+      + "plus, si l'État le portait seul, ce que le Gouvernement estimait en "
+      + `${an(d, "gul_besoin")} pour une garantie plus large, qui couvrait `
+      + "presque tout le parc privé : "
+      + `${milliards(n(d, "gul_besoin") / 1000)} par an.`,
+      "Visale, gratuite, payée par Action Logement : "
+      + `${v(d, "visale_sinistres", 0)} d'impayés et `
+      + `${v(d, "visale_gestion", 0)} de gestion en ${an(d, "visale_sinistres")}`,
+      "Une garantie de l'État, payée par une prime", estime("garantie"),
+      "estime"),
 
     new g.Intertitre(`<a href="${g.lien("/aider")}">Aider</a>`),
     ligneDuPoste(poste("allocations"),
@@ -1885,10 +1941,21 @@ function lignesDuCompte(d, bilan, reglages) {
       `${v(d, "bonifications")} d'intérêts épargnés aux emprunteurs`,
       "Supprimées"),
     ligneDuCompte("La clause de sauvegarde",
-      "Aucun ménage sous plafond de ressources ne perçoit moins qu'avant. Son "
-      + "coût demande la microsimulation décrite plus bas.",
+      "Aucun ménage sous plafond de ressources ne perçoit moins qu'avant : "
+      + "l'écart lui est versé en complément dégressif. Estimé sur la seule "
+      + "microsimulation publiée d'une aide qui suit le revenu, la taille du "
+      + "ménage et la zone, et non le loyer, faite par l'Institut des "
+      + "politiques publiques : à budget constant, ses perdants — "
+      + `${v(d, "ipp_perdants", 0)} des ménages — perdent en moyenne `
+      + `${v(d, "ipp_perte_moyenne", 0)} ; ses allocataires, les `
+      + `${nombre(100 - n(d, "ipp_neutres"), 0)}&nbsp;% qu'elle touche, `
+      + `reçoivent en moyenne ${v(d, "ipp_aide_moyenne", 0)}. Les pertes font `
+      + `ainsi ${nombre(clause.part * 100, 1)}&nbsp;% de l'enveloppe. C'est le `
+      + "coût de la première année ; le complément décroît ensuite, jusqu'à "
+      + "s'éteindre. Un chèque plus bas que l'aide moyenne l'augmente de ce "
+      + "qu'il retire aux ménages aidés : la clause le leur rend.",
       "—",
-      "Un complément à qui perdrait au change", null, "inconnu"),
+      "Un complément à qui perdrait au change", clause, "estime"),
     ligneDuPoste(poste("autres_prestations"),
       "Les autres prestations sociales du logement",
       "L'aide sociale à l'hébergement des personnes âgées ou handicapées, "
@@ -1942,9 +2009,17 @@ function lignesDuCompte(d, bilan, reglages) {
       `${v(d, "taxe_fonciere")} sur des valeurs de 1970`,
       "Le même produit, sur une assiette refaite", 0, "regle"),
     ligneDuCompte("Un régime unique des revenus fonciers",
-      "Louer nu, louer meublé, habiter, laisser vide : un seul régime. Il "
-      + "rapporte ou coûte selon le barème retenu, qui n'est pas écrit ici.",
-      "Quatre situations, quatre régimes", "Un seul régime", null, "inconnu"),
+      "Louer nu, louer meublé, habiter, laisser vide : un seul régime. Estimé "
+      + "sur la seule part que l'administration fiscale a chiffrée : la "
+      + "location meublée rangée sous le régime de la location nue, sans "
+      + "amortissement. Selon l'abattement retenu, de "
+      + `${v(d, "meuble_regime_foncier_50", 0)} à `
+      + `${v(d, "meuble_regime_foncier", 0)} d'impôt sur le revenu en plus par `
+      + "an ; les prélèvements sociaux, qu'elle ne sait pas chiffrer, y "
+      + "ajouteraient. Habiter son logement ne change pas d'impôt : le "
+      + `programme refuse d'imposer le ${g.terme("loyer imputé")}.`,
+      "Quatre situations, quatre régimes", "Un seul régime", estime("regime"),
+      "estime"),
   ];
 }
 
@@ -2023,6 +2098,30 @@ function pageChiffrage(d, parametres) {
       + "sans chiffre, faute de source : chaque ligne dit pourquoi, et donne le "
       + "repère qui existe quand il y en a un. "
     : "";
+  const clause = bilan.estimations.find((e) => e.cle === "clause");
+  const travaux = n(d, "tva_travaux_taux_reduit");
+  const social = n(d, "niches_secteur_social");
+  const TENIR = {
+    toujours: "y tient",
+    parfois: "n'y tient que dans le haut de la fourchette",
+    jamais: "n'y tient pas",
+  };
+  const [premier, second, ensemble] = [travaux, social, travaux + social]
+    .map((montant) => tientDans(bilan, montant));
+  let troisiemeEmploi = "L'un et l'autre y tiennent, et même les deux ensemble.";
+  if (ensemble !== "toujours") {
+    let chacun = `Le premier ${TENIR[premier]}, le second ${TENIR[second]}.`;
+    if (premier === second) {
+      chacun = premier === "jamais"
+        ? '<strong class="cle-texte">Ni l\'un ni l\'autre n\'y tient.</strong>'
+        : `L'un comme l'autre ${TENIR[premier]}.`;
+    }
+    const deux = premier === "jamais" && second === "jamais" ? ""
+      : ` <strong class="cle-texte">Les deux ensemble ${ensemble === "jamais"
+        ? "dépassent la marge" : "n'y tiennent que dans le haut de la fourchette"}.</strong>`;
+    troisiemeEmploi = `${chacun}${deux} C'est alors le montant du chèque — le `
+      + "seul paramètre qui pèse assez — qu'il faudrait revoir.";
+  }
   const reste = bilan.solde >= 0
     ? `laissent <strong class="cle-texte">${milliards(bilan.solde)} par an`
       + "</strong>"
@@ -2050,7 +2149,10 @@ function pageChiffrage(d, parametres) {
       + "le chèque et la suppression des droits de mutation, eux, coûtent "
       + "dès le premier exercice. La marge affichée est celle de la fin du "
       + "chemin ; le début est négatif, et demande un financement de "
-      + "transition que ce compte ne porte pas."],
+      + "transition que ce compte ne porte pas. Une ligne fait exception, et "
+      + "c'est voulu : la clause de sauvegarde y est comptée à son coût de la "
+      + "première année, le plus lourd, parce qu'elle passe avant tout le "
+      + "reste."],
     ["Aucune redistribution fine",
       "Le chèque est ici un montant moyen. Sa modulation réelle — par "
       + "revenu, par taille de ménage, par zone — décide de qui gagne et "
@@ -2135,18 +2237,22 @@ ${g.cle("Qu'est-ce qui change, mesure par mesure, par rapport à aujourd'hui ?",
   garde une dépense telle qu'elle est, ou fait passer de l'argent d'une
   administration à une autre sans changer le total. Un effet précédé de ≈, ou
   donné en fourchette, est une estimation : la ligne dit sur quelle hypothèse,
-  et les estimations sont additionnées à part. « Non chiffré » n'est pas un
-  oubli non plus : la ligne dit pourquoi. La colonne des lignes mesurées
-  s'additionne ; les arrondis peuvent en écarter le total d'un dixième.</p>
+  et les estimations sont additionnées à part.${inconnues.length
+    ? " « Non chiffré » n'est pas un oubli non plus : la ligne dit pourquoi."
+    : ""} La colonne des lignes mesurées s'additionne ; les arrondis peuvent en
+  écarter le total d'un dixième.</p>
   <p><strong>Ce que pèsent les lignes sans mesure publiée.</strong> Leur effet
-  ne se lit dans aucun agrégat : il dépend d'hypothèses, que chaque ligne écrit.
-  C'est pourquoi le tableau donne deux soldes — celui des lignes mesurées, et
-  celui qui compte aussi les estimations. ${inconnuesTexte}Le solde mesuré n'est
-  donc pas une marge acquise : c'est ce qui reste pour elles. Ce qu'il peut
-  payer, et dans quel ordre, est dit plus bas, sous « Ce que ce calcul n'est
-  pas ».</p>`,
+  ne se lit dans aucun agrégat : il dépend d'hypothèses, que chaque ligne écrit,
+  et il se donne en fourchette. C'est pourquoi le tableau donne deux soldes —
+  celui des lignes mesurées, et celui qui compte aussi les estimations.
+  ${inconnuesTexte}Le solde mesuré n'est donc pas une marge acquise : c'est ce
+  qui reste avant elles, et la dernière ligne dit ce qu'elles laissent. Ce que
+  la marge peut payer, et dans quel ordre, est dit plus bas, sous « Ce que ce
+  calcul n'est pas ».</p>`,
     sources(d, "allocations_logement", "bonifications_etat", "tva_neuf",
-      "visale_enveloppe", "decisions_bail", "recours_duree",
+      "recours_delai_legal", "recours_duree", "enquetes_sociales",
+      "commandements_payer", "cout_magistrat", "decisions_bail", "gul_besoin",
+      "visale_sinistres", "accedants", "ipp_perdants", "meuble_regime_foncier",
       "encadrement_gain_mensuel", "encadrement_villes", "taxe_fonciere"),
     "mesures")}
 
@@ -2161,19 +2267,18 @@ ${g.depliant("Ce que ce calcul n'est pas",
   aides : les sommes qu'elle redéploie sont celles que le compte du logement
   publie chaque année.</p>
   <p><strong>Ce que la marge peut payer, et dans quel ordre.</strong> Trois
-  emplois la réclament, et ${milliards(bilan.solde)} ne les couvrent pas tous :
-  mieux vaut donc dire lequel passe d'abord. Un, la clause de sauvegarde qui
-  garantit qu'aucun ménage modeste ne perde au change — son coût n'est pas
-  connu, et elle passe avant tout le reste. Deux, les lignes du tableau qui
-  coûtent et que le solde mesuré ne contient pas : garantie du loyer, moyens de
-  justice, ouverture du chèque à l'accession. Trois, si le Parlement les juge
-  nécessaires, le maintien du taux réduit de TVA sur les travaux
-  (${milliards(n(d, "tva_travaux_taux_reduit"))}) ou celui des avantages
-  fiscaux du logement social (${milliards(n(d, "niches_secteur_social"))}).
-  <strong class="cle-texte">Les trois ensemble dépassent la marge.</strong>
-  C'est alors le montant du chèque — le seul paramètre qui pèse assez — qu'il
-  faudrait revoir. Nous préférons l'écrire que de laisser croire qu'une même
-  somme paie trois fois.</p>
+  emplois la réclament, et mieux vaut dire lequel passe d'abord. Un, la clause
+  de sauvegarde, qui garantit qu'aucun ménage modeste ne perde au change :
+  ${entre(-clause.haut, -clause.bas)} la première année, et elle passe avant
+  tout le reste. Deux, les autres lignes estimées qui coûtent : la garantie du
+  loyer, l'accompagnement et les juges de l'impayé, l'ouverture du chèque à
+  l'accession. Ces deux emplois payés, et le peu que rapporte le régime unique
+  des revenus fonciers compté, le solde est de
+  ${fourchetteEnMots(bilan.soldeBas, bilan.soldeHaut)} par an. Trois, si le
+  Parlement les juge nécessaires, le maintien du taux réduit de TVA sur les
+  travaux (${milliards(travaux)}) ou celui des avantages fiscaux du logement
+  social (${milliards(social)}). ${troisiemeEmploi} Nous préférons l'écrire que
+  de laisser croire qu'une même somme paie trois fois.</p>
   <p>Une précision s'impose pourtant, parce qu'elle nous sera opposée et
   qu'elle est fondée. <strong class="cle-texte">Supprimer une niche fiscale
   augmente l'impôt de celui qui en bénéficiait.</strong> Aucun taux ne monte,
@@ -2212,14 +2317,19 @@ ${g.depliant("La microsimulation qui manque, et ce qu'elle trancherait",
       "La part des ménages aidés qui gagnent et celle qui perdent ; la "
       + "perte du décile le plus touché, en euros par mois ; et le coût "
       + "d'une clause de sauvegarde ramenant cette perte à zéro. Les trois "
-      + "décident de la réforme, et aucune des trois n'est ici."],
+      + "décident de la réforme, et aucune n'est mesurée ici pour notre "
+      + "chèque : le tableau n'en donne que l'ordre de grandeur, tiré d'une "
+      + "étude de l'Institut des politiques publiques sur une aide voisine et "
+      + "sur la législation de 2013."],
     ["Ce à quoi nous nous engageons en attendant",
       "Une clause de sauvegarde : aucun ménage sous plafond de ressources "
       + "ne perçoit moins qu'avant la réforme, l'écart lui étant versé en "
-      + "complément dégressif. Son coût n'est pas connu — il l'est dès que "
-      + "la microsimulation est faite — et il est prélevé sur la marge "
-      + "ci-dessus avant tout autre emploi. Si la marge n'y suffisait pas, "
-      + "c'est le montant du chèque qu'il faudrait revoir, non la clause."],
+      + "complément dégressif. Son coût n'est connu qu'en ordre de grandeur "
+      + `— ${entre(-clause.haut, -clause.bas)} la première année, dans le `
+      + "tableau ci-dessus — et ne le sera exactement qu'une fois la "
+      + "microsimulation faite. Il est prélevé sur la marge avant tout autre "
+      + "emploi. Si la marge n'y suffisait pas, c'est le montant du chèque "
+      + "qu'il faudrait revoir, non la clause."],
   ])}
   <p>Un lecteur peut légitimement conclure que le chiffrage est incomplet. Il
   l'est. Il établit qu'une enveloppe existe et qu'une règle est meilleure ; il
@@ -2242,10 +2352,13 @@ ${g.depliant("Les leviers, et ce qu'ils déplacent",
     l'être.</strong> Le compte retient ${v(d, "menages_aides")} de ménages, le
     nombre actuel de bénéficiaires. Or le chèque est ouvert aux accédants,
     quand l'aide personnelle ne l'est presque plus : à barème de ressources
-    inchangé, l'assiette s'élargit donc mécaniquement. Nous ne savons pas de
-    combien — c'est encore la microsimulation qui le dirait — et le compte
-    ci-dessus <em>sous-estime</em> de ce fait le coût du chèque. Chaque
-    tranche de cent mille ménages supplémentaires au montant retenu coûte
+    inchangé, l'assiette s'élargit donc mécaniquement. Le tableau l'estime en
+    ramenant la part des accédants aidés à celle de
+    ${an(d, "accedants_aides_2017")} : environ
+    ${nombre(Math.round(bilan.accedantsNouveaux * 1000) * 1000, 0)} ménages de
+    plus, que la ligne de l'accession compte à part. C'est une hypothèse, que
+    seule la microsimulation vérifierait. Chaque tranche de cent mille ménages
+    supplémentaires au montant retenu coûte
     ${milliards(reglages.chequeMensuel * 12 * 0.1 / 1000, 2)} par an, à titre
     de repère.</li>
     <li><strong>Les droits de mutation.</strong> Leur suppression coûte
