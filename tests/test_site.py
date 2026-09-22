@@ -87,11 +87,25 @@ class Chiffres(unittest.TestCase):
                     self.assertIn("note", entree,
                                   f"{cle} : une reprise sans note ne dit pas sa dette")
 
-    def test_le_solde_public_est_la_difference_annoncee(self):
-        """Le seul chiffre calculé du paquet : il doit tomber juste."""
-        chiffres = DONNEES["chiffres"]
-        attendu = chiffres["prelevements"]["valeur"] - chiffres["aides_totales_2024"]["valeur"]
-        self.assertAlmostEqual(chiffres["solde_public"]["valeur"], attendu, places=1)
+    def test_le_solde_public_ne_compte_les_niches_qu_une_fois(self):
+        """Le seul chiffre calculé du paquet : il doit tomber juste.
+
+        Les prélèvements du compte du logement sont nets des niches fiscales ;
+        les aides, elles, les comprennent. Le solde a d'abord été calculé
+        comme leur différence, qui retranchait les niches deux fois. Il se
+        calcule sur les aides versées, et il doit valoir exactement la même
+        chose quand on compte les niches des deux côtés."""
+        c = {cle: e["valeur"] for cle, e in DONNEES["chiffres"].items()}
+        self.assertAlmostEqual(c["aides_totales_2024"],
+                               c["aides_hors_fiscales"] + c["depenses_fiscales"], places=1)
+        self.assertAlmostEqual(c["solde_public"],
+                               c["prelevements"] - c["aides_hors_fiscales"], places=1)
+        self.assertAlmostEqual(c["solde_public"],
+                               c["prelevements"] + c["depenses_fiscales"]
+                               - c["aides_totales_2024"], places=1)
+        self.assertNotAlmostEqual(c["solde_public"],
+                                  c["prelevements"] - c["aides_totales_2024"], places=1,
+                                  msg="le solde retranche de nouveau les niches")
 
 
 class Citations(unittest.TestCase):

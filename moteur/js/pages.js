@@ -291,9 +291,10 @@ ${g.affiche(
     + `<strong class="cle-texte">${nombre(n(d, "logements_commences") * 1000, 0)} logements</strong> `
     + `en ${an(d, "logements_commences")} : avec 2024, les deux années les plus `
     + `basses depuis 2000. Dans le même temps, l'État et les `
-    + `collectivités ont prélevé ${v(d, "prelevements")} sur le logement et en `
-    + `ont dépensé ${v(d, "aides_totales_2024")}. Ce n'est `
-    + "pas d'argent que le logement manque, c'est d'autorisation.",
+    + `collectivités ont prélevé ${v(d, "prelevements")} sur le logement et lui `
+    + `ont consacré ${v(d, "aides_totales_2024")} d'aides, niches fiscales `
+    + "comprises. Ce n'est pas d'argent que le logement manque, c'est "
+    + "d'autorisation.",
   )}
 
 ${repere}
@@ -374,13 +375,59 @@ function courbeConstruction(d) {
   );
 }
 
-/** Ce que l'État prend et ce qu'il rend, en une cascade. */
+/**
+ * Ce que le logement rapporte, rapporté à ce qu'il coûte.
+ *
+ * Deux façons de compter, qui ne comptent chaque euro qu'une fois : les niches
+ * fiscales des deux côtés — l'impôt dû avant niches contre les aides niches
+ * comprises —, ou l'argent perçu contre l'argent versé. Les prélèvements que
+ * publie le compte du logement sont NETS des niches : les rapporter aux aides
+ * niches comprises retranchait les niches deux fois, et c'est ce que ce site a
+ * d'abord fait. `ancien` garde ce solde faux, pour pouvoir dire la correction
+ * sans écrire un nombre à la main.
+ *
+ * La non-imposition du loyer imputé est un impôt auquel on renonce, comme une
+ * niche : la compter parmi les aides oblige à la compter aussi dans l'impôt
+ * dû. Elle change le rapport ; elle ne change pas le solde.
+ */
+function soldeDuLogement(d) {
+  const prelevements = n(d, "prelevements");
+  const niches = n(d, "depenses_fiscales");
+  const aides = n(d, "aides_totales_2024");
+  const loyers = n(d, "loyers_imputes_cout");
+  return {
+    du: prelevements + niches,
+    rapportBrut: (prelevements + niches) / aides,
+    rapportNet: prelevements / n(d, "aides_hors_fiscales"),
+    rapportLoyers: (prelevements + niches + loyers) / (aides + loyers),
+    ancien: prelevements - aides,
+    ancienRapportLoyers: prelevements / (aides + loyers),
+  };
+}
+
+/**
+ * Ce que l'État prend et ce qu'il rend, en une cascade.
+ *
+ * Les niches y figurent une fois, et une seule : entre l'impôt que le logement
+ * devrait et celui qu'il paie. Les aides versées se retranchent ensuite de ce
+ * qui est perçu.
+ */
 function cascadePrelevements(d) {
   const marches = [
-    new g.Marche("Prélèvements sur le logement", n(d, "prelevements"), true,
+    new g.Marche("Impôt avant niches", soldeDuLogement(d).du, true,
+      "var(--actuel)",
+      "Ce que le logement paierait sans ses niches fiscales : ce qui est "
+      + "perçu, et l'impôt auquel les niches font renoncer."),
+    new g.Marche("Niches fiscales", -n(d, "depenses_fiscales"), false,
+      "var(--manque)",
+      "TVA à taux réduit sur l'entretien, réductions d'impôt pour "
+      + "investissement locatif, exonérations : un impôt dû, qu'on renonce à "
+      + "percevoir."),
+    new g.Marche("Prélèvements perçus", n(d, "prelevements"), true,
       "var(--actuel)",
       "Taxe foncière, TVA, droits de mutation, impôts sur les revenus "
-      + "locatifs, taxes sur l'énergie du logement."),
+      + "locatifs, taxes sur l'énergie du logement — nets des niches, comme le "
+      + "compte du logement les retrace."),
     new g.Marche("Prestations sociales", -n(d, "prestations_sociales"), false,
       "var(--manque)",
       `Aides personnelles — APL, ALS, ALF — pour `
@@ -390,10 +437,6 @@ function cascadePrelevements(d) {
       "var(--manque)", "Versées aux bailleurs sociaux et aux producteurs."),
     new g.Marche("Bonifications de taux", -n(d, "bonifications"), false,
       "var(--manque)", "Prêts aidés, dont le prêt à taux zéro."),
-    new g.Marche("Dépenses fiscales", -n(d, "depenses_fiscales"), false,
-      "var(--manque)",
-      "TVA à taux réduit sur l'entretien, réductions d'impôt pour "
-      + "investissement locatif, exonérations."),
     new g.Marche("Reste aux administrations", n(d, "solde_public"), true,
       "var(--reste)",
       "Ce que le logement rapporte, net de tout ce qu'il reçoit. La taxe "
@@ -413,6 +456,7 @@ function pageConstat(d) {
   const pic = extremum(serie, "total", true);
   const bas = extremum(serie, "total", false);
   const derniere = serie.annees[serie.annees.length - 1];
+  const solde = soldeDuLogement(d);
 
   const corps = `
 ${g.depliant("Ce que le logement pèse, avant tout jugement",
@@ -532,11 +576,11 @@ ${g.cle("La file d'attente s'allonge pendant qu'on distribue.",
       "demandes_hlm_mutation"), "attente")}
 
 ${g.cle("Le logement rapporte aux administrations plus du double de ce qu'il leur coûte.",
-    `${vc(d, "prelevements")} de prélèvements en ${an(d, "prelevements")}, `
-    + `${v(d, "aides_totales_2024")} d'aides : il reste `
-    + `${vc(d, "solde_public")}. Le compte ci-dessous porte sur `
-    + `${an(d, "aides_totales_2024")}, dernier exercice publié poste par `
-    + "poste.",
+    `Elles en ont tiré ${vc(d, "prelevements")} d'impôts en `
+    + `${an(d, "prelevements")} et lui ont versé ${v(d, "aides_hors_fiscales")} `
+    + `d'aides : il leur reste ${vc(d, "solde_public", 1)}. Les niches fiscales, `
+    + "impôts auxquels elles renoncent, sont déjà retranchées de ce qu'elles "
+    + "perçoivent.",
     `${cascadePrelevements(d)}
   <p>Les prélèvements représentent ${v(d, "prelevements_part_pib")} du produit
   intérieur brut et ${v(d, "prelevements_part_po")} de tous les prélèvements
@@ -544,6 +588,20 @@ ${g.cle("Le logement rapporte aux administrations plus du double de ce qu'il leu
   (${v(d, "taxe_fonciere")}), la TVA
   sur le neuf, les travaux et les services (${v(d, "tva_logement")}), et les
   droits de mutation (${v(d, "dmto")}).</p>
+  <p><strong>Une correction, parce qu'elle change le chiffre de cette
+  carte.</strong> Le compte du logement retrace les prélèvements « nets des
+  avantages fiscaux » : les ${v(d, "depenses_fiscales")} de niches — un impôt
+  dû qu'on renonce à percevoir — en sont déjà retranchés. Ce site retranchait
+  pourtant une seconde fois les ${v(d, "aides_totales_2024")} d'aides, niches
+  comprises, et publiait un reste de ${milliards(solde.ancien)} : les niches y
+  étaient comptées deux fois. Compter une niche comme une aide est légitime —
+  le compte du logement le fait, notre chiffrage aussi —, à condition de la
+  compter aussi dans l'impôt qu'elle fait renoncer à percevoir, comme la
+  cascade le fait : ${milliards(solde.du)} dus, ${v(d, "aides_totales_2024")}
+  d'aides, et le même reste de ${v(d, "solde_public", 1)}. Ce que le logement
+  rapporte vaut alors ${nombre(solde.rapportBrut, 1)} fois ce qu'il coûte,
+  niches comptées des deux côtés — ${nombre(solde.rapportNet, 1)} fois en
+  argent perçu contre argent versé.</p>
   <p>Le sens de ce solde demande une précaution : aides et prélèvements n'ont
   ni les mêmes redevables ni les mêmes bénéficiaires, et l'écart n'est pas un
   solde budgétaire qu'on pourrait dépenser. Il dit une chose, et une seule :
@@ -554,12 +612,14 @@ ${g.cle("Le logement rapporte aux administrations plus du double de ce qu'il leu
   occupants ne sont pas imposés sur le ${g.terme("loyer imputé")} qu'ils se
   versent à eux-mêmes, et cet avantage vaut
   ${vc(d, "loyers_imputes_cout")} par an. Il n'entre dans aucune colonne
-  ci-dessus. Le compte refait avec lui donne
-  ${v(d, "solde_public_loyers_imputes")} au lieu de ${v(d, "solde_public")} —
-  le rapport tombe de 2,3 à 1,8 sans s'inverser, et la page
+  ci-dessus, et il ne change pas le reste, pour la même raison que les niches :
+  un impôt qu'on ne perçoit pas n'entre ni ne sort des caisses. Il change le
+  rapport, qui tombe de ${nombre(solde.rapportBrut, 1)} à
+  ${nombre(solde.rapportLoyers, 1)} sans s'inverser ; la page
   <a href="${g.lien("/fiscalite")}">Fiscalité</a> le reprend en entier.</p>`,
-    sources(d, "prelevements", "aides_totales_2024", "taxe_fonciere",
-      "prelevements_part_pib", "prelevements_part_po"), "argent")}
+    sources(d, "prelevements", "aides_totales_2024", "aides_hors_fiscales",
+      "taxe_fonciere", "prelevements_part_pib", "prelevements_part_po",
+      "loyers_imputes_cout"), "argent")}
 
 ${g.cle("Et pourtant, le mal-logement progresse.",
     `${vc(d, "mal_loges")} de personnes sont mal logées, et `
@@ -1277,6 +1337,7 @@ function pageFiscalite(d, parametres) {
   // l'écrire en dur, c'est promettre une phrase que la prochaine mise à jour
   // des données rendra fausse sans que rien ne le signale.
   const marge = chiffrage(d, reglagesChiffrage(d, parametres)).solde;
+  const solde = soldeDuLogement(d);
   const travaux = n(d, "tva_travaux_taux_reduit");
   const social = n(d, "niches_secteur_social");
   const suffitTravaux = marge >= travaux ? "qui y suffit" : "qui n'y suffit pas";
@@ -1299,9 +1360,12 @@ ${g.depliant("Ce que le logement rapporte",
   ${g.terme("DMTO")} — auxquelles s'ajoutent la TVA et les taxes sur l'énergie
   consommée dans le logement, les impôts sur les revenus locatifs et les
   plus-values.</p>
-  <p>En face, ${v(d, "aides_totales_2024")} d'aides. Le logement n'est pas un
-  secteur subventionné : c'est l'une des principales assiettes fiscales du
-  pays.</p>
+  <p>En face, ${v(d, "aides_totales_2024")} d'aides, dont
+  ${v(d, "depenses_fiscales")} de niches fiscales — des impôts auxquels on
+  renonce, et qui sont déjà absents des prélèvements : tout compté une fois, le
+  logement rapporte ${vc(d, "solde_public", 1)} net aux administrations. Il n'est
+  pas un secteur subventionné : c'est l'une des principales assiettes fiscales
+  du pays.</p>
   <p class="source">${sources(d, "prelevements", "taxe_fonciere", "dmto",
     "prelevements_part_pib", "prelevements_part_po")}</p>`,
     "rapporte")}
@@ -1314,13 +1378,23 @@ ${g.depliant("L'objection : « vous oubliez les loyers imputés »",
   aide publique aux propriétaires — la première de toutes, et elle ne figure
   dans aucun compte des aides au logement. L'Insee l'estime à
   ${vc(d, "loyers_imputes_cout")} par an.</p>
-  <p>Alors refaisons le calcul avec. Aides et avantage réunis :
-  ${milliards(n(d, "aides_totales_2024") + n(d, "loyers_imputes_cout"))} contre
-  ${v(d, "prelevements")} de prélèvements, soit
-  ${vc(d, "solde_public_loyers_imputes")} au lieu de
-  ${v(d, "solde_public")}. Le rapport tombe de 2,3 à 1,8. Il ne s'inverse pas,
-  et la phrase que nous défendons tient : le logement reste, et de loin, un
-  secteur plus taxé qu'aidé.</p>
+  <p>Alors refaisons le calcul avec. La non-imposition du loyer imputé est un
+  impôt auquel on renonce, comme une niche fiscale : la compter parmi les
+  aides, c'est la compter aussi dans l'impôt dû. Aides et avantage réunis :
+  ${milliards(n(d, "aides_totales_2024") + n(d, "loyers_imputes_cout"))} ;
+  impôt dû, niches et loyers imputés compris :
+  ${milliards(solde.du + n(d, "loyers_imputes_cout"))}. Le rapport tombe de
+  ${nombre(solde.rapportBrut, 1)} à
+  <strong class="cle-texte">${nombre(solde.rapportLoyers, 1)}</strong>. Il ne
+  s'inverse pas, et la phrase que nous défendons tient : le logement reste, et
+  de loin, un secteur plus taxé qu'aidé. Ce qu'il rapporte net aux
+  administrations, lui, ne bouge pas : ${v(d, "solde_public", 1)}, puisque
+  cet impôt n'a jamais été perçu et qu'il n'y a rien à en retrancher.</p>
+  <p>Nous avions d'abord fait ce calcul de travers, en retranchant l'avantage
+  d'un solde qui ne l'avait jamais contenu : le rapport tombait alors à
+  ${nombre(solde.ancienRapportLoyers, 1)}. L'erreur, la même que pour les
+  niches, est corrigée et expliquée à la page
+  <a href="${g.lien("/constat")}">Constat</a>.</p>
   <p>Que proposons-nous d'en faire ? Rien. Imposer un revenu que personne ne
   perçoit en argent est une idée cohérente sur le papier et intenable en
   pratique : elle demanderait à un retraité propriétaire sans liquidités de
@@ -1332,8 +1406,8 @@ ${g.depliant("L'objection : « vous oubliez les loyers imputés »",
   n'est pas de le confisquer, c'est de l'ouvrir : un chèque qui paie une
   mensualité aussi bien qu'un loyer, un déménagement qui cesse d'être taxé, et
   des logements qu'on a le droit de construire.</p>
-  <p class="source">${sources(d, "loyers_imputes_cout",
-    "solde_public_loyers_imputes")}</p>`, "loyers-imputes")}
+  <p class="source">${sources(d, "loyers_imputes_cout", "prelevements",
+    "solde_public")}</p>`, "loyers-imputes")}
 
 ${g.depliant("Les droits de mutation taxent le mouvement",
     `<p>Un impôt se juge à ce qu'il décourage. Les ${g.terme("DMTO")}

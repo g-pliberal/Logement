@@ -24,7 +24,7 @@ Les chiffres qui portent cette thèse, tous datés et sourcés :
 | 264 800 | logements mis en chantier en 2025, contre 433 900 au dernier sommet de 2017 — et 493 800 en 2006 |
 | +55 % | l'écart du prix des logements anciens à la tendance qu'il a suivie de 1965 à 2001, rapporté au revenu par ménage |
 | 2,885 M | ménages en attente d'un logement social fin 2025 — dont 890 000 déjà logés dans le parc — pour 394 000 attributions dans l'année |
-| 99,2 Md€ | prélevés sur le logement en 2024, contre 43,1 Md€ d'aides |
+| 99,2 Md€ | prélevés sur le logement en 2024, contre 43,1 Md€ d'aides, niches fiscales comprises : 72,0 Md€ net, chaque euro compté une fois |
 
 ## Les cinq engagements
 
@@ -184,7 +184,7 @@ objections sont donc portées par le site, chacune là où elle se pose :
 | « Une commune ne peut pas être forcée d'autoriser » | [Construire](https://g-pliberal.github.io/logement/#/construire) |
 | « Trois mois, c'est l'expulsion expresse » — trêve hivernale, DALO | [Louer](https://g-pliberal.github.io/logement/#/louer) |
 | « Vous allez baisser les aides » | [Aider](https://g-pliberal.github.io/logement/#/aider) |
-| « Vous oubliez les loyers imputés » — 11 Md€, le solde refait | [Fiscalité](https://g-pliberal.github.io/logement/#/fiscalite) |
+| « Vous oubliez les loyers imputés » — 11 Md€, le calcul refait : le rapport baisse, le solde ne bouge pas | [Fiscalité](https://g-pliberal.github.io/logement/#/fiscalite) |
 | « Qui perd ? » — les six perdants, nommés, dont le logement social | [Fiscalité](https://g-pliberal.github.io/logement/#/fiscalite) |
 | « Sans impôt nouveau » : ce que la suppression d'une niche fait vraiment | [Chiffrage](https://g-pliberal.github.io/logement/#/chiffrage) |
 | « L'encadrement n'a pas réduit l'offre à Paris » — l'Apur le mesure, on le concède | [Louer](https://g-pliberal.github.io/logement/#/louer) |

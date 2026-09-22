@@ -175,15 +175,15 @@
       "note": "Moyenne Union européenne : 1,0 %. Zone euro : 1,2 %."
     },
     "prelevements": {
-      "libelle": "Prélèvements assis sur le logement (État et collectivités)",
+      "libelle": "Prélèvements assis sur le logement, nets des niches fiscales (État et collectivités)",
       "valeur": 99.2,
       "unite": "Md€",
       "annee": 2024,
       "fiabilite": "officielle",
       "source": "FIPECO, « La politique du logement », d'après le compte du logement",
       "url": "https://www.fipeco.fr/fiche/La-politique-du-logement",
-      "lu_le": "2026-09-20",
-      "note": "3,4 % du PIB, 7,9 % des prélèvements obligatoires. +2,8 % en 2024, +4,9 % en 2025 (compte du logement, édition 2026)."
+      "lu_le": "2026-09-22",
+      "note": "« Les prélèvements obligatoires, nets des avantages fiscaux […], s'élèvent à 99,2 Md€ » : les 15,9 Md€ de niches en sont déjà retranchés, ce que le compte du logement dit aussi (« les prélèvements sont retracés nets des avantages fiscaux »). 3,4 % du PIB, 7,9 % des prélèvements obligatoires. +2,8 % en 2024, +4,9 % en 2025 (compte du logement, édition 2026)."
     },
     "taxe_fonciere": {
       "libelle": "Taxe foncière sur les propriétés bâties",
@@ -229,14 +229,14 @@
     },
     "solde_public": {
       "libelle": "Ce que le logement rapporte aux administrations, net des aides",
-      "valeur": 56.1,
+      "valeur": 72.0,
       "unite": "Md€",
       "annee": 2024,
       "fiabilite": "calcul",
-      "source": "Calcul du site : prélèvements − aides",
+      "source": "Calcul du site : prélèvements, nets des niches, − aides versées",
       "url": "https://www.fipeco.fr/fiche/La-politique-du-logement",
-      "lu_le": "2026-09-20",
-      "note": "99,2 − 43,1 = 56,1 Md€. Un ordre de grandeur, pas un solde budgétaire : les deux agrégats sont mesurés par le même compte, mais aides et prélèvements n'ont ni les mêmes redevables ni les mêmes bénéficiaires, et ils ne sont pas perçus par les mêmes administrations — la taxe foncière revient aux communes, les droits de mutation aux départements."
+      "lu_le": "2026-09-22",
+      "note": "99,2 − 27,2 = 72,0 Md€ : les prélèvements, que la source donne nets des niches fiscales, moins les aides versées — prestations, subventions, bonifications. Le même résultat s'obtient en comptant les 15,9 Md€ de niches des deux côtés : (99,2 + 15,9) − 43,1. Le site a d'abord publié 99,2 − 43,1 = 56,1 Md€, qui retranchait les niches deux fois — une fois dans les prélèvements, une fois dans les aides. Un ordre de grandeur, pas un solde budgétaire : aides et prélèvements n'ont ni les mêmes redevables ni les mêmes bénéficiaires, et ils ne sont pas perçus par les mêmes administrations — la taxe foncière revient aux communes, les droits de mutation aux départements."
     },
     "logements_commences": {
       "libelle": "Logements mis en chantier",
@@ -782,17 +782,6 @@
       "url": "https://www.banque-france.fr/fr/publications-et-statistiques/statistiques/panorama-des-prets-lhabitat-des-menages",
       "lu_le": "2026-09-21",
       "note": "Octobre 2023, renégociations comprises ; 3,87 % hors renégociations. Le coût du crédit a plus que triplé en vingt-deux mois."
-    },
-    "solde_public_loyers_imputes": {
-      "libelle": "Le même solde, la non-imposition des loyers imputés déduite",
-      "valeur": 45.1,
-      "unite": "Md€",
-      "annee": 2024,
-      "fiabilite": "calcul",
-      "source": "Calcul du site : prélèvements − aides − loyers imputés non imposés",
-      "url": "https://www.insee.fr/fr/statistiques/7738724",
-      "lu_le": "2026-09-21",
-      "note": "99,2 − 43,1 − 11,0 = 45,1 Md€. C'est le solde tel que le calcule l'objection la plus sérieuse qu'on nous fasse : compter parmi les aides l'avantage que les propriétaires occupants tirent de ne pas être imposés sur le loyer qu'ils ne se paient pas. Le rapport des prélèvements aux aides tombe alors de 2,3 à 1,8 — il ne s'inverse pas."
     },
     "auckland_part_permis": {
       "libelle": "Part des logements autorisés à Auckland attribuable à la réforme",
