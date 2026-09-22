@@ -798,6 +798,56 @@ tbody th { font-weight: 700; }
    maigre, comme dans le tableau du COR qu'elle imite, et une ligne « pour
    mémoire » de même — elle n'entre dans aucun total. */
 tbody th .dont { font-weight: 400; color: var(--texte-doux); padding-left: 1.2rem; display: inline-block; }
+/* L'intertitre d'un groupe de lignes — « Construire », « Louer » : en
+   capitales espacées comme l'en-tête du tableau, en or comme ce qui ouvre, et
+   décollé du groupe précédent, dont la dernière ligne a perdu son filet. */
+tr.intertitre th {
+  text-align: left; padding: 1.5rem 0.6rem 0.5rem;
+  font-size: 0.875rem; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--or);
+  border-bottom: 1px solid var(--or);
+}
+tr.intertitre th a { color: inherit; }
+tbody:first-of-type tr.intertitre th { padding-top: 0.9rem; }
+/* Le compte mesure par mesure : quatre colonnes, dont deux de phrases. Sans
+   largeur minimale, un téléphone les réduisait à un mot par ligne ; il
+   défile, et le dit. La colonne des mesures porte en plus la raison de
+   chaque chiffre, en retrait. */
+table#mesures { min-width: 50rem; }
+table#mesures tbody th { min-width: 17rem; font-weight: 700; vertical-align: top; }
+table#mesures td { vertical-align: top; }
+table#mesures tbody th .discret { display: block; font-weight: 400; margin-top: 0.25rem; }
+/* L'intitulé d'une colonne, redit dans la cellule : il ne sert que lorsque la
+   grille se défait en fiches, et que l'en-tête n'est plus au-dessus. */
+table#mesures .sur-mobile { display: none; }
+/* Sur un téléphone, le tableau ne défile PAS : il se défait en fiches. Défilant,
+   il montrait le nom des mesures et cachait hors de l'écran la seule colonne
+   qui compte, celle des + et des −. Chaque mesure tient donc en une fiche — son
+   nom et son effet sur la même ligne, ce qui existe aujourd'hui et ce que le
+   programme met à la place dessous, chacun sous son intitulé. */
+@media (max-width: 48rem) {
+  table#mesures, table#mesures tbody, table#mesures tr, table#mesures th,
+  table#mesures td { display: block; }
+  table#mesures { min-width: 0; }
+  /* L'en-tête sort de la vue, pas de l'arbre : il reste lu. */
+  table#mesures thead {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip-path: inset(50%); white-space: nowrap;
+  }
+  table#mesures tbody tr:not(.intertitre) {
+    display: grid; grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 0.9rem; padding: 0.8rem 0; border-bottom: 1px solid var(--trait);
+  }
+  table#mesures tbody tr:not(.intertitre) > * { border-bottom: none; padding: 0; }
+  table#mesures tbody th { grid-column: 1; grid-row: 1; min-width: 0; }
+  table#mesures td.nombre { grid-column: 2; grid-row: 1; align-self: start; }
+  table#mesures td.nombre[style] { padding: 0.15rem 0.4rem; border-radius: 0.25rem; }
+  table#mesures td.texte { grid-column: 1 / -1; margin-top: 0.45rem; }
+  table#mesures td.texte:empty { display: none; }
+  table#mesures tr.intertitre th { padding-left: 0; padding-right: 0; }
+  table#mesures .sur-mobile { display: inline; color: var(--texte-doux); }
+  table#mesures tbody:last-of-type tr:last-child { border-bottom: none; }
+}
 th, td { text-align: right; padding: 0.7rem 0.6rem; border-bottom: 1px solid var(--trait); }
 th:first-child, td:first-child { text-align: left; }
 thead th {

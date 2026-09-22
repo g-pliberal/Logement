@@ -1,6 +1,6 @@
 {
   "_lisez_moi": "Toutes les valeurs du site sont ici, et nulle part ailleurs. Chaque entrée porte sa source, son adresse, l'année qu'elle mesure et la date à laquelle elle a été lue. tests/test_site.py refuse une entrée incomplete, refuse qu'une page cite une cle qui n'existe pas, refuse une adresse qui ne designe aucun document, et refuse qu'une page ecrive un nombre a la main. Fiabilite : 'officielle' = service statistique public, juridiction financiere ou texte officiel ; 'academique' = article a comite de lecture ; 'partie_prenante' = source primaire, publiee par un acteur qui est partie au debat (federation professionnelle, association) — le chiffre est le sien, et son interet aussi ; 'presse' = source secondaire, a reprendre a la source primaire des qu'elle est accessible ; 'calcul' = obtenu ici a partir d'autres entrees, la formule est dans 'note'.",
-  "lu_le": "2026-09-21",
+  "lu_le": "2026-09-22",
   "chiffres": {
     "depense_nationale": {
       "libelle": "Dépense nationale de logement",
@@ -78,14 +78,26 @@
       "note": "0,9 % du PIB."
     },
     "prestations_sociales": {
-      "libelle": "Aides personnelles au logement (APL, ALS, ALF)",
+      "libelle": "Prestations sociales liées au logement",
       "valeur": 19.6,
       "unite": "Md€",
       "annee": 2024,
       "fiabilite": "officielle",
       "source": "FIPECO, « La politique du logement », d'après le compte du logement",
       "url": "https://www.fipeco.fr/fiche/La-politique-du-logement",
-      "lu_le": "2026-09-20"
+      "lu_le": "2026-09-22",
+      "note": "Les trois aides personnelles — APL, ALS, ALF — en font 15,9 Md€. Le reste va à l'aide sociale à l'hébergement et aux résidents d'hébergements collectifs (personnes âgées, handicapées ou en difficulté), à l'allocation de logement temporaire, aux fonds de solidarité logement, aux aides d'Action Logement et au chèque énergie. Le site a d'abord présenté ce total tout entier comme des aides personnelles : c'était faux de 3,7 Md€."
+    },
+    "allocations_logement": {
+      "libelle": "Aides personnelles au logement (APL, ALS, ALF)",
+      "valeur": 15.9,
+      "unite": "Md€",
+      "annee": 2024,
+      "fiabilite": "officielle",
+      "source": "SDES, Rapport du compte du logement 2024",
+      "url": "https://www.statistiques.developpement-durable.gouv.fr/rapport-du-compte-du-logement-2024",
+      "lu_le": "2026-09-22",
+      "note": "Partie 5, « Les aides aux consommateurs ». L'aide personnalisée au logement, l'allocation de logement sociale et l'allocation de logement familiale : les trois aides que le chèque logement remplace. Elles progressent de 2,2 % sur un an, après six années de baisse."
     },
     "subventions": {
       "libelle": "Subventions aux producteurs de logement",
@@ -107,6 +119,28 @@
       "url": "https://www.fipeco.fr/fiche/La-politique-du-logement",
       "lu_le": "2026-09-20"
     },
+    "bonifications_bailleurs_sociaux": {
+      "libelle": "Avantages de taux sur les prêts aux bailleurs sociaux",
+      "valeur": 1.3,
+      "unite": "Md€",
+      "annee": 2024,
+      "fiabilite": "officielle",
+      "source": "SDES, Rapport du compte du logement 2024",
+      "url": "https://www.statistiques.developpement-durable.gouv.fr/rapport-du-compte-du-logement-2024",
+      "lu_le": "2026-09-22",
+      "note": "Partie 5, figures 5.13 et 5.14. Une part des 2,9 Md€ de bonifications : les prêts de la Caisse des dépôts et d'Action Logement pour construire et rénover des logements sociaux. Le reste va aux ménages, dont 1,2 Md€ au titre du prêt à taux zéro."
+    },
+    "bonifications_etat": {
+      "libelle": "Bonifications de taux payées par l'État",
+      "valeur": 1.4,
+      "unite": "Md€",
+      "annee": 2024,
+      "fiabilite": "officielle",
+      "source": "SDES, Rapport du compte du logement 2024",
+      "url": "https://www.statistiques.developpement-durable.gouv.fr/rapport-du-compte-du-logement-2024",
+      "lu_le": "2026-09-22",
+      "note": "Partie 5, figure 5.4, « par contributeur ». Le prêt à taux zéro et l'éco-prêt à taux zéro. Le reste des 2,9 Md€ n'est pas de l'argent de l'État : 0,9 Md€ sont portés par l'épargne du livret A, qui finance les prêts au logement social, et 0,5 Md€ par les employeurs, via Action Logement."
+    },
     "depenses_fiscales": {
       "libelle": "Dépenses fiscales (niches) du logement",
       "valeur": 15.9,
@@ -117,6 +151,17 @@
       "url": "https://www.fipeco.fr/fiche/La-politique-du-logement",
       "lu_le": "2026-09-20",
       "note": "Dont 4,5 Md€ de TVA à taux réduit sur l'entretien et 2,3 Md€ de dispositifs d'investissement locatif."
+    },
+    "niches_secteur_social": {
+      "libelle": "Avantages fiscaux au secteur locatif social",
+      "valeur": 5.3,
+      "unite": "Md€",
+      "annee": 2024,
+      "fiabilite": "officielle",
+      "source": "SDES, Rapport du compte du logement 2024",
+      "url": "https://www.statistiques.developpement-durable.gouv.fr/rapport-du-compte-du-logement-2024",
+      "lu_le": "2026-09-22",
+      "note": "Partie 5, figure 5.17. 40,6 % des avantages fiscaux aux producteurs de logement, et une part des 15,9 Md€ de dépenses fiscales : la TVA à taux réduit sur la construction de logements sociaux (2,0 Md€), l'exonération de longue durée de taxe foncière, l'exonération d'impôt sur les sociétés des organismes HLM, la TVA réduite sur leurs travaux."
     },
     "depense_publique_pib": {
       "libelle": "Dépense publique de logement, France",
@@ -159,6 +204,17 @@
       "source": "FIPECO, « La politique du logement », d'après le compte du logement",
       "url": "https://www.fipeco.fr/fiche/La-politique-du-logement",
       "lu_le": "2026-09-20"
+    },
+    "tva_neuf": {
+      "libelle": "TVA sur les logements neufs",
+      "valeur": 6.3,
+      "unite": "Md€",
+      "annee": 2024,
+      "fiabilite": "officielle",
+      "source": "SDES, Rapport du compte du logement 2024",
+      "url": "https://www.statistiques.developpement-durable.gouv.fr/rapport-du-compte-du-logement-2024",
+      "lu_le": "2026-09-22",
+      "note": "Partie 6, figure 6.1 : 6 283 M€. Une part des 29,5 Md€ de TVA sur le logement : celle que paie la construction des logements neufs eux-mêmes, hors terrains, frais et travaux. En baisse de 12,1 % sur un an, avec la construction."
     },
     "dmto": {
       "libelle": "Droits de mutation à titre onéreux",
@@ -489,6 +545,50 @@
       "url": "https://drees.solidarites-sante.gouv.fr/sites/default/files/2025-12/MS2025%20-%20Fiche%2034%20-%20Les%20aides%20au%20logement.pdf",
       "lu_le": "2026-09-21",
       "note": "Fin 2023, en baisse de 1,8 % sur un an. Avec les conjoints et les enfants, 11,2 millions de personnes vivent dans un ménage aidé, soit environ 16 % de la population."
+    },
+    "visale_enveloppe": {
+      "libelle": "Enveloppe de la garantie Visale, convention 2023-2027",
+      "valeur": 520,
+      "unite": "M€",
+      "annee": 2023,
+      "fiabilite": "officielle",
+      "source": "Convention quinquennale 2023-2027 entre l'État et Action Logement, dossier de presse du Premier ministre, 16 juin 2023",
+      "url": "https://www.info.gouv.fr/upload/media/content/0001/07/5557026e248ab5df7d9b469b824dd3460db8fde0.pdf",
+      "lu_le": "2026-09-22",
+      "note": "Pour les cinq années de la convention. Visale garantit gratuitement le loyer de jeunes et de salariés ; elle est financée par Action Logement, c'est-à-dire par les employeurs, et non par l'État."
+    },
+    "visale_contrats": {
+      "libelle": "Contrats Visale prévus par la convention 2023-2027",
+      "valeur": 2.1,
+      "unite": "millions",
+      "annee": 2023,
+      "fiabilite": "officielle",
+      "source": "Convention quinquennale 2023-2027 entre l'État et Action Logement, dossier de presse du Premier ministre, 16 juin 2023",
+      "url": "https://www.info.gouv.fr/upload/media/content/0001/07/5557026e248ab5df7d9b469b824dd3460db8fde0.pdf",
+      "lu_le": "2026-09-22",
+      "note": "Objectif sur les cinq années de la convention, pour l'enveloppe de visale_enveloppe. Un contrat garantit un bail."
+    },
+    "decisions_bail": {
+      "libelle": "Décisions de justice entre bailleurs et locataires",
+      "valeur": 109860,
+      "unite": "décisions",
+      "annee": 2019,
+      "fiabilite": "officielle",
+      "source": "Ministère de la Justice, SSER, Infos rapides justice n° 16, « L'expulsion du locataire demandée dans neuf affaires sur dix », 19 septembre 2024",
+      "url": "https://www.justice.gouv.fr/documentation/etudes-et-statistiques/lexpulsion-du-locataire-demandee-neuf-affaires-dix",
+      "lu_le": "2026-09-22",
+      "note": "Rendues en 2019 au titre de la loi du 6 juillet 1989, dernière année étudiée. Le bailleur demande la résiliation du bail ou l'expulsion dans neuf affaires sur dix, pour loyers impayés le plus souvent ; le juge y fait droit dans 97 % des cas."
+    },
+    "delai_decision_bail": {
+      "libelle": "Délai moyen d'une décision entre bailleur et locataire",
+      "valeur": 5.1,
+      "unite": "mois",
+      "annee": 2019,
+      "fiabilite": "officielle",
+      "source": "Ministère de la Justice, SSER, Infos rapides justice n° 16, « L'expulsion du locataire demandée dans neuf affaires sur dix », 19 septembre 2024",
+      "url": "https://www.justice.gouv.fr/documentation/etudes-et-statistiques/lexpulsion-du-locataire-demandee-neuf-affaires-dix",
+      "lu_le": "2026-09-22",
+      "note": "De la délivrance de l'assignation à la décision, au fond ou en référé : 3,8 mois jusqu'à l'audience, 1,3 mois jusqu'au jugement. Le commandement de payer qui précède l'assignation, et l'exécution qui suit la décision, n'y sont pas."
     },
     "prelevements_part_pib": {
       "libelle": "Part des prélèvements sur le logement dans le PIB",
@@ -999,7 +1099,7 @@
       "libelle": "L'expérimentation de l'encadrement des loyers s'éteint faute de loi nouvelle",
       "echeance": "2026-11-25",
       "ecrit": "25 novembre 2026",
-      "ou": "/louer, section « encadrement » ; note de encadrement_villes",
+      "ou": "/louer, section « encadrement » ; /chiffrage, tableau mesure par mesure, ligne de l'encadrement ; note de encadrement_villes",
       "verifier": "S'est-elle éteinte, ou la proposition de loi de pérennisation a-t-elle abouti ? Dans les deux cas la page Louer change de temps : elle parle d'un dispositif en vigueur. Reprendre aussi encadrement_villes, dont la liste des dix collectivités n'aura plus le même sens.",
       "url": "https://www.anil.org/aj-experimentation-encadrement-niveau-loyers-zones-tendues/"
     },
@@ -1046,6 +1146,13 @@
       "ou": "/louer, section « dpe »",
       "verifier": "Même question que pour les classes F, dont la réponse commandera probablement celle-ci.",
       "url": "https://www.ecologie.gouv.fr/politiques-publiques/diagnostic-performance-energetique-dpe"
+    },
+    "visale_convention": {
+      "libelle": "La convention entre l'État et Action Logement fixe l'enveloppe de Visale jusqu'à fin 2027",
+      "echeance": "2027-12-31",
+      "ou": "/chiffrage, section « mesures », ligne de la garantie publique du loyer ; notes de visale_enveloppe et visale_contrats",
+      "verifier": "La convention suivante est-elle signée ? Quelle enveloppe donne-t-elle à Visale, et pour combien de contrats ? Reprendre visale_enveloppe et visale_contrats, et le coût par bail que la page Chiffrage en tire comme repère pour la garantie publique du loyer.",
+      "url": "https://www.info.gouv.fr/upload/media/content/0001/07/5557026e248ab5df7d9b469b824dd3460db8fde0.pdf"
     }
   }
 }

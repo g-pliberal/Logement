@@ -86,11 +86,59 @@ test("le coût se traduit en mois de loyer, ou en rien du tout", () => {
 test("le chiffrage est l'addition qu'il annonce", () => {
   const menages = d.valeur("menages_aides");
   const bilan = chiffrage(d, { chequeMensuel: 300, menages });
-  const remplacees = d.valeur("prestations_sociales")
+  const remplacees = d.valeur("allocations_logement")
     + d.valeur("bonifications") + d.valeur("depenses_fiscales");
   presque(bilan.remplacees, remplacees, 1e-9);
   presque(bilan.cheque, (300 * 12 * menages) / 1000, 1e-9);
   presque(bilan.solde, remplacees - bilan.cheque - d.valeur("dmto"), 1e-9);
+});
+
+test("le chèque remplace les aides personnelles, et elles seules", () => {
+  // Le total des prestations sociales du logement comprend l'aide sociale à
+  // l'hébergement des personnes âgées et le chèque énergie : le compter comme
+  // des aides personnelles gonflait la « moyenne versée aujourd'hui ».
+  const menages = d.valeur("menages_aides");
+  const bilan = chiffrage(d, { chequeMensuel: 300, menages });
+  assert.equal(bilan.allocations, d.valeur("allocations_logement"));
+  assert.ok(bilan.allocations < d.valeur("prestations_sociales"));
+  presque(bilan.autresPrestations,
+    d.valeur("prestations_sociales") - d.valeur("allocations_logement"), 1e-9);
+  const autres = bilan.postes.find((p) => p.cle === "autres_prestations");
+  assert.equal(autres.effet, 0, "les autres prestations ne bougent pas");
+  assert.equal(autres.aujourdhui, autres.programme);
+});
+
+test("le solde est la somme des postes, et chaque poste se lit face à aujourd'hui", () => {
+  const menages = d.valeur("menages_aides");
+  for (const reglages of [
+    { chequeMensuel: 300, menages },
+    { chequeMensuel: 250, menages, supprimerDmto: false },
+    { chequeMensuel: 900, menages, partSubventions: 0.5 },
+    { chequeMensuel: 0, menages, supprimerDmto: false, partSubventions: 0 },
+  ]) {
+    const bilan = chiffrage(d, reglages);
+    const somme = bilan.postes.reduce((total, p) => total + p.effet, 0);
+    presque(bilan.solde, somme, 1e-9);
+    presque(bilan.plus + bilan.moins, bilan.solde, 1e-9);
+    assert.ok(bilan.plus >= 0 && bilan.moins <= 0);
+    for (const p of bilan.postes) {
+      // Une dépense qui baisse rapporte ; une recette qui baisse coûte.
+      const attendu = p.sens === "depense"
+        ? p.aujourdhui - p.programme : p.programme - p.aujourdhui;
+      presque(p.effet, attendu, 1e-9);
+    }
+  }
+});
+
+test("un poste que les réglages laissent intact a un effet nul", () => {
+  const menages = d.valeur("menages_aides");
+  const bilan = chiffrage(d, {
+    chequeMensuel: 300, menages, supprimerDmto: false, partSubventions: 1,
+  });
+  const effet = (cle) => bilan.postes.find((p) => p.cle === cle).effet;
+  assert.equal(effet("dmto"), 0);
+  assert.equal(effet("pierre"), 0);
+  assert.equal(effet("autres_prestations"), 0);
 });
 
 test("garder les droits de mutation dégage exactement leur montant", () => {
@@ -111,7 +159,7 @@ test("le chèque à la moyenne actuelle rend exactement l'aide d'aujourd'hui", (
   const menages = d.valeur("menages_aides");
   const { actuelle } = bornesCheque(d, menages);
   const bilan = chiffrage(d, { chequeMensuel: actuelle, menages });
-  presque(bilan.cheque, d.valeur("prestations_sociales"), 1e-9);
+  presque(bilan.cheque, d.valeur("allocations_logement"), 1e-9);
   presque(bilan.aideMoyenneActuelle, actuelle, 1e-9);
 });
 
@@ -154,6 +202,53 @@ test("les réglages du chiffrage suivent les liens de la page", () => {
   // Et rien d'autre : un paramètre étranger ne se propage pas.
   const [, autre] = rendre(d, "/", { prix: "300000" });
   assert.ok(!autre.includes("prix=300000"));
+});
+
+/** Les lignes du tableau mesure par mesure, lues dans le HTML rendu. */
+function lignesDuTableau(html) {
+  const tableau = html.match(/<table id="mesures">([\s\S]*?)<\/table>/);
+  assert.ok(tableau, "le tableau mesure par mesure manque");
+  const texte = (cellule) => cellule.replace(/<[^>]+>/g, "").trim();
+  return [...tableau[1].matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/g)].map(([, rangee]) => (
+    [...rangee.matchAll(/<(?:th|td)[^>]*>([\s\S]*?)<\/(?:th|td)>/g)]
+      .map(([, cellule]) => texte(cellule))));
+}
+
+/** « +15,9 », « −11,2 », « 0 » : l'effet tel qu'il est écrit, en nombre. */
+function effetLu(texte) {
+  return Number(texte.replace("−", "-").replace(/[   ]/g, "").replace(",", "."));
+}
+
+test("la page Chiffrage met chaque chantier face à aujourd'hui", () => {
+  const [, html] = rendre(d, "/chiffrage", {});
+  const lignes = lignesDuTableau(html);
+  const intertitres = lignes.filter((l) => l.length === 1).map((l) => l[0]);
+  assert.deepEqual(intertitres,
+    ["Construire", "Louer", "Aider", "Fiscalité", "Au total"]);
+  // Les mesures qu'on ne sait pas chiffrer le disent, et ne portent aucun
+  // nombre inventé.
+  const sansChiffre = lignes.filter((l) => l[3] === "non chiffré");
+  assert.ok(sansChiffre.length >= 4, "les lignes sans chiffre doivent le dire");
+});
+
+test("la colonne des effets s'additionne, dans toutes les configurations", () => {
+  for (const parametres of [{}, { cheque: "350", dmto: "non" },
+    { cheque: "200", pierre: "50" }, { cheque: "900", pierre: "0" }]) {
+    const [, html] = rendre(d, "/chiffrage", parametres);
+    const lignes = lignesDuTableau(html);
+    const total = lignes.findIndex((l) => l.length === 1 && l[0] === "Au total");
+    const mesures = lignes.slice(0, total)
+      .filter((l) => l.length === 4 && l[3] !== "non chiffré" && l[0] !== "Mesure");
+    const somme = mesures.reduce((s, l) => s + effetLu(l[3]), 0);
+    const solde = effetLu(lignes[lignes.length - 1][3]);
+    // Chaque ligne est arrondie au dixième : la somme lue peut s'écarter du
+    // solde d'un demi-dixième par ligne arrondie, et pas davantage.
+    assert.ok(Math.abs(somme - solde) <= 0.05 * mesures.length + 1e-9,
+      `${JSON.stringify(parametres)} : ${somme} lus, ${solde} annoncés`);
+    const plus = effetLu(lignes[lignes.length - 3][3]);
+    const moins = effetLu(lignes[lignes.length - 2][3]);
+    assert.ok(Math.abs(plus + moins - solde) <= 0.1 + 1e-9);
+  }
 });
 
 test("un prix saisi donne un résultat, un prix absurde n'en donne pas", () => {

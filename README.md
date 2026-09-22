@@ -50,9 +50,13 @@ Les chiffres qui portent cette thèse, tous datés et sourcés :
 
 Le [chiffrage](https://g-pliberal.github.io/logement/#/chiffrage) montre que
 l'ensemble tient dans les agrégats publiés, sans impôt nouveau : les aides
-supprimées (38,4 Md€) financent le chèque et la suppression des droits de
-mutation, et laissent une marge à montant d'aide inchangé. Le lecteur y déplace
-lui-même les trois hypothèses qui pèsent.
+supprimées (34,7 Md€ — aides personnelles, bonifications de taux, dépenses
+fiscales) financent le chèque et la suppression des droits de mutation, et
+laissent une marge à montant d'aide inchangé. Chaque mesure des quatre chantiers
+y est mise en face de la situation actuelle, dans un tableau qui dit ce qu'elle
+rapporte (+), ce qu'elle coûte (−), pourquoi elle ne coûte rien, ou pourquoi on
+ne sait pas la chiffrer. Le lecteur y déplace lui-même les trois hypothèses qui
+pèsent.
 
 ## Ce que le dépôt contient
 
@@ -156,11 +160,15 @@ environnement à monter n'est pas vérifié longtemps.
 - **Le détail des collectivités.** La compensation de la suppression des droits
   de mutation est posée en principe ; sa répartition entre départements demande
   un travail qui n'est pas fait ici.
-- **Le coût de trois engagements sur cinq.** Le chiffrage porte sur le chèque
-  logement et sur les droits de mutation. La garantie publique du loyer, le
-  reversement à la commune de dix ans de recettes du logement neuf et les
-  moyens de justice d'un impayé jugé en trois mois ne sont pas chiffrés — c'est
-  à cela que la marge dégagée est destinée, et c'est le prochain travail.
+- **Le coût de six lignes du compte.** Le tableau mesure par mesure les
+  nomme, chacune avec la raison de son absence et le repère qui existe quand il
+  en existe un : la garantie publique du loyer (Visale, qui coûte de l'ordre de
+  0,1 Md€ par an, sert de repère), les juges et travailleurs sociaux d'un impayé
+  jugé en trois mois (le jugement prend aujourd'hui 5,1 mois), la clause de
+  sauvegarde, l'ouverture du chèque à l'accession, le délai fixe des recours et
+  le régime unique des revenus fonciers. Le reversement aux communes, lui, est
+  chiffré comme ce qu'il est : un transfert de l'État aux communes, qui ne
+  change pas le total. Chiffrer les six est le prochain travail.
 
 Ces limites sont écrites sur le site lui-même, et non reléguées ici.
 
@@ -177,7 +185,7 @@ objections sont donc portées par le site, chacune là où elle se pose :
 | « Trois mois, c'est l'expulsion expresse » — trêve hivernale, DALO | [Louer](https://g-pliberal.github.io/logement/#/louer) |
 | « Vous allez baisser les aides » | [Aider](https://g-pliberal.github.io/logement/#/aider) |
 | « Vous oubliez les loyers imputés » — 11 Md€, le solde refait | [Fiscalité](https://g-pliberal.github.io/logement/#/fiscalite) |
-| « Qui perd ? » — les cinq perdants, nommés | [Fiscalité](https://g-pliberal.github.io/logement/#/fiscalite) |
+| « Qui perd ? » — les six perdants, nommés, dont le logement social | [Fiscalité](https://g-pliberal.github.io/logement/#/fiscalite) |
 | « Sans impôt nouveau » : ce que la suppression d'une niche fait vraiment | [Chiffrage](https://g-pliberal.github.io/logement/#/chiffrage) |
 | « L'encadrement n'a pas réduit l'offre à Paris » — l'Apur le mesure, on le concède | [Louer](https://g-pliberal.github.io/logement/#/louer) |
 

@@ -51,9 +51,10 @@ export const DESCRIPTIONS = Object.freeze({
     + "reçoit : ce que la fiscalité fait au déménagement, à la construction "
     + "et au propriétaire, et le calcul de ce qu'un achat coûte en droits de "
     + "mutation.",
-  "/chiffrage": "Ce que la proposition coûte et ce qu'elle rend, en milliards "
-    + "par an, sur les agrégats publiés du compte du logement — avec les "
-    + "hypothèses qu'on peut déplacer soi-même.",
+  "/chiffrage": "Ce que la proposition coûte et ce qu'elle rend, mesure par "
+    + "mesure et face à la situation actuelle, en milliards par an sur les "
+    + "agrégats publiés du compte du logement — avec les hypothèses qu'on peut "
+    + "déplacer soi-même.",
   "/donnees": "Tous les chiffres du site, avec leur source, leur adresse, "
     + "l'année qu'ils mesurent et la date à laquelle ils ont été lus.",
 });
@@ -380,8 +381,11 @@ function cascadePrelevements(d) {
       "var(--actuel)",
       "Taxe foncière, TVA, droits de mutation, impôts sur les revenus "
       + "locatifs, taxes sur l'énergie du logement."),
-    new g.Marche("Aides personnelles", -n(d, "prestations_sociales"), false,
-      "var(--manque)", "APL, ALS, ALF."),
+    new g.Marche("Prestations sociales", -n(d, "prestations_sociales"), false,
+      "var(--manque)",
+      `Aides personnelles — APL, ALS, ALF — pour `
+      + `${milliards(n(d, "allocations_logement"))}, aide sociale à `
+      + "l'hébergement, fonds de solidarité logement, chèque énergie."),
     new g.Marche("Subventions à la pierre", -n(d, "subventions"), false,
       "var(--manque)", "Versées aux bailleurs sociaux et aux producteurs."),
     new g.Marche("Bonifications de taux", -n(d, "bonifications"), false,
@@ -974,10 +978,12 @@ ${g.depliant("L'objection : « trois mois, c'est l'expulsion expresse »",
     `<p>Il faut répondre sur le fond, parce que l'accusation est la plus facile
   à lancer contre nous et la plus coûteuse à laisser sans réponse.</p>
   <p>Ce que nous raccourcissons est le <em>jugement</em>, non l'exécution.
-  Aujourd'hui, un bailleur attend plus de deux ans pour qu'un tribunal dise si
-  la dette est due ; pendant ces deux ans, le locataire de bonne foi accumule
-  une dette qu'il ne remboursera jamais, et le locataire de mauvaise foi
-  occupe gratuitement. Personne n'y gagne, sauf le second. Un jugement en
+  Aujourd'hui, une fois l'assignation délivrée — après les mois de relances et
+  le commandement de payer qui la précèdent —, il faut en moyenne
+  ${vc(d, "delai_decision_bail")} pour qu'un tribunal dise si la dette est due.
+  Pendant ce temps, le locataire de bonne foi accumule une dette qu'il ne
+  remboursera pas, et le locataire de mauvaise foi occupe gratuitement.
+  Personne n'y gagne, sauf le second. Un jugement en
   trois mois est d'abord une protection pour le premier : c'est à ce moment-là
   que l'accompagnement social, le plan d'apurement et le
   ${g.terme("FSL")} peuvent encore quelque chose.</p>
@@ -1005,7 +1011,8 @@ ${g.depliant("L'objection : « trois mois, c'est l'expulsion expresse »",
   un jugement plus rapide rendra quelques expulsions plus rapides aussi. Nous
   le pensons préférable à un droit qui protège si mal qu'il pousse les
   bailleurs à ne louer qu'aux dossiers déjà solides — c'est-à-dire à exclure du
-  marché, en amont et sans juge, ceux que la procédure prétend protéger.</p>`,
+  marché, en amont et sans juge, ceux que la procédure prétend protéger.</p>
+  <p class="source">${sources(d, "delai_decision_bail")}</p>`,
     "treve-dalo")}
 `;
 
@@ -1028,7 +1035,7 @@ ${suite("/aider", "Troisième chantier : aider")}
 // -- la page Aider -----------------------------------------------------------
 
 function pageAider(d) {
-  const moyenne = (n(d, "prestations_sociales") * 1000)
+  const moyenne = (n(d, "allocations_logement") * 1000)
     / (n(d, "menages_aides") * 12);
 
   const corps = `
@@ -1074,9 +1081,12 @@ ${g.cle("Où va une aide au logement ?",
     sources(d, "apl_capture", "apl_capture_plancher"), "capture")}
 
 ${g.depliant("Ce que l'État verse, et à qui",
-    `<p>${vc(d, "prestations_sociales")} d'aides personnelles — ${g.terme("APL")},
+    `<p>${vc(d, "allocations_logement")} d'aides personnelles — ${g.terme("APL")},
   ALS, ALF — vont à ${vc(d, "menages_aides")} de ménages, soit environ
-  ${euros(moyenne)} par mois et par ménage aidé. S'y ajoutent
+  ${euros(moyenne)} par mois et par ménage aidé. D'autres prestations
+  sociales du logement — l'aide sociale à l'hébergement des personnes âgées ou
+  handicapées, les ${g.terme("fonds de solidarité logement", "FSL")}, le chèque
+  énergie — portent le total à ${v(d, "prestations_sociales")}. S'y ajoutent
   ${v(d, "subventions")} d'${g.terme("aide à la pierre")},
   ${v(d, "bonifications")} de bonifications de taux, et
   ${v(d, "depenses_fiscales")} de ${g.terme("dépense fiscale")} — taux réduit de
@@ -1084,11 +1094,11 @@ ${g.depliant("Ce que l'État verse, et à qui",
   exonérations diverses.</p>
   <p>Soit ${vc(d, "aides_totales_2024")} en ${an(d, "aides_totales_2024")},
   répartis entre une douzaine de dispositifs qui n'ont ni le même guichet, ni
-  les mêmes conditions, ni la même administration — et dont le plus coûteux
-  après les aides personnelles, la dépense fiscale, ne figure dans aucun budget
-  voté ligne à ligne.</p>
-  <p class="source">${sources(d, "prestations_sociales", "menages_aides",
-    "depenses_fiscales")}</p>`, "verse")}
+  les mêmes conditions, ni la même administration — et dont l'un des deux plus
+  coûteux, la dépense fiscale, ne figure dans aucun budget voté ligne à
+  ligne.</p>
+  <p class="source">${sources(d, "allocations_logement",
+    "prestations_sociales", "menages_aides", "depenses_fiscales")}</p>`, "verse")}
 
 ${g.depliant("Le logement social : un parc qui ne circule pas",
     `<p>${vc(d, "parc_social")} de logements, un ménage sur six, un loyer moyen
@@ -1262,6 +1272,22 @@ function calculetteMutation(d, parametres) {
 }
 
 function pageFiscalite(d, parametres) {
+  // La marge que le chiffrage dégage, aux réglages du lecteur : c'est sur elle
+  // que se paierait le maintien d'une niche. Dire si elle y suffit se calcule ;
+  // l'écrire en dur, c'est promettre une phrase que la prochaine mise à jour
+  // des données rendra fausse sans que rien ne le signale.
+  const marge = chiffrage(d, reglagesChiffrage(d, parametres)).solde;
+  const travaux = n(d, "tva_travaux_taux_reduit");
+  const social = n(d, "niches_secteur_social");
+  const suffitTravaux = marge >= travaux ? "qui y suffit" : "qui n'y suffit pas";
+  let suffitSocial = "qui n'y suffit pas";
+  if (marge >= social + travaux) {
+    suffitSocial = "qui y suffit, même avec le taux réduit des travaux";
+  } else if (marge >= social) {
+    suffitSocial = "qui y suffit, mais pas en même temps qu'au taux réduit des "
+      + "travaux";
+  }
+
   const corps = `
 ${g.depliant("Ce que le logement rapporte",
     `<p>${vc(d, "prelevements")} en ${an(d, "prelevements")} :
@@ -1440,8 +1466,23 @@ ${g.depliant("L'objection : « qui perd ? »",
       + "nécessaire — parce qu'il tient aussi le travail déclaré dans le "
       + "bâtiment —, le maintenir coûte "
       + `${v(d, "tva_travaux_taux_reduit")} sur la marge dégagée par le `
-      + `<a href="${g.lien("/chiffrage")}">chiffrage</a>, qui y suffit. `
+      + `<a href="${g.lien("/chiffrage")}">chiffrage</a>, ${suffitTravaux}. `
       + "C'est un arbitrage, pas un impensé."],
+    ["Le logement social",
+      "C'est le plus lourd des perdants, et ce n'est pas un ménage. Les "
+      + "dépenses fiscales supprimées comprennent "
+      + `${v(d, "niches_secteur_social")} d'avantages au secteur locatif `
+      + "social — TVA à taux réduit sur la construction, exonération de "
+      + "longue durée de taxe foncière, exonération d'impôt sur les sociétés "
+      + "des organismes HLM. Les bonifications supprimées lui retirent en "
+      + `outre ${v(d, "bonifications_bailleurs_sociaux")} d'avantages de `
+      + "taux sur ses prêts. Les subventions à la pierre, conservées, ne les "
+      + "remplacent pas : elles s'y ajoutaient. Construire et gérer un "
+      + "logement social coûtera donc plus cher. La proposition les supprime "
+      + "avec les autres ; si le Parlement jugeait les avantages fiscaux "
+      + "nécessaires, les maintenir coûterait "
+      + `${v(d, "niches_secteur_social")} sur la marge du `
+      + `<a href="${g.lien("/chiffrage")}">chiffrage</a>, ${suffitSocial}.`],
     ["Les locataires protégés par l'encadrement des loyers",
       `Environ ${v(d, "encadrement_gain_mensuel", 0)} par mois à Paris — `
       + `${nombre(Math.abs(n(d, "encadrement_effet")), 1)} % de modération `
@@ -1469,7 +1510,9 @@ ${g.depliant("L'objection : « qui perd ? »",
       + "transfert de charge de plus."],
   ])}
   <p class="source">${sources(d, "niches_investissement_locatif",
-    "tva_travaux_taux_reduit", "encadrement_effet", "bonifications")}</p>`,
+    "tva_travaux_taux_reduit", "niches_secteur_social",
+    "bonifications_bailleurs_sociaux", "encadrement_effet",
+    "bonifications")}</p>`,
     "qui-perd")}
 `;
 
@@ -1526,7 +1569,7 @@ function formulaireChiffrage(d, reglages) {
     ${g.liste("pierre", "Subventions à la pierre conservées",
     [["100", "En totalité"], ["50", "La moitié"], ["0", "Aucune"]],
     String(Math.round(reglages.partSubventions * 100)),
-    "hébergement d'urgence et logement très social")}
+    "logement social, rénovation, hébergement")}
     <div class="action"><button type="submit">Recalculer →</button></div>
   </div>
 </form>`;
@@ -1535,9 +1578,9 @@ function formulaireChiffrage(d, reglages) {
 function cascadeChiffrage(d, bilan) {
   const marches = [
     new g.Marche("Aides supprimées", bilan.remplacees, true, "var(--actuel)",
-      `Aides personnelles (${milliards(bilan.prestations)}), bonifications de `
-      + `taux (${milliards(bilan.bonifications)}) et dépenses fiscales `
-      + `(${milliards(bilan.niches)}).`),
+      `Aides personnelles — APL, ALS, ALF — (${milliards(bilan.allocations)}), `
+      + `bonifications de taux (${milliards(bilan.bonifications)}) et `
+      + `dépenses fiscales (${milliards(bilan.niches)}).`),
   ];
   if (bilan.subventionsRendues > 0) {
     marches.push(new g.Marche("Subventions à la pierre rendues",
@@ -1560,6 +1603,261 @@ function cascadeChiffrage(d, bilan) {
     marches, "Md€", 1, 0, "Poste");
 }
 
+/**
+ * La convention qui dote Visale court sur cinq exercices, de 2023 à 2027 inclus.
+ * C'est sa durée, non une mesure : elle ne sert qu'à ramener l'enveloppe à
+ * l'année, pour la comparer aux autres lignes du compte.
+ */
+const EXERCICES_CONVENTION_VISALE = 5;
+
+/**
+ * Les petits nombres s'écrivent en lettres dans une phrase. Au féminin : on y
+ * compte des lignes et des mesures.
+ */
+const EN_LETTRES = Object.freeze([
+  "aucune", "une", "deux", "trois", "quatre", "cinq", "six", "sept", "huit",
+  "neuf", "dix", "onze", "douze", "treize", "quatorze", "quinze", "seize",
+  "dix-sept", "dix-huit", "dix-neuf", "vingt",
+]);
+
+function enLettres(entier, capitale = false) {
+  const mot = EN_LETTRES[entier] ?? String(entier);
+  return capitale ? mot.charAt(0).toUpperCase() + mot.slice(1) : mot;
+}
+
+/**
+ * Une ligne du compte mesure par mesure : ce que la mesure est et pourquoi son
+ * chiffre est ce qu'il est, ce qui existe aujourd'hui, ce que le programme met
+ * à la place, et l'effet sur le compte.
+ *
+ * `effet` est un montant, zéro, ou `null` — l'aveu qu'on ne sait pas le
+ * chiffrer, que la ligne écrit alors en toutes lettres. `nature` range la
+ * ligne pour la phrase qui résume le tableau : `compte` porte de l'argent,
+ * `regle` change une règle, `garde` conserve une dépense telle qu'elle est,
+ * `transfert` fait passer de l'argent d'une administration à une autre sans
+ * changer le total, `inconnu` n'est pas chiffré.
+ */
+function ligneDuCompte(nom, pourquoi, aujourdhui, programme, effet, nature) {
+  return { nom, pourquoi, aujourdhui, programme, effet, nature };
+}
+
+/**
+ * La ligne d'un poste calculé : son effet vient du calcul, et un poste que les
+ * réglages laissent intact — des droits de mutation maintenus, des
+ * subventions gardées — est une dépense conservée, non une ligne du compte.
+ */
+function ligneDuPoste(poste, nom, pourquoi, aujourdhui, programme) {
+  return ligneDuCompte(nom, pourquoi, aujourdhui, programme, poste.effet,
+    poste.effet === 0 ? "garde" : "compte");
+}
+
+/** L'effet tel qu'il s'écrit dans la colonne, teinté selon son sens. */
+function celluleEffet(effet, plusGrand) {
+  if (effet === null) {
+    return '<span class="discret">non chiffré</span>';
+  }
+  if (effet === 0) {
+    return nombre(effet, 0);
+  }
+  return new g.Cellule(g.signeCascade(effet, 1), effet / plusGrand);
+}
+
+/**
+ * Le programme mesure par mesure, face à aujourd'hui.
+ *
+ * C'est la question que pose tout lecteur d'un chiffrage — qu'est-ce qui
+ * change, et de combien ? —, et la cascade n'y répondait qu'à moitié : elle ne
+ * montre que ce qui bouge. Le tableau met chaque proposition des quatre
+ * chantiers en face de ce qui existe aujourd'hui, y compris celles qui ne
+ * coûtent rien et celles qu'on ne sait pas chiffrer : un compte qui tait ses
+ * zéros et ses trous laisse croire qu'il est complet.
+ */
+function lignesDuCompte(d, bilan, reglages) {
+  const poste = (cle) => bilan.postes.find((p) => p.cle === cle);
+  const menages = v(d, "menages_aides");
+  const parMenage = (bilan.cheque * 1000) / (n(d, "menages_aides") * 12);
+  const parBail = n(d, "visale_enveloppe") / n(d, "visale_contrats");
+  const visaleParAn = n(d, "visale_enveloppe") / 1000 / EXERCICES_CONVENTION_VISALE;
+  const garde = reglages.partSubventions === 1 ? "Conservées"
+    : (reglages.partSubventions > 0 ? "La moitié conservée" : "Supprimées");
+
+  return [
+    new g.Intertitre(`<a href="${g.lien("/construire")}">Construire</a>`),
+    ligneDuCompte("Le droit de construire",
+      "Un gabarit autorisé de plein droit ; la division, la surélévation et le "
+      + `changement d'usage de droit ; la fin du ${g.terme("ZAN")}. Une règle `
+      + "change, aucune dépense.",
+      `Le ${g.terme("PLU")} plafonne, le ZAN rationne le sol`,
+      "Ce qui entre dans le gabarit est autorisé", 0, "regle"),
+    ligneDuCompte("Le produit du neuf à la commune qui l'autorise",
+      "Un transfert entre administrations, qui ne change pas le total. Chaque "
+      + "dixième de cette TVA rendu aux communes coûte "
+      + `${milliards(n(d, "tva_neuf") / 10)} à l'État, et leur rapporte autant.`,
+      `${v(d, "tva_neuf")} de TVA sur les logements neufs, à l'État ; la `
+      + "taxe foncière, déjà à la commune et à l'intercommunalité",
+      "Une part de la TVA à la commune, dix ans, avec la taxe foncière",
+      0, "transfert"),
+    ligneDuCompte("Le recours contre un permis, jugé dans un délai fixe",
+      "Tenir un délai fixe demande des juges, et aucune donnée publique ne "
+      + "permet de dire combien.",
+      `${v(d, "recours_duree", 0)} devant le tribunal administratif `
+      + `(${an(d, "recours_duree")})`,
+      "Une seule instance, un délai fixe", null, "inconnu"),
+
+    new g.Intertitre(`<a href="${g.lien("/louer")}">Louer</a>`),
+    ligneDuCompte("La fin de l'encadrement des loyers",
+      "Rien pour les comptes publics. Pour un locataire parisien dont le loyer "
+      + `est plafonné, environ ${v(d, "encadrement_gain_mensuel", 0)} par mois `
+      + "cessent de lui être transférés : il est compté parmi "
+      + `<a href="${g.lien("/fiscalite")}">les perdants</a>.`,
+      `${v(d, "encadrement_villes", 0)} plafonnent le loyer`,
+      "Le loyer se fixe au contrat", 0, "regle"),
+    ligneDuCompte("Le diagnostic énergétique, la durée du bail",
+      "L'information plutôt que l'interdiction, une durée qui se négocie : deux "
+      + "règles, aucune dépense.",
+      "Un logement classé G ne se loue plus",
+      "Le diagnostic est affiché, la location permise", 0, "regle"),
+    ligneDuCompte("Un impayé jugé en trois mois",
+      "Avec l'accompagnement social dès le premier mois d'impayé. Le coût tient "
+      + "aux juges et aux travailleurs sociaux qu'il faut ajouter, et aucune "
+      + "statistique publique ne permet de l'estimer.",
+      `${v(d, "decisions_bail")} en ${an(d, "decisions_bail")}, rendues en `
+      + `${v(d, "delai_decision_bail")} en moyenne après l'assignation`,
+      "Trois mois, délai fixe", null, "inconnu"),
+    ligneDuCompte("Une garantie publique du loyer",
+      "Pour tout locataire au revenu modeste ou irrégulier, contre une prime. "
+      + "Son coût dépend du nombre de baux couverts et de la prime, que le "
+      + "programme ne fixe pas. Repère : la convention qui finance Visale "
+      + `prévoit environ ${euros(parBail)} par bail garanti, de l'ordre de `
+      + `${milliards(visaleParAn)} par an.`,
+      `Visale, la garantie gratuite d'Action Logement : `
+      + `${v(d, "visale_enveloppe")} pour ${v(d, "visale_contrats")} de baux, `
+      + "2023-2027",
+      "Une garantie de l'État, payée par une prime", null, "inconnu"),
+
+    new g.Intertitre(`<a href="${g.lien("/aider")}">Aider</a>`),
+    ligneDuPoste(poste("allocations"),
+      "Les aides personnelles",
+      `${g.terme("APL")}, ALS, ALF : le chèque les remplace.`,
+      `${v(d, "allocations_logement")} à ${menages} de ménages`,
+      "Supprimées"),
+    ligneDuPoste(poste("cheque"),
+      "Le chèque logement",
+      "Au montant choisi dans le formulaire ci-dessus, et indépendant du loyer "
+      + "payé.",
+      "—",
+      `${euros(parMenage)} par mois à ${menages} de ménages`),
+    ligneDuCompte("Le chèque ouvert à l'accession",
+      "Il paie aussi une mensualité d'emprunt, ce que l'aide personnelle ne fait "
+      + "presque plus : plus de ménages y auront droit, sans qu'on sache "
+      + "combien. Chaque tranche de cent mille ménages coûte "
+      + `${milliards(reglages.chequeMensuel * 12 * 0.1 / 1000, 2)} par an.`,
+      "L'aide personnelle ne va presque plus aux accédants",
+      "Le même chèque pour louer ou pour acheter", null, "inconnu"),
+    ligneDuPoste(poste("bonifications"),
+      "Les bonifications de taux",
+      "Le prêt à taux zéro et les prêts aidés, dont "
+      + `${v(d, "bonifications_bailleurs_sociaux")} sur les prêts aux `
+      + `bailleurs sociaux. L'État n'en paie que ${v(d, "bonifications_etat")} : `
+      + "voir les limites, plus bas.",
+      `${v(d, "bonifications")} d'intérêts épargnés aux emprunteurs`,
+      "Supprimées"),
+    ligneDuCompte("La clause de sauvegarde",
+      "Aucun ménage sous plafond de ressources ne perçoit moins qu'avant. Son "
+      + "coût demande la microsimulation décrite plus bas.",
+      "—",
+      "Un complément à qui perdrait au change", null, "inconnu"),
+    ligneDuPoste(poste("autres_prestations"),
+      "Les autres prestations sociales du logement",
+      "L'aide sociale à l'hébergement des personnes âgées ou handicapées, "
+      + "l'allocation de logement temporaire, les "
+      + `${g.terme("fonds de solidarité logement", "FSL")}, le chèque énergie : `
+      + "ce ne sont pas des aides personnelles, et la proposition n'y touche pas.",
+      milliards(bilan.autresPrestations),
+      "Conservées"),
+    ligneDuPoste(poste("pierre"),
+      `Les ${g.terme("subventions à la pierre", "aide à la pierre")}`,
+      "Versées aux bailleurs sociaux et à qui rénove"
+      + (bilan.subventionsRendues > 0
+        ? ", et rendues en partie selon le réglage ci-dessus." : "."),
+      v(d, "subventions"),
+      garde),
+    ligneDuCompte("Le parc social ouvert par le haut, l'attribution publiée",
+      "Le surloyer revient au bailleur social, non au budget ; publier la règle "
+      + "ne coûte rien.",
+      `Le ${g.terme("droit au maintien dans les lieux")} ; une file sans `
+      + "règle publique",
+      "Le loyer de marché au-dessus du plafond ; le rang de chacun publié",
+      0, "regle"),
+
+    new g.Intertitre(`<a href="${g.lien("/fiscalite")}">Fiscalité</a>`),
+    ligneDuPoste(poste("niches"),
+      "Les dépenses fiscales",
+      `Les ${g.terme("niches", "dépense fiscale")}, dont `
+      + `${v(d, "tva_travaux_taux_reduit")} de TVA réduite sur les travaux et `
+      + `${v(d, "niches_investissement_locatif")} pour l'investissement `
+      + "locatif. Comptées par bénéficiaire, elles vont pour "
+      + `${v(d, "niches_secteur_social")} au logement social, le plus lourd `
+      + "des perdants.",
+      `${v(d, "depenses_fiscales")} d'impôt non perçu`,
+      "Supprimées"),
+    ligneDuPoste(poste("dmto"),
+      "Les droits de mutation",
+      reglages.supprimerDmto
+        ? `Les ${g.terme("DMTO")} : déménager cesse d'être taxé.`
+        : "Maintenus, selon le réglage ci-dessus.",
+      `${v(d, "dmto")} perçus`,
+      reglages.supprimerDmto ? "Supprimés" : "Maintenus"),
+    ...(reglages.supprimerDmto ? [ligneDuCompte(
+      "La compensation des départements",
+      "L'État leur verse, à l'euro, ce que les droits de mutation leur "
+      + "rapportaient. Un transfert : la perte est déjà comptée sur la ligne "
+      + "du dessus.",
+      "—", "Une dotation indexée, en loi organique", 0, "transfert")] : []),
+    ligneDuCompte("La taxe foncière sur des valeurs de ce siècle",
+      "À rendement inchangé : la charge se déplace entre propriétaires, le "
+      + "total ne bouge pas.",
+      `${v(d, "taxe_fonciere")} sur des valeurs de 1970`,
+      "Le même produit, sur une assiette refaite", 0, "regle"),
+    ligneDuCompte("Un régime unique des revenus fonciers",
+      "Louer nu, louer meublé, habiter, laisser vide : un seul régime. Il "
+      + "rapporte ou coûte selon le barème retenu, qui n'est pas écrit ici.",
+      "Quatre situations, quatre régimes", "Un seul régime", null, "inconnu"),
+  ];
+}
+
+/** Le tableau du compte mesure par mesure, et ses trois totaux. */
+function tableauDesMesures(bilan, lignes) {
+  const mesures = lignes.filter((ligne) => !(ligne instanceof g.Intertitre));
+  const plusGrand = Math.max(...mesures
+    .filter((ligne) => ligne.effet !== null)
+    .map((ligne) => Math.abs(ligne.effet)));
+  // L'intitulé des deux colonnes de phrases est redit dans chaque cellule, et
+  // ne s'affiche que sur un téléphone, où le tableau se défait en fiches.
+  const rangees = lignes.map((ligne) => (ligne instanceof g.Intertitre ? ligne : [
+    `${ligne.nom}<span class="discret">${ligne.pourquoi}</span>`,
+    `<span class="sur-mobile">Aujourd'hui : </span>${ligne.aujourdhui}`,
+    `<span class="sur-mobile">Avec le programme : </span>${ligne.programme}`,
+    celluleEffet(ligne.effet, plusGrand),
+  ]));
+  rangees.push(
+    new g.Intertitre("Au total"),
+    ["Ce que la réforme cesse de verser ou commence à percevoir", "", "",
+      g.signeCascade(bilan.plus, 1)],
+    ["Ce qu'elle verse en plus ou cesse de percevoir", "", "",
+      g.signeCascade(bilan.moins, 1)],
+    ["Solde des lignes chiffrées", "", "",
+      `<strong>${g.signeCascade(bilan.solde, 1)}</strong>`],
+  );
+  return g.tableau(
+    ["Mesure", "Aujourd'hui", "Avec le programme", "Effet, Md€ par an"],
+    rangees, ["", "texte", "texte", "nombre"],
+    "Le programme mesure par mesure, face à aujourd'hui, en milliards "
+    + "d'euros par an",
+    true, null, false, "mesures",
+  );
+}
+
 function pageChiffrage(d, parametres) {
   const reglages = reglagesChiffrage(d, parametres);
   const bilan = chiffrage(d, reglages);
@@ -1571,52 +1869,26 @@ function pageChiffrage(d, parametres) {
     : `la réforme demande <strong class="cle-texte">${milliards(-bilan.solde)} `
       + "par an</strong> de financement";
 
-  const tableauBilan = g.tableau(
-    ["Poste", "Milliards d'euros par an"],
-    [
-      ["Aides personnelles supprimées", milliards(bilan.prestations)],
-      ["Bonifications de taux supprimées", milliards(bilan.bonifications)],
-      ["Dépenses fiscales supprimées", milliards(bilan.niches)],
-      ...(bilan.subventionsRendues > 0
-        ? [["Subventions à la pierre rendues",
-          milliards(bilan.subventionsRendues)]]
-        : []),
-      ["Chèque logement versé", `− ${milliards(bilan.cheque)}`],
-      ["Droits de mutation supprimés",
-        bilan.perteDmto > 0 ? `− ${milliards(bilan.perteDmto)}` : "0 Md€"],
-      ["<strong>Solde</strong>",
-        `<strong>${bilan.solde >= 0 ? "+" : "−"} `
-        + `${milliards(Math.abs(bilan.solde))}</strong>`],
-    ],
-    ["", "nombre"],
-    "Le compte, poste par poste",
-    true,
-  );
+  // Le chèque doublé, pour dire ce que pèse le premier levier : le résultat
+  // se calcule, parce qu'une phrase qui l'écrirait en dur deviendrait fausse
+  // à la première mise à jour des agrégats — c'est déjà arrivé.
+  const double = chiffrage(d, { ...reglages, chequeMensuel: 2 * reglages.actuelle });
+  const lignes = lignesDuCompte(d, bilan, reglages);
+  const mesures = lignes.filter((ligne) => !(ligne instanceof g.Intertitre));
+  const combien = (...natures) => mesures
+    .filter((ligne) => natures.includes(ligne.nature)).length;
+  const portent = combien("compte");
+  const sansCout = combien("regle", "garde", "transfert");
+  const sansChiffre = combien("inconnu");
+  const reste = bilan.solde >= 0
+    ? `laissent <strong class="cle-texte">${milliards(bilan.solde)} par an`
+      + "</strong>"
+    : `demandent <strong class="cle-texte">${milliards(-bilan.solde)} par an`
+      + "</strong> de financement";
 
-  const corps = `
-${formulaireChiffrage(d, reglages)}
-
-${g.cle("Que coûte la proposition ?",
-    `À ${euros(parMenage)} de chèque mensuel par ménage aidé, ${verdict}.`,
-    `${cascadeChiffrage(d, bilan)}
-  ${tableauBilan}
-  <p>Le chèque retenu ici représente ${euros(parMenage)} par mois et par ménage
-  aidé, contre ${euros(reglages.actuelle)} versés en moyenne aujourd'hui au
-  titre des aides personnelles. Il est servi à ${v(d, "menages_aides")} de
-  ménages — le nombre actuel de bénéficiaires, tenu constant.</p>
-  <p>Une absence se remarque, et c'est voulu : les
-  ${milliards(bilan.subventionsGardees)} de subventions à la pierre que la
-  réforme conserve ne figurent pas dans le compte. Une dépense qu'on ne touche
-  pas ne s'ajoute ni ne se retranche ; elle continue. Le curseur ci-dessus
-  permet d'en rendre une part, et elle apparaît alors en recette. La colonne
-  s'additionne ; les arrondis peuvent en écarter le total d'un dixième.</p>`,
-    sources(d, "prestations_sociales", "depenses_fiscales", "dmto",
-      "menages_aides"), "compte")}
-
-${g.depliant("Ce que ce calcul n'est pas",
-    `<p>C'est une addition, pas un modèle budgétaire, et il faut le dire avant
-  qu'on le découvre. Cinq choses n'y sont pas.</p>
-  ${g.points([
+  // Ce que le calcul ne porte pas. La liste est comptée par la phrase qui
+  // l'annonce : elle s'allonge sans qu'on ait à la recompter.
+  const limites = [
     ["Aucun effet de comportement",
       "Ni la construction que la libération du droit des sols "
       + "déclencherait, ni la TVA et la taxe foncière qu'elle "
@@ -1647,14 +1919,96 @@ ${g.depliant("Ce que ce calcul n'est pas",
       + "dans le prix des logements est probable — c'est ce que fait tout "
       + "allègement sur un marché contraint. C'est précisément pourquoi "
       + "elle ne vaut qu'accompagnée du premier chantier."],
-    ["Aucun coût pour trois des cinq engagements",
-      "Le compte ci-dessus chiffre le chèque logement et la suppression "
-      + "des droits de mutation. Il ne chiffre ni la garantie publique du "
-      + "loyer, ni le reversement à la commune de dix ans de recettes du "
-      + "logement neuf, ni les moyens de justice qu'un impayé jugé en "
-      + "trois mois demanderait. Les trois coûtent, et leur coût n'est "
-      + "pas établi ici : c'est le premier chiffrage à produire."],
-  ])}
+    [`${enLettres(sansChiffre, true)} lignes sans chiffre`,
+      "Le tableau mesure par mesure les nomme : la garantie publique du "
+      + "loyer, les juges et les travailleurs sociaux d'un impayé jugé en "
+      + "trois mois, la clause de sauvegarde, l'ouverture du chèque à "
+      + "l'accession, le délai des recours, le régime unique des revenus "
+      + "fonciers. Aucune n'a de coût qu'on puisse sourcer ; chacune dit "
+      + "pourquoi, et donne le repère qui existe quand il y en a un. Le "
+      + "reversement aux communes, lui, n'est plus un trou : c'est un "
+      + "transfert de l'État aux communes, qui ne change pas le total, et "
+      + "le tableau en donne le prix pour l'État."],
+    ["Des aides qui ne sont pas toutes de l'argent public",
+      "Le compte suit la convention du compte du logement, qui range "
+      + `parmi les aides les ${v(d, "bonifications")} de bonifications de `
+      + `taux. L'État n'en paie que ${v(d, "bonifications_etat")} — le prêt `
+      + "à taux zéro et l'éco-prêt. Le reste est porté par l'épargne du "
+      + "livret A, qui finance les prêts au logement social, et par Action "
+      + "Logement : le supprimer ne rend rien au budget. Compté en seul "
+      + "argent de l'État et des collectivités, le solde est inférieur de "
+      + `${milliards(n(d, "bonifications") - n(d, "bonifications_etat"))}.`],
+  ];
+
+  const corps = `
+${formulaireChiffrage(d, reglages)}
+
+${g.cle("Que coûte la proposition ?",
+    `À ${euros(parMenage)} de chèque mensuel par ménage aidé, ${verdict}.`,
+    `${cascadeChiffrage(d, bilan)}
+  <p>Le chèque retenu ici représente ${euros(parMenage)} par mois et par ménage
+  aidé, contre ${euros(reglages.actuelle)} versés en moyenne aujourd'hui au
+  titre des aides personnelles — ${g.terme("APL")}, ALS, ALF. Il est servi à
+  ${v(d, "menages_aides")} de ménages — le nombre actuel de bénéficiaires, tenu
+  constant.</p>
+  <p>Deux dépenses ne figurent pas dans la cascade, et c'est voulu : les
+  ${milliards(bilan.subventionsGardees)} de subventions à la pierre que la
+  réforme conserve, et les ${milliards(bilan.autresPrestations)} d'autres
+  prestations sociales du logement — l'aide sociale à l'hébergement des
+  personnes âgées, les fonds de solidarité logement, le chèque énergie —, qui
+  ne sont pas des aides personnelles. Une dépense qu'on ne touche pas ne
+  s'ajoute ni ne se retranche ; elle continue. Le tableau mesure par mesure,
+  plus bas, les montre quand même, face à aujourd'hui. Le curseur ci-dessus
+  permet de rendre une part des subventions, et elle apparaît alors en
+  recette.</p>
+  <p>Une correction, parce qu'elle change un chiffre que ce site a publié. Ce
+  compte partait de ${v(d, "prestations_sociales")} d'« aides personnelles » :
+  c'était le total des prestations sociales du logement, dont les trois aides
+  personnelles ne font que ${v(d, "allocations_logement")}. Le reste — l'aide
+  sociale à l'hébergement d'une personne âgée en maison de retraite, par
+  exemple — n'a rien à faire dans un chèque logement, et il est désormais
+  compté à part. La marge n'en change pas : le chèque est calibré sur l'aide
+  qu'il remplace, et les deux montants baissent ensemble.</p>`,
+    sources(d, "allocations_logement", "prestations_sociales",
+      "depenses_fiscales", "dmto", "menages_aides"), "compte")}
+
+${g.cle("Qu'est-ce qui change, mesure par mesure, par rapport à aujourd'hui ?",
+    `${enLettres(portent, true)} lignes portent tout le compte : `
+    + `${milliards(bilan.plus)} que la réforme cesse de verser ou commence à `
+    + `percevoir, ${milliards(-bilan.moins)} qu'elle verse en plus ou cesse `
+    + `de percevoir. Elles ${reste}. `
+    + `${enLettres(sansCout, true)} ne coûtent rien : elles changent une `
+    + "règle, gardent une dépense ou la font passer d'une administration à une "
+    + `autre. ${enLettres(sansChiffre, true)} restent sans chiffre, et chacune `
+    + "dit pourquoi.",
+    `${tableauDesMesures(bilan, lignes)}
+  <p><strong>Comment le lire.</strong> Chaque ligne met une proposition en face
+  de ce qui existe aujourd'hui. Le signe + dit ce que la réforme cesse de
+  verser ou commence à percevoir ; le signe −, ce qu'elle verse en plus ou
+  cesse de percevoir. Un zéro n'est pas un oubli : la mesure change une règle,
+  garde une dépense telle qu'elle est, ou fait passer de l'argent d'une
+  administration à une autre sans changer le total. « Non chiffré » n'en est
+  pas un non plus : la ligne dit pourquoi, et donne le repère qui existe quand
+  il en existe un. La colonne s'additionne ; les arrondis peuvent en écarter le
+  total d'un dixième.</p>
+  <p><strong>Ce que pèsent les lignes sans chiffre.</strong> Elles ne jouent pas
+  toutes dans le même sens. La garantie du loyer, les juges et les travailleurs
+  sociaux de l'impayé, la clause de sauvegarde et l'ouverture du chèque à
+  l'accession coûtent, et c'est sur le solde qu'ils se paient. Le délai des
+  recours et le régime unique des revenus fonciers peuvent coûter ou rapporter.
+  Le solde n'est donc pas une marge acquise : c'est ce qui reste pour elles.
+  Ce qu'il peut payer, et dans quel ordre, est dit plus bas, sous « Ce que ce
+  calcul n'est pas ».</p>`,
+    sources(d, "allocations_logement", "bonifications_etat", "tva_neuf",
+      "visale_enveloppe", "decisions_bail", "recours_duree",
+      "encadrement_gain_mensuel", "encadrement_villes", "taxe_fonciere"),
+    "mesures")}
+
+${g.depliant("Ce que ce calcul n'est pas",
+    `<p>C'est une addition, pas un modèle budgétaire, et il faut le dire avant
+  qu'on le découvre. ${enLettres(limites.length, true)} choses n'y sont
+  pas.</p>
+  ${g.points(limites)}
   <p>Ce que le calcul établit est donc modeste, et suffisant : la réforme
   <strong class="cle-texte">tient dans les agrégats existants</strong>. Elle ne
   crée aucun impôt nouveau, ne suppose ni dette ni baisse de l'enveloppe des
@@ -1664,14 +2018,16 @@ ${g.depliant("Ce que ce calcul n'est pas",
   emplois la réclament, et ${milliards(bilan.solde)} ne les couvrent pas tous :
   mieux vaut donc dire lequel passe d'abord. Un, la clause de sauvegarde qui
   garantit qu'aucun ménage modeste ne perde au change — son coût n'est pas
-  connu, et elle passe avant tout le reste. Deux, les trois engagements que ce
-  compte ne chiffre pas : garantie du loyer, reversement aux communes, moyens
-  de justice. Trois, le maintien du taux réduit de TVA sur les travaux
-  (${milliards(n(d, "tva_travaux_taux_reduit"))}), si le Parlement le juge
-  nécessaire. <strong class="cle-texte">Les trois ensemble dépassent la
-  marge.</strong> C'est alors le montant du chèque — le seul paramètre qui
-  pèse assez — qu'il faudrait revoir. Nous préférons l'écrire que de laisser
-  croire qu'une même somme paie trois fois.</p>
+  connu, et elle passe avant tout le reste. Deux, les lignes du tableau qui
+  coûtent sans être chiffrées : garantie du loyer, moyens de justice, ouverture
+  du chèque à l'accession. Trois, si le Parlement les juge nécessaires, le
+  maintien du taux réduit de TVA sur les travaux
+  (${milliards(n(d, "tva_travaux_taux_reduit"))}) ou celui des avantages
+  fiscaux du logement social (${milliards(n(d, "niches_secteur_social"))}).
+  <strong class="cle-texte">Les trois ensemble dépassent la marge.</strong>
+  C'est alors le montant du chèque — le seul paramètre qui pèse assez — qu'il
+  faudrait revoir. Nous préférons l'écrire que de laisser croire qu'une même
+  somme paie trois fois.</p>
   <p>Une précision s'impose pourtant, parce qu'elle nous sera opposée et
   qu'elle est fondée. <strong class="cle-texte">Supprimer une niche fiscale
   augmente l'impôt de celui qui en bénéficiait.</strong> Aucun taux ne monte,
@@ -1679,8 +2035,9 @@ ${g.depliant("Ce que ce calcul n'est pas",
   rendus — dont ${v(d, "tva_travaux_taux_reduit")} de TVA à taux réduit sur les
   travaux, qui concerne tout propriétaire qui refait une toiture. Dire « sans
   impôt nouveau » serait exact et insuffisant : la réforme déplace la charge
-  des niches vers le chèque, et ce déplacement fait des perdants nommables.
-  Ils sont traités à la page
+  des niches vers le chèque, et ce déplacement fait des perdants nommables. Le
+  plus lourd n'est pas un ménage : c'est le logement social, qui reçoit
+  ${v(d, "niches_secteur_social")} de ces avantages. Ils sont traités à la page
   <a href="${g.lien("/fiscalite")}">Fiscalité</a>.</p>`, "limites")}
 
 
@@ -1732,8 +2089,9 @@ ${g.depliant("Les leviers, et ce qu'ils déplacent",
     <li><strong>Le chèque.</strong> Chaque tranche de 10 € mensuels sur
     ${v(d, "menages_aides")} de ménages coûte
     ${milliards(10 * 12 * n(d, "menages_aides") / 1000, 2)} par an. C'est le
-    levier le plus lourd : doubler l'aide moyenne coûterait davantage que tout
-    ce que la réforme supprime.</li>
+    levier le plus lourd : doubler l'aide moyenne ${double.solde < 0
+    ? `demanderait ${milliards(-double.solde)} par an de financement`
+    : `ne laisserait que ${milliards(double.solde)} de marge`}.</li>
     <li><strong>Le nombre de ménages, qui n'est pas un levier ici et devrait
     l'être.</strong> Le compte retient ${v(d, "menages_aides")} de ménages, le
     nombre actuel de bénéficiaires. Or le chèque est ouvert aux accédants,
@@ -1748,8 +2106,8 @@ ${g.depliant("Les leviers, et ce qu'ils déplacent",
     ${milliards(n(d, "dmto"))} de recettes — un montant qui suit le nombre de
     ventes, et qu'une année basse sous-estime.</li>
     <li><strong>Les subventions à la pierre.</strong>
-    ${milliards(n(d, "subventions"))}, dont l'essentiel finance le logement
-    très social et l'hébergement. La proposition les conserve en totalité par
+    ${milliards(n(d, "subventions"))}, versés surtout aux bailleurs sociaux et à
+    la rénovation des logements. La proposition les conserve en totalité par
     défaut : ce sont elles qui tiennent le plancher.</li>
   </ul>`, "leviers")}
 `;
@@ -1758,9 +2116,11 @@ ${g.depliant("Les leviers, et ce qu'ils déplacent",
 ${g.affiche(
     "La preuve",
     "Le chiffrage",
-    "Quatre chantiers, un compte. Les aides d'aujourd'hui financent le chèque "
-    + "de demain et la suppression des droits de mutation — sur les agrégats "
-    + "publiés, sans impôt nouveau. Les hypothèses se déplacent ci-dessous.",
+    "Quatre chantiers, un compte, et chaque mesure face à aujourd'hui : ce "
+    + "qu'elle rapporte, ce qu'elle coûte, ou pourquoi on ne sait pas la "
+    + "chiffrer. Les aides d'aujourd'hui financent le chèque de demain et la "
+    + "suppression des droits de mutation — sur les agrégats publiés, sans "
+    + "impôt nouveau. Les hypothèses se déplacent ci-dessous.",
   )}
 ${g.plan(corps, "/chiffrage")}
 ${corps}

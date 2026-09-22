@@ -111,8 +111,8 @@ Le site s'adresse à des électeurs, pas à des économistes.
   « dépense fiscale », « ZAN » sont des mots opaques pour qui n'a pas fait
   d'économie.
 - **Dire ce que le site ne sait pas**, sur le site et non dans un coin du
-  dépôt. La page Chiffrage porte ses quatre limites ; la page Données porte les
-  siennes.
+  dépôt. La page Chiffrage porte ses limites et ses lignes sans chiffre ; la
+  page Données porte les siennes.
 - **Une objection se traite dans la page qui l'appelle**, pas ailleurs : « vous
   allez baisser les aides » est traitée au bas de la page Aider.
 - Les titres de page sont mis en capitales **par la feuille de style**, jamais

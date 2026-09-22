@@ -508,6 +508,21 @@ export class Cellule {
 }
 
 /**
+ * Une ligne qui ouvre un groupe de lignes : « Construire », « Louer ».
+ *
+ * Elle occupe toute la largeur et commence un nouveau `<tbody>`, dont elle est
+ * l'en-tête (`scope="rowgroup"`) : une synthèse vocale qui lit une cellule du
+ * groupe annonce ainsi le groupe avec la ligne, et non seulement la ligne. Un
+ * intertitre peint en gras dans une rangée ordinaire se lirait, lui, comme une
+ * ligne vide à quatre colonnes. `html` peut porter un lien.
+ */
+export class Intertitre {
+  constructor(html) {
+    this.html = html;
+  }
+}
+
+/**
  * Tableau de données.
  *
  * `titre` devient le `<caption>`. Sans lui, un lecteur d'écran qui arrive sur
@@ -542,19 +557,34 @@ export function tableau(entetes, lignes, classesColonnes = null, titre = "",
       + (valeur instanceof Cellule ? valeur.html : valeur)
       + `</${balise}>`;
   };
-  const corps = lignes.map((ligne, rang) => "<tr"
-    + Object.entries(attributs[rang])
-      .map(([cle, val]) => ` ${cle}="${echapper(String(val))}"`).join("")
-    + `>${
+  const rangee = (ligne, rang) => {
+    const suite = Object.entries(attributs[rang])
+      .map(([cle, val]) => ` ${cle}="${echapper(String(val))}"`).join("");
+    if (ligne instanceof Intertitre) {
+      return `<tr class="intertitre"${suite}><th colspan="${classes.length}" `
+        + `scope="rowgroup">${ligne.html}</th></tr>`;
+    }
+    return `<tr${suite}>${
       ligne.slice(0, classes.length)
         .map((valeur, i) => cellule(valeur, classes[i], i === 0)).join("")
-    }</tr>`).join("");
+    }</tr>`;
+  };
+  // Un intertitre ferme le groupe en cours et en ouvre un autre ; un groupe
+  // vide — celui qui précède le premier intertitre — n'est pas écrit.
+  const groupes = [[]];
+  lignes.forEach((ligne, rang) => {
+    if (ligne instanceof Intertitre && groupes[groupes.length - 1].length) {
+      groupes.push([]);
+    }
+    groupes[groupes.length - 1].push(rangee(ligne, rang));
+  });
+  const corps = groupes.map((groupe) => `<tbody>${groupe.join("")}</tbody>`).join("");
   const legendeHtml = titre ? `<caption><span>${echapper(titre)}</span></caption>` : "";
   const nom = titre ? ` role="region" aria-label="${echapper(titre)}"` : "";
   const cible = identifiant ? ` id="${echapper(identifiant)}"` : "";
   return `<div class="defilant" tabindex="0"${nom}><table${cible}>${legendeHtml}`
     + `<thead><tr>${tete}</tr></thead>`
-    + `<tbody>${corps}</tbody></table></div>`;
+    + `${corps}</table></div>`;
 }
 
 /**
